@@ -1,0 +1,72 @@
+.debug, .debug * { border: 1px dotted red}
+
+.debug-children, .debug-children > * {border: 1px dotted red}
+
+.index-bg {
+    background-image: url('https://picsum.photos/1998/1000');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+.wrapper {
+    display: flex;
+}
+
+.content {
+    display: flex;
+}
+
+.profile-pic {
+    width: 125px;
+    height: 125px;
+}
+
+.show-photo {
+    width: 150px;
+    height: 150px;
+}
+
+#sidebar {
+    min-width: 150px;
+    max-width: 250px;
+    height: 100vh;
+}
+
+#sidebar ul li {
+    padding: 5px;
+    list-style: none;
+    text-align: right;
+}
+
+#side.active {
+    margin-left: -150px;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -150px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+}
+
+
+.formcolor {
+    background-color: white;
+}
+
+.register-bg {
+    background-image: url('https://picsum.photos/2002/1001');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+.login-bg {
+    background-image: url('https://picsum.photos/2003/1000');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
