@@ -1,0 +1,35 @@
+{% extends 'airbnbclone/base.html' %} {% block body %}
+
+<div class="card my-4 col-6 offset-3 p-5">
+    <h3 class="text-center">Update Profile</h3>
+    <form method="POST" action="{% url 'airbnbclone:edit_profile' %}" id="edit_profile-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="inputUserName1">Update Name</label>
+            <input type="text" class="form-control" id="inputUserName1" aria-describedby="usernameHelp" placeholder="Enter Your Name"
+                name="html_username">
+        </div>
+        <div class="form-group">
+            <label for="inputEmail1">Update Email Address</label>
+            <input type="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp" placeholder="Enter Email Address"
+                name="html_email">
+        </div>
+        <div class="form-group">
+            <label for="inputBirthday">Update Your Birthday</label>
+            <label for="inputBirthday" class="fineprint">To sign up, you must be 18 or older. Other people won’t see your birthday.</label>
+            <input type="date" class="form-control" id="inputBirthday" placeholder="Your Birthday" name="html_birthday">
+        </div>
+        <div class="form-group">
+            <label for="inputPassword1">Change Password</label>
+            <input type="password" class="form-control" id="inputPassword1" placeholder="Create Password" name="html_password">
+        </div>
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+        <i class="fa fa-spinner ml-3 fa-spin" id="spinner" style="display: none"></i>
+    </form>
+
+    <div class="my-3 messages">
+
+    </div>
+</div>
+
+{% endblock %}
