@@ -1,0 +1,86 @@
+{% extends 'airbnbclone/base.html' %} 
+
+{% block body %}
+
+<div class="card my-4 col-6 offset-3 p-5">
+    <h3 class="text-center">Booking</h3>
+    <form method="POST" action="{% url 'airbnbclone:authenticate_booking' %}" id="booking-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="inputEmail1">Checkin Date</label>
+            <input type="date" class="form-control" id="checkin" aria-describedby="emailHelp" placeholder="Checkin"
+                name="html_checkin">
+        </div>
+        <div class="form-group">
+            <label for="inputUserName1">Checkout Date</label>
+            <input type="date" class="form-control" id="checkout" aria-describedby="usernameHelp" placeholder="Checkout"
+                name="html_checkout">
+        </div>
+        <div class="form-group">
+            <label for="inputPassword1">Number of Guests</label>
+            <input type="number" class="form-control" id="numguests" min="1" placeholder="Number of Guests" name="html_guests">
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+        <i class="fa fa-spinner ml-3 fa-spin" id="spinner" style="display: none"></i>
+    </form>
+
+    <div class="my-3 messages">
+        
+    </div>
+</div>
+
+{% endblock %} {% block scripts %}
+
+<script>
+
+    $(document).ready(function () {
+
+        let d = new Date();
+        let dYear = d.getFullYear();
+        let dMonth = d.getMonth()+1;
+
+        if (dMonth < 10) {
+            dMonth = "0" + dMonth;
+        }
+
+        let dDate = d.getDate();
+
+        if (dDate < 10) {
+            dDate = "0" + dDate;
+        }
+        
+        todayDate = dYear + "-" + dMonth + "-" + dDate;
+
+        $("#checkin").attr("min", todayDate);
+        $("#checkout").attr("min", todayDate);
+        $("#numguests").attr("max", 5);
+        
+        $("button").click(function(event) {
+            event.preventDefault();
+            $(".messages").children().remove();
+            $.ajax({
+                beforeSend: setCsrfToken,
+                type: $("form").attr("method"),
+                url: $("form").attr("action"),
+                data: {
+                    "html_checkin": $("input[name=html_checkin]").val(),
+                    "html_checkout": $("input[name=html_checkout]").val(),
+                    "html_guests": $("input[name=html_guests]").val(),
+                    "html_listing_id": 3,
+                    "html_user_id": 1,
+                },
+                success: function (response) {
+                    console.log(response);
+                    window.location = response.url;
+                },
+                error: function(response) {
+                    console.log("error error");
+                    console.log(response);
+                }
+            });
+
+        });
+    });
+</script> 
+
+{% endblock %}

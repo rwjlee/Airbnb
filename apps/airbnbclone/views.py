@@ -23,7 +23,6 @@ def check_length(request, data, name):
         return False
     return True
 
-
 def edit_profile(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
@@ -121,9 +120,62 @@ def view_profile(request, user_id):
 
     return render(request, 'airbnbclone/view_profile.html', context)
 
+def authenticate_booking(request):
+    if request.method== "POST":
+        booking = create_booking(request)
+
+        if booking:
+            return JsonResponse({"url": redirect('airbnbclone:index').url})
+
+        errors = []
+        for message in messages.get_messages(request):
+            errors.append(str(message))
+
+        return JsonResponse({'errors': errors}, status=400)
+        
+    return JsonResponse({'message': 'method not allowed'})
+
+def create_booking(request):
+    listing_id = request.POST["html_listing_id"]
+    user_id = request.POST["html_user_id"]
+    checkin = request.POST["html_checkin"]
+    checkout = request.POST["html_checkout"]
+    guests = request.POST["html_guests"]
+    charge = float(request.POST["html_charge"]) * 5
+
+    if not check_dates(checkin, checkout, listing_id):
+        return None
+
+    try:
+        booking = m.Booking.objects.create(
+            guest_id = user_id, 
+            home_listing_id = listing_id, 
+            from_date = checkin,
+            to_date = checkout,
+            guests = guests,
+            charge_amount = charge,
+        )
+        
+    except:
+        raise
+    
+    print("==========finish book=======")
+
+    return booking
+
+def check_dates(start_date, end_date, listing_id):
+    print("in check date")
+    try:
+        listing = m.Listing.objects.get(id=listing_id)
+    except:
+        raise
+        return False
+
+    return True
 
 def listing(request, listing_id):
-    print("here listing")
+    print("1111111 {}".format(request.method))
+    
     try:
         room = m.Listing.objects.get(id = listing_id)
         if not room.active:
@@ -188,8 +240,6 @@ def get_amenities(amen):
         a = m.Amenity.objects.create(name = amen)
     
     return a
-
-    
 
 def create_listing(request):
 

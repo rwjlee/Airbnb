@@ -69,28 +69,82 @@
       <div class="small align-bottom">per night</div>
     </div>
 
-    <form method="POST" action="" id="booking-form">
+    <form method="POST" action="{% url 'airbnbclone:authenticate_booking' %}" id="booking-form">
         {% csrf_token %}
       <div class="form-group">
-          <input type="date" name="html_checkin" id="" placeholder="Check In" class="form-control">
+          <input type="date" name="html_checkin" id="checkin" placeholder="Check In" class="form-control">
       </div>
       <div class="form-group">
-          <input type="date" name="html_checkout" id="" placeholder="Check Out" class="form-control">
+          <input type="date" name="html_checkout" id="checkout" placeholder="Check Out" class="form-control">
       </div>
       <div class="form-group">
-          <input type="number" name="html_guests" id="" placeholder="Guests" class="form-control">
+          <input type="number" name="html_guests" id="numguests" placeholder="Guests" class="form-control">
       </div>
-      <button class="btn btn-danger col-12">Book
-
-      </button>
-
+      <button class="btn btn-danger col-12">Book</button>
+    </form>
     </div>
-  </div>
 
-</div>
+  </div>
   
 </div>
   
   
   
   {% endblock %}
+
+{% block scripts %}
+
+<script>
+
+    $(document).ready(function () {
+      console.log({{request.session.user_id}});
+        let d = new Date();
+        let dYear = d.getFullYear();
+        let dMonth = d.getMonth()+1;
+
+        if (dMonth < 10) {
+            dMonth = "0" + dMonth;
+        }
+
+        let dDate = d.getDate();
+
+        if (dDate < 10) {
+            dDate = "0" + dDate;
+        }
+        
+        todayDate = dYear + "-" + dMonth + "-" + dDate;
+
+        $("#checkin").attr("min", todayDate);
+        $("#checkout").attr("min", todayDate);
+        $("#numguests").attr("max", 5);
+        
+        $("button").click(function(event) {
+          console.log(event);
+            event.preventDefault();
+            $(".messages").children().remove();
+            $.ajax({
+                beforeSend: setCsrfToken,
+                type: "POST",
+                url: $("#booking-form").attr("action"),
+                data: {
+                    "html_checkin": $("input[name=html_checkin]").val(),
+                    "html_checkout": $("input[name=html_checkout]").val(),
+                    "html_guests": $("input[name=html_guests]").val(),
+                    "html_listing_id": "{{room.id}}",
+                    "html_user_id": "{{request.session.user_id}}",
+                    "html_charge": "{{room.price}}",
+                },
+                success: function (response) {
+                    console.log(response);
+                    window.location = response.url;
+                },
+                error: function(response) {
+                    displayErrors($('.messages'), response.responseJSON.errors)
+                }
+            });
+
+        });
+    });
+</script> 
+
+{% endblock %}
