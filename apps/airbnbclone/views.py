@@ -26,28 +26,34 @@ def edit_profile(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
     if request.method == 'POST':
-        if len(request.POST['html_email']) > 0:
-            try:
-                user = m.User.objects.update(
-                    username = request.POST['html_username'],
-                    email = request.POST['html_email'], 
-                    password = request.POST['html_password'],
-                    birthday = request.POST['html_birthday'],
-                    gender = request.POST['html_gender'],
-                    description = request.POST['html_description'])
-                request.session['username'] = user.username
-                request.session['user_id'] = user.id
-                request.session['email'] = user.email
-                request.session['birthday'] = user.birthday
-                request.session['gender'] = user.gender
-                request.session['description'] = user.description
-            except:
-                raise
-                messages.error(request,'Account already in use')
-                return redirect('airbnbclone:edit_profile')
+        try:
+            user = m.User.objects.get(id = request.session['user_id'])
+            user.username = request.POST['html_username']
+            user.password = request.POST['html_password']
+            user.birthday = request.POST['html_birthday']
+            print(request.POST['html_birthday'])
+            user.gender = request.POST['html_gender']
+            user.description = request.POST['html_description']
+            user.save()
+            request.session['username'] = user.username
+
+        except:
+            raise
+            messages.error(request,'Account already in use')
+            return redirect('airbnbclone:edit_profile')
 
         return redirect('airbnbclone:index')
-    return render(request, 'airbnbclone/edit_profile.html')
+
+    user = m.User.objects.get(id = request.session['user_id'])
+    print("*****")
+    print(str(user.birthday))
+    print("*****")
+    context = {
+        "user": user,
+        "birthday": str(user.birthday),
+        "gender_options": ["Male", "Female", "Other"]
+    }
+    return render(request, 'airbnbclone/edit_profile.html', context)
 
 def register(request):
     if 'user_id' in request.session:
