@@ -103,7 +103,7 @@ def listing(request):
 
     context = {
         'api_key' : MAP_API_KEY,
-        'query' : query
+        'address' : query
     }
     return render(request, 'airbnbclone/listing.html', context)
 
