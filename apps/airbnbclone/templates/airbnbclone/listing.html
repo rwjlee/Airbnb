@@ -1,62 +1,96 @@
 {% extends 'airbnbclone/base.html' %}
 
 {% block body %}
-<div class="listing_container">
-  <div class="summary">
-    <img src="https://a0.muscache.com/im/pictures/27217858/9d9dabee_original.jpg?aki_policy=xx_large" alt="Image here" class="big-picture">
-    <a href="" class="view-photos">View Photos</a>
-    <h3>{{room.listing_type}}</h3>
-    <h2>{{room.name}}</h2>
-    <p>{{room.city}}, {{room.country}}</p>
-    <p>{{room.num_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
-    <p>{{room.desc}}</p>
-    <a href="">Contact host</a>
+
+<div class="listing-banner">
+  <img src="https://a0.muscache.com/im/pictures/27217858/9d9dabee_original.jpg?aki_policy=xx_large" alt="Image here" class="big-picture">
+  <a href="" class="view-photos">View Photos</a>
+</div>
+
+<div class="container">
+  <div class="row">
+  <div class="listing-content col-8">
+
+    <div class="summary">
+      <h3>{{room.listing_type}}</h3>
+      <h2>{{room.name}}</h2>
+      <p>{{room.city}}, {{room.country}}</p>
+      <p>{{room.num_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
+      <p>{{room.desc}}</p>
+      <a href="">Contact host</a>
+    </div>
+
+    <hr>
+
+    <div class="amenities">
+      <p>Amenities</p>
+      {% for amen in room.amenities.all %}
+      <div>{{amen.name}}</div>
+      {% endfor %}
+    </div>
+
+    <hr>
+
+    <div class="cancellations">
+      <p>Cancellation<p>
+      <a href="">Get Details</a>
+    </div>
+
+    <hr>
+
+    <!-- Insert reviews here -->
+
+    <div class="hosted-by">
+      <span>Hosted by {{room.host.username}}</span>
+      <p>Languages: </p>
+      <a href="">Contact Host</a>
+    </div>
+
+    <hr>
+
+    <div class="neighborhood">
+      <p>The neighborhood</p>
+        <iframe
+        width="450"
+        height="250"
+        frameborder="0" style="border:0"
+
+        src="https://www.google.com/maps/embed/v1/search?key={{api_key}} &q={{room.address}}+{{room.city}}+{{room.country}}">
+
+      </iframe>
+      <span>Exact location information is provided after a booking is confirmed.</span>
+    </div>
   </div>
+
+  <div class="listing-avail col-4 border border-secondary">
+    <div class="container">
+    <div class="row">
+      <div class="h3">${{room.price}}</div>
+      <div class="small align-bottom">per night</div>
+    </div>
+
+    <form method="POST" action="" id="booking-form">
+        {% csrf_token %}
+      <div class="form-group">
+          <input type="date" name="html_checkin" id="" placeholder="Check In" class="form-control">
+      </div>
+      <div class="form-group">
+          <input type="date" name="html_checkout" id="" placeholder="Check Out" class="form-control">
+      </div>
+      <div class="form-group">
+          <input type="number" name="html_guests" id="" placeholder="Guests" class="form-control">
+      </div>
+      <button class="btn btn-danger col-12">Book
+
+      </button>
+
+    </div>
+  </div>
+
+</div>
   
-  <hr>
-  
-  <div class="amenities">
-    <p>Amenities</p>
-    {% for amen in room.amenities.all %}
-    <div>{{amen.name}}</div>
-    {% endfor %}
-  </div>
-
-  <hr>
-
-  <div class="cancellations">
-    <p>Cancellation<p>
-    <a href="">Get Details</a>
-  </div>
-
-  <hr>
-
-  <!-- Insert reviews here -->
-
-  <div class="hosted-by">
-    <span>Hosted by {{room.host.username}}</span>
-    <p>Languages: </p>
-    <a href="">Contact Host</a>
-  </div>
-
-  <hr>
-
-  <div class="neighborhood">
-    <p>The neighborhood</p>
-      <iframe
-      width="450"
-      height="250"
-      frameborder="0" style="border:0"
-
-      src="https://www.google.com/maps/embed/v1/search?key={{api_key}} &q={{room.address}}+{{room.city}}+{{room.country}}">
-
-    </iframe>
-    <span>Exact location information is provided after a booking is confirmed.</span>
-  </div>
-  
-  
+</div>
   
   
   
   {% endblock %}
-</div>
