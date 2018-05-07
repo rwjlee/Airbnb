@@ -5,5 +5,5 @@ app_name = 'airbnbclone'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('result', views.result, name='result'),
+    path('listing', views.listing, name='listing'),
 ]
