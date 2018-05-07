@@ -6,6 +6,9 @@ class User(models.Model):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=64)
     password = models.CharField(max_length=256)
+    birthday = models.DateField(default=None, blank=True, null=True)
+    gender = models.CharField(max_length=64, default=None, null=True)
+    description = models.CharField(max_length=500, default=None, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

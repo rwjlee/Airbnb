@@ -5,9 +5,9 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'airbnbclone:index' %}"><b>MyFace</b> <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{% url 'airbnbclone:index' %}"><b>Airbnb</b> <span class="sr-only">(current)</span></a>
         </li>
-        <form class="form-inline mx-3" action="{% url 'airbnbclone:map' %}" method="GET">
+        <form class="form-inline mx-3" action="{% url 'airbnbclone:listing' %}" method="GET">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" name="html_term">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
@@ -21,8 +21,8 @@
                 {{ request.session.username }}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="{% url 'airbnbclone:index' user_id=request.session.user_id %}">Edit Profile</a>
-                <a class="dropdown-item" href="{% url 'airbnbclone:index' %}">Logout</a>
+                <a class="dropdown-item" href="{% url 'airbnbclone:edit_profile' %}">Edit Profile</a>
+                <a class="dropdown-item" href="{% url 'airbnbclone:logout' %}">Logout</a>
               </div>
           
           {% else %}
@@ -30,8 +30,8 @@
             Account
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="{% url 'airbnbclone:index' %}">Login</a>
-            <a class="dropdown-item" href="{% url 'airbnbclone:index' %}">Register</a>
+            <a class="dropdown-item" href="{% url 'airbnbclone:login' %}">Login</a>
+            <a class="dropdown-item" href="{% url 'airbnbclone:register' %}">Register</a>
           </div>
           {% endif %}
         </li>
