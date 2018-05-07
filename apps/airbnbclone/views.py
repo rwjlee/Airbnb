@@ -3,11 +3,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from pprint import pprint
-from apps.airbnbclone.models import User
+import apps.airbnbclone.models as m
 import googlemaps
 from datetime import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
-from apps.airbnbclone.models import User
+# from apps.airbnbclone.models import User
 
 def index(request):
     return render(request, 'airbnbclone/index.html')
@@ -23,13 +23,15 @@ def check_length(request, data, name):
     return True
 
 
+
+
 def edit_profile(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
     if request.method == 'POST':
         if len(request.POST['html_email']) > 0 and request.POST['html_password'] == request.POST['html_confirm']:
             try:
-                user = User.objects.create(
+                user = m.User.objects.create(
                     username = request.POST['html_username'],
                     email = request.POST['html_email'], 
                     password = request.POST['html_password'],
@@ -52,11 +54,12 @@ def register(request):
     if request.method == 'POST':
         if len(request.POST['html_email']) > 0 and request.POST['html_password'] == request.POST['html_confirm']:
             try:
-                user = User.objects.create(
+                user = m.User.objects.create(
                     username = request.POST['html_username'],
                     email = request.POST['html_email'], 
                     password = request.POST['html_password'],
-                    birthday = request.POST['html_birthday'])
+                    birthday = request.POST['html_birthday']
+                )
                 request.session['username'] = user.username
                 request.session['user_id'] = user.id
                 request.session['email'] = user.email
@@ -74,7 +77,7 @@ def login(request):
         return redirect('airbnbclone:index')
     if request.method == 'POST':
         try:
-            user = User.objects.get(email = request.POST['html_email'])
+            user = m.User.objects.get(email = request.POST['html_email'])
             if request.POST['html_password'] == user.password:
                 request.session['username'] = user.username
                 request.session['user_id'] = user.id
@@ -104,7 +107,6 @@ def listing(request):
     }
     return render(request, 'airbnbclone/listing.html', context)
 
-<<<<<<< HEAD
 def become_a_host(request):
 
     return render(request, 'airbnbclone/create_listing.html')
@@ -147,6 +149,3 @@ def create_listing(request):
         return redirect('airbnbclone:index')
 
     return render(request, 'airbnbclone/create_listing.html')
-=======
-
->>>>>>> edcd3eefb8e1d53023cabebd928207b137f00668
