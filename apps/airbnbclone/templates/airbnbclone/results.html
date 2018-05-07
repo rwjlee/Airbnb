@@ -3,6 +3,7 @@
 {% block body %}
 <div class="results_container">
     <div class="filters">
+        
         <p>Dates, Guests, Home Types, Price</p>
     </div>
     <hr>
@@ -11,7 +12,7 @@
         <p>300 + Homes</p>
         {% for listing in listings %}
         <div class="home">
-            <a href="{% url 'airbnbclone:listing' %}">
+            <a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">
                 <img src="https://a0.muscache.com/im/pictures/117df0b2-1034-4222-8679-74c8a6f62e59.jpg?aki_policy=xx_large" alt="Image here">
             </a>
             <p>{{listing.listing_type}}, {{listing.bed}} beds</p>
