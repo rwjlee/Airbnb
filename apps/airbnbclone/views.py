@@ -77,6 +77,7 @@ def register(request):
 def login(request):
     if 'user_id' in request.session:
         return redirect('airbnbclone:index')
+
     if request.method == 'POST':
         try:
             user = m.User.objects.get(email = request.POST['html_email'])
@@ -145,7 +146,7 @@ def create_listing(request):
 
     if request.method == 'POST':
         try:
-            # host = request.session['user_id']
+            host = request.session['user_id']
             listing_type = request.POST['html_listing_type']
             privacy_type = request.POST['html_privacy_type']
             bedroom = request.POST['html_bedroom']
@@ -176,7 +177,7 @@ def create_listing(request):
                 desc = desc,
                 price = price,
             )
-            
+
         except:
             raise
             print('This is wrong')
