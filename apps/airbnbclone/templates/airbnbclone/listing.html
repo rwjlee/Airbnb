@@ -5,12 +5,11 @@
   <div class="summary">
     <img src="https://a0.muscache.com/im/pictures/27217858/9d9dabee_original.jpg?aki_policy=xx_large" alt="Image here" class="big-picture">
     <a href="" class="view-photos">View Photos</a>
-    <h3>ENTIRE HOUSE</h3>
-    <h2>Eco-luxury, family-friendly villa</h2>
-    <p>Ubud</p>
-    <p>9 guests, 4 bathrooms, 6 beds, 4 baths</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A, ut? Nisi distinctio, eligendi debitis, sequi corrupti voluptates culpa ipsam at, amet eaque a in impedit sapiente sit placeat? Dignissimos ut consequuntur quae libero tempore accusamus fuga sequi unde, possimus quaerat fugit temporibus illum odit corrupti, nihil repellat quibusdam porro adipisci.</p>
-    <a href="">Read more about this space</a>
+    <h3>{{room.listing_type}}</h3>
+    <h2>{{room.name}}</h2>
+    <p>{{room.country}}</p>
+    <p>{{room.num_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
+    <p>{{room.desc}}</p>
     <a href="">Contact host</a>
   </div>
   
@@ -19,22 +18,6 @@
   <div class="amenities">
     <p>Amenities</p>
     <p>kitchen, wifi, breakfast, dryer, laundry, free parking</p>
-    <a href="">Show all 31 amenities</a>
-  </div>
-
-  <hr>
-
-  <div class="sleeping-arrangements">
-    <div class="bedroom">
-      <p>3 beds</p>
-      <p>3 bedrooms</p>
-    </div>
-  </div>
-
-  <hr>
-
-  <div class="house-rules">
-    <p>Check in is anytime after 2pm</p>
   </div>
 
   <hr>
@@ -62,7 +45,7 @@
       width="450"
       height="250"
       frameborder="0" style="border:0"
-      src="https://www.google.com/maps/embed/v1/search?key={{api_key}}  &q={{address}}" allowfullscreen>
+      src="https://www.google.com/maps/embed/v1/search?key={{api_key}}  &q={{room.address}}" allowfullscreen>
     </iframe>
     <span>Exact location information is provided after a booking is confirmed.</span>
   </div>

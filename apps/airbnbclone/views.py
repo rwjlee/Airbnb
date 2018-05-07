@@ -96,7 +96,7 @@ def logout(request):
 def listing(request, listing_id):
 
     try:
-        room = m.Listing.objects.filter(listing_id = listing_id)
+        room = m.Listing.objects.get(id = listing_id)
     except:
         room = None
         return redirect('airbnbclone:index')
@@ -105,6 +105,8 @@ def listing(request, listing_id):
         'api_key' : MAP_API_KEY,
         'room': room,
     }
+    print("listing got okay")
+    print(room.address)
     return render(request, 'airbnbclone/listing.html', context)
 
 def results(request):
