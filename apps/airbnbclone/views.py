@@ -98,11 +98,12 @@ def listing(request):
 
     context = {
         'api_key' : MAP_API_KEY,
-        'address' : query
+        'query' : query
     }
     return render(request, 'airbnbclone/listing.html', context)
 
 def results(request):
+    
     return render(request, 'airbnbclone/results.html')
 
 def become_a_host(request):
