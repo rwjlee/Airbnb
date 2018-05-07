@@ -7,6 +7,7 @@ import googlemaps
 from datetime import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
+import json, requests
 
 # Create your views here.
 def index(request):
@@ -120,6 +121,7 @@ def results(request):
         'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(host__icontains=query) | Q(name__icontains=query))
     }
     listings = m.Listing.objects.filter()
+
     return render(request, 'airbnbclone/results.html', context)
 
 def become_a_host(request):
@@ -127,6 +129,14 @@ def become_a_host(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:register')
     return render(request, 'airbnbclone/create_listing.html')
+
+def get_url(address, city, country):
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address={},+{},+{}&key={}".format(address, city, country, MAP_API_KEY)
+    return url
+
+def get_json(url):
+    resp = requests.get(url)
+    return json.loads(resp.text)
 
 def create_listing(request):
 
@@ -142,10 +152,16 @@ def create_listing(request):
             bath = request.POST['html_bath']
             bed = request.POST['html_bed']
             num_guests= request.POST['html_num_guests']
+
             country = request.POST['html_country']
+            city = request.POST['html_city']
             address = request.POST['html_address']
+
+            price = request.POST['html_price']
+            
             name = request.POST['html_name']
             desc = request.POST['html_desc']
+
             listing = m.Listing.objects.create(
                 listing_type = listing_type,
                 privacy_type = privacy_type,
@@ -154,10 +170,13 @@ def create_listing(request):
                 bed = bed,
                 num_guests= num_guests,
                 country = country,
+                city = city,
                 address = address,
                 name = name,
-                desc = desc,    
+                desc = desc,
+                price = price,
             )
+            
         except:
             raise
             print('This is wrong')

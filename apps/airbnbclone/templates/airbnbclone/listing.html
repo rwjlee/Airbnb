@@ -7,7 +7,7 @@
     <a href="" class="view-photos">View Photos</a>
     <h3>{{room.listing_type}}</h3>
     <h2>{{room.name}}</h2>
-    <p>{{room.country}}</p>
+    <p>{{room.city}}, {{room.country}}</p>
     <p>{{room.num_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
     <p>{{room.desc}}</p>
     <a href="">Contact host</a>
@@ -46,7 +46,7 @@
       height="250"
       frameborder="0" style="border:0"
 
-      src="https://www.google.com/maps/embed/v1/search?key={{api_key}}  &q={{room.address}}" allowfullscreen>
+      src="https://www.google.com/maps/embed/v1/search?key={{api_key}}&q={{room.address}}" allowfullscreen>
 
     </iframe>
     <span>Exact location information is provided after a booking is confirmed.</span>
