@@ -1,4 +1,3 @@
-import bcrypt, json
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
@@ -8,6 +7,7 @@ import googlemaps
 from datetime import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 
+# Create your views here.
 def index(request):
     return render(request, 'airbnbclone/index.html')
 
@@ -101,6 +101,9 @@ def listing(request):
         'query' : query
     }
     return render(request, 'airbnbclone/listing.html', context)
+
+def results(request):
+    return render(request, 'airbnbclone/results.html')
 
 def become_a_host(request):
 
