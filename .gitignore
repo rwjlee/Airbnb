@@ -1,1 +1,5 @@
 constants.py
+
+.pyc
+
+__pycache__/*

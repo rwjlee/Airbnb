@@ -1,7 +1,7 @@
 {% extends 'airbnbclone/base.html' %}
 
 {% block body %}
-<div class="entire_page">
+<div class="listing_container">
   <div class="summary">
     <img src="https://a0.muscache.com/im/pictures/27217858/9d9dabee_original.jpg?aki_policy=xx_large" alt="Image here" class="big-picture">
     <a href="" class="view-photos">View Photos</a>
@@ -62,7 +62,7 @@
       width="450"
       height="250"
       frameborder="0" style="border:0"
-      src="https://www.google.com/maps/embed/v1/search?key={{api_key}}  &q={{query}}" allowfullscreen>
+      src="https://www.google.com/maps/embed/v1/search?key={{api_key}}  &q={{address}}" allowfullscreen>
     </iframe>
     <span>Exact location information is provided after a booking is confirmed.</span>
   </div>

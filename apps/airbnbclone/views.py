@@ -1,4 +1,3 @@
-import bcrypt, json
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
@@ -7,8 +6,8 @@ import apps.airbnbclone.models as m
 import googlemaps
 from datetime import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
-# from apps.airbnbclone.models import User
 
+# Create your views here.
 def index(request):
     return render(request, 'airbnbclone/index.html')
 
@@ -21,9 +20,6 @@ def check_length(request, data, name):
         messages.error(request, name + ' cannot be left blank')
         return False
     return True
-
-
-
 
 def edit_profile(request):
     if 'user_id' not in request.session:
@@ -97,15 +93,17 @@ def logout(request):
     request.session.clear()
     return redirect('airbnbclone:index')
 
-
 def listing(request):
     query = request.GET["html_term".replace(" ", "+")]
 
     context = {
         'api_key' : MAP_API_KEY,
-        'query' : query
+        'address' : query
     }
     return render(request, 'airbnbclone/listing.html', context)
+
+def results(request):
+    return render(request, 'airbnbclone/results.html')
 
 def become_a_host(request):
 
