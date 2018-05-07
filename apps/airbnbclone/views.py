@@ -23,6 +23,7 @@ def check_length(request, data, name):
         return False
     return True
 
+
 def edit_profile(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
@@ -105,6 +106,21 @@ def login(request):
 def logout(request):
     request.session.clear()
     return redirect('airbnbclone:index')
+
+
+def view_profile(request, user_id):
+    try:
+        profile = m.User.objects.get(id = user_id)
+    except:
+        profile = None
+        return redirect('airbnbclone:index')
+
+    context = {
+        'profile': profile
+    }
+
+    return render(request, 'airbnbclone/view_profile.html', context)
+
 
 def listing(request, listing_id):
 

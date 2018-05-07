@@ -75,6 +75,10 @@
     font-size: 0.7em;
 }
 
+.largeprint {
+    font-size: 1.2em;
+}
+
 .big-picture {
     width: 100vw;
     height: calc(100vh - 80px);
