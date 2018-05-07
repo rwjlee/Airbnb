@@ -99,7 +99,7 @@ def check_length(request, data, name):
 
 
 def edit_profile(request):
-    if 'user_id' in request.session:
+    if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
     if request.method == 'POST':
         if len(request.POST['html_email']) > 0 and request.POST['html_password'] == request.POST['html_confirm']:
@@ -122,7 +122,7 @@ def edit_profile(request):
     return render(request, 'airbnbclone/edit_profile.html')
 
 def register(request):
-    if 'user_id' not in request.session:
+    if 'user_id' in request.session:
         return redirect('airbnbclone:index')
     if request.method == 'POST':
         if len(request.POST['html_email']) > 0 and request.POST['html_password'] == request.POST['html_confirm']:
