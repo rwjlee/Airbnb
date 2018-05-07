@@ -9,16 +9,18 @@
 
     <div class="homes">
         <p>300 + Homes</p>
+        {% for listing in listings %}
         <div class="home">
             <a href="{% url 'airbnbclone:listing' %}">
                 <img src="https://a0.muscache.com/im/pictures/117df0b2-1034-4222-8679-74c8a6f62e59.jpg?aki_policy=xx_large" alt="Image here">
             </a>
-            <p>Entire villa, 3 beds</p>
-            <p>Lush & Luxurious Villa</p>
-            <p>from IDR1,566,477 per night - Free cancellation</p>
+            <p>{{listing.listing_type}}, {{listing.bed}} beds</p>
+            <p>{{listing.name}}</p>
+            <p>from PRICE per night - Free cancellation</p>
             <p>5/5 stars</p>
 
         </div>
+        {% endfor %}
     </div>
 </div>
 

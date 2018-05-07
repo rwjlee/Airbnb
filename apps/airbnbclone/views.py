@@ -6,6 +6,7 @@ import apps.airbnbclone.models as m
 import googlemaps
 from datetime import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
+from django.db.models import Q
 
 # Create your views here.
 def index(request):
@@ -106,8 +107,12 @@ def listing(request, listing_id):
     return render(request, 'airbnbclone/listing.html', context)
 
 def results(request):
-    
-    return render(request, 'airbnbclone/results.html')
+    query = request.GET['html_term']
+    context = {
+        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(host__icontains=query) | Q(name__icontains=query))
+    }
+    listings = m.Listing.objects.filter()
+    return render(request, 'airbnbclone/results.html', context)
 
 def become_a_host(request):
 
