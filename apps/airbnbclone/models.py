@@ -34,6 +34,7 @@ class Listing(models.Model):
     address = models.TextField(blank=True)
     amenities = models.ManyToManyField(Amenity, null=True)
     price = models.FloatField(null=True)
+    active = models.BooleanField(default=False)
     
     name = models.TextField(max_length=200)
     desc = models.TextField(blank=True)

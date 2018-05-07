@@ -17,13 +17,15 @@
   
   <div class="amenities">
     <p>Amenities</p>
-    <p>kitchen, wifi, breakfast, dryer, laundry, free parking</p>
+    {% for amen in room.amenities.all %}
+    <div>{{amen.name}}</div>
+    {% endfor %}
   </div>
 
   <hr>
 
   <div class="cancellations">
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque aut ut eligendi itaque repellat consectetur veritatis ab nulla ullam iure!</p>
+    <p>Cancellation<p>
     <a href="">Get Details</a>
   </div>
 
@@ -32,21 +34,21 @@
   <!-- Insert reviews here -->
 
   <div class="hosted-by">
-    <span>Hosted by Widi</span>
-    <p>Languages: English, Bahasa Indonesia</p>
+    <span>Hosted by {{room.host.username}}</span>
+    <p>Languages: </p>
     <a href="">Contact Host</a>
   </div>
 
   <hr>
 
   <div class="neighborhood">
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto hic reiciendis quod illum quaerat voluptatibus? Soluta perferendis omnis perspiciatis reiciendis consectetur velit, aut minima quidem dicta facere, labore tempore officia nam iusto eos? Ipsum doloremque perferendis vitae neque assumenda, vero vel nihil, pariatur porro error dolorem. Sunt tempore itaque illo!</p>
-    <iframe
+    <p>The neighborhood</p>
+      <iframe
       width="450"
       height="250"
       frameborder="0" style="border:0"
 
-      src="https://www.google.com/maps/embed/v1/search?key={{api_key}}&q={{room.address}}" allowfullscreen>
+      src="https://www.google.com/maps/embed/v1/search?key={{api_key}} &q={{room.address}}+{{room.city}}+{{room.country}}">
 
     </iframe>
     <span>Exact location information is provided after a booking is confirmed.</span>

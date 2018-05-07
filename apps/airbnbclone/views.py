@@ -123,9 +123,11 @@ def view_profile(request, user_id):
 
 
 def listing(request, listing_id):
-
+    print("here listing")
     try:
         room = m.Listing.objects.get(id = listing_id)
+        if not room.active:
+            return redirect('airbnbclone:index')
     except:
         room = None
         return redirect('airbnbclone:index')
@@ -136,6 +138,8 @@ def listing(request, listing_id):
     }
     print("listing got okay")
     print(room.address)
+    # geo_address = get_json(get_url(room.address, room.city, room.country))
+    # pprint(geo_address)
     return render(request, 'airbnbclone/listing.html', context)
 
 def filters(request):
@@ -164,6 +168,29 @@ def get_json(url):
     resp = requests.get(url)
     return json.loads(resp.text)
 
+def edit_listing(request, listing_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    
+    listing = Listing.objects.get(id = listing_id)
+    if listing and listing.host_id == request.session['user_id']:
+        print("do edit")
+
+    return redirect('airbnbclone:index') 
+
+def get_amenities(amen):
+    a = None
+
+    try:
+        a = m.Amenity.objects.get(name = amen)
+    except:
+        print("amenity does not exist")
+        a = m.Amenity.objects.create(name = amen)
+    
+    return a
+
+    
+
 def create_listing(request):
 
     if 'user_id' not in request.session:
@@ -188,6 +215,9 @@ def create_listing(request):
             name = request.POST['html_name']
             desc = request.POST['html_desc']
 
+            amen = get_amenities("dryer")
+
+            
             listing = m.Listing.objects.create(
                 listing_type = listing_type,
                 privacy_type = privacy_type,
@@ -202,6 +232,9 @@ def create_listing(request):
                 desc = desc,
                 price = price,
             )
+
+            listing.amenities.add(amen)
+            listing.save()
 
         except:
             raise
