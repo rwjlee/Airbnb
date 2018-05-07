@@ -29,9 +29,11 @@ class Listing(models.Model):
     bath = models.IntegerField()
     bed = models.IntegerField()
     num_guests = models.IntegerField()
+    city = models.TextField(max_length=100, blank=True)
     country = models.TextField(max_length=100, blank=True)
     address = models.TextField(blank=True)
     amenities = models.ManyToManyField(Amenity, null=True)
+    price = models.FloatField(null=True)
     
     name = models.TextField(max_length=200)
     desc = models.TextField(blank=True)
