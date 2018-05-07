@@ -70,3 +70,9 @@
     background-position: center;
     height: 100vh;
 }
+
+.big-picture {
+    width: 100vw;
+    height: calc(100vh - 80px);
+    object-fit: cover;
+}

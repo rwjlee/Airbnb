@@ -8,14 +8,14 @@ from apps.airbnbclone.constants import MAP_API_KEY
 def index(request):
     return render(request, 'airbnbclone/index.html')
 
-def map(request):
+def result(request):
     query = request.GET["html_term".replace(" ", "+")]
-    
+
     context = {
         'api_key' : MAP_API_KEY,
         'query' : query
     }
-    return render(request, 'airbnbclone/map.html', context)
+    return render(request, 'airbnbclone/result.html', context)
 
 
     
