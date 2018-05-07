@@ -7,6 +7,7 @@ import googlemaps
 from datetime import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
+import json, requests
 
 # Create your views here.
 def index(request):
@@ -26,28 +27,34 @@ def edit_profile(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
     if request.method == 'POST':
-        if len(request.POST['html_email']) > 0:
-            try:
-                user = m.User.objects.update(
-                    username = request.POST['html_username'],
-                    email = request.POST['html_email'], 
-                    password = request.POST['html_password'],
-                    birthday = request.POST['html_birthday'],
-                    gender = request.POST['html_gender'],
-                    description = request.POST['html_description'])
-                request.session['username'] = user.username
-                request.session['user_id'] = user.id
-                request.session['email'] = user.email
-                request.session['birthday'] = user.birthday
-                request.session['gender'] = user.gender
-                request.session['description'] = user.description
-            except:
-                raise
-                messages.error(request,'Account already in use')
-                return redirect('airbnbclone:edit_profile')
+        try:
+            user = m.User.objects.get(id = request.session['user_id'])
+            user.username = request.POST['html_username']
+            user.password = request.POST['html_password']
+            user.birthday = request.POST['html_birthday']
+            print(request.POST['html_birthday'])
+            user.gender = request.POST['html_gender']
+            user.description = request.POST['html_description']
+            user.save()
+            request.session['username'] = user.username
+
+        except:
+            raise
+            messages.error(request,'Account already in use')
+            return redirect('airbnbclone:edit_profile')
 
         return redirect('airbnbclone:index')
-    return render(request, 'airbnbclone/edit_profile.html')
+
+    user = m.User.objects.get(id = request.session['user_id'])
+    print("*****")
+    print(str(user.birthday))
+    print("*****")
+    context = {
+        "user": user,
+        "birthday": str(user.birthday),
+        "gender_options": ["Male", "Female", "Other"]
+    }
+    return render(request, 'airbnbclone/edit_profile.html', context)
 
 def register(request):
     if 'user_id' in request.session:
@@ -120,6 +127,7 @@ def results(request):
         'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query))
     }
     listings = m.Listing.objects.filter()
+
     return render(request, 'airbnbclone/results.html', context)
 
 def become_a_host(request):
@@ -127,6 +135,14 @@ def become_a_host(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:register')
     return render(request, 'airbnbclone/create_listing.html')
+
+def get_url(address, city, country):
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address={},+{},+{}&key={}".format(address, city, country, MAP_API_KEY)
+    return url
+
+def get_json(url):
+    resp = requests.get(url)
+    return json.loads(resp.text)
 
 def create_listing(request):
 
@@ -142,10 +158,16 @@ def create_listing(request):
             bath = request.POST['html_bath']
             bed = request.POST['html_bed']
             num_guests= request.POST['html_num_guests']
+
             country = request.POST['html_country']
+            city = request.POST['html_city']
             address = request.POST['html_address']
+
+            price = request.POST['html_price']
+            
             name = request.POST['html_name']
             desc = request.POST['html_desc']
+
             listing = m.Listing.objects.create(
                 listing_type = listing_type,
                 privacy_type = privacy_type,
@@ -154,10 +176,13 @@ def create_listing(request):
                 bed = bed,
                 num_guests= num_guests,
                 country = country,
+                city = city,
                 address = address,
                 name = name,
-                desc = desc,    
+                desc = desc,
+                price = price,
             )
+            
         except:
             raise
             print('This is wrong')
