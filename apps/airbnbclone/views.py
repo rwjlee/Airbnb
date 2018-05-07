@@ -98,7 +98,7 @@ def check_length(request, data, name):
     return True
 
 
-def register(request):
+def edit_profile(request):
     if 'user_id' in request.session:
         return redirect('airbnbclone:index')
     if request.method == 'POST':
@@ -107,10 +107,35 @@ def register(request):
                 user = User.objects.create(
                     username = request.POST['html_username'],
                     email = request.POST['html_email'], 
-                    password = request.POST['html_password'])
+                    password = request.POST['html_password'],
+                    birthday = request.POST['html_birthday'])
                 request.session['username'] = user.username
                 request.session['user_id'] = user.id
                 request.session['email'] = user.email
+                request.session['birthday'] = user.birthday
+            except:
+                raise
+                messages.error(request,'Account already in use')
+                return redirect('airbnbclone:edit_profile')
+
+        return redirect('airbnbclone:index')
+    return render(request, 'airbnbclone/edit_profile.html')
+
+def register(request):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    if request.method == 'POST':
+        if len(request.POST['html_email']) > 0 and request.POST['html_password'] == request.POST['html_confirm']:
+            try:
+                user = User.objects.create(
+                    username = request.POST['html_username'],
+                    email = request.POST['html_email'], 
+                    password = request.POST['html_password'],
+                    birthday = request.POST['html_birthday'])
+                request.session['username'] = user.username
+                request.session['user_id'] = user.id
+                request.session['email'] = user.email
+                request.session['birthday'] = user.birthday
             except:
                 raise
                 messages.error(request,'Account already in use')

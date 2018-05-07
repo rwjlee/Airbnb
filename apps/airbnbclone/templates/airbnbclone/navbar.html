@@ -21,8 +21,8 @@
                 {{ request.session.username }}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="{% url 'airbnbclone:index' user_id=request.session.user_id %}">Edit Profile</a>
-                <a class="dropdown-item" href="{% url 'airbnbclone:index' %}">Logout</a>
+                <a class="dropdown-item" href="{% url 'airbnbclone:edit_profile' %}">Edit Profile</a>
+                <a class="dropdown-item" href="{% url 'airbnbclone:logout' %}">Logout</a>
               </div>
           
           {% else %}
