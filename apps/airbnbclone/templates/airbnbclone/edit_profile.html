@@ -1,7 +1,7 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">Update Profile</h3>
+    <h3 class="text-center">Edit Profile</h3>
     <form method="POST" action="{% url 'airbnbclone:edit_profile' %}" id="edit_profile-form">
         {% csrf_token %}
         <div class="form-group">
@@ -19,14 +19,26 @@
             <label for="inputBirthday" class="fineprint">To sign up, you must be 18 or older. Other people won’t see your birthday.</label>
             <input type="date" class="form-control" id="inputBirthday" placeholder="Your Birthday" name="html_birthday">
         </div>
+
         <div class="form-group">
             <label for="inputGender">I Am</label>
-            <input type="radio" class="form-control" id="inputGender" value="Male" name="html_gender">
-            <input type="radio" class="form-control" id="inputGender" value="Female" name="html_gender">
-            <input type="radio" class="form-control" id="inputGender" value="Other" name="html_gender">
+            <select class="form-control" id="inputGender" name="html_gender">
+                <option>Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+                <option>Etienne</option>
+            </select>
         </div>
+
         <div class="form-group">
-            <label for="inputPassword1">Change Password</label>
+            <label for="inputDescription">Describe Yourself</label>
+            <label for="inputBirthday" class="fineprint">Airbnb is built on relationships. Help other people get to know you. Tell them what it’s like to have you as a guest or host: What’s your style of traveling? Of Airbnb hosting?</label>
+            <textarea class="form-control" id="inputDescription" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="inputPassword1">Update Password</label>
             <input type="password" class="form-control" id="inputPassword1" placeholder="Create Password" name="html_password">
         </div>
         <button type="submit" class="btn btn-primary">Update Profile</button>
