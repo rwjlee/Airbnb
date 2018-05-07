@@ -19,7 +19,7 @@ class Amenity(models.Model):
 
 class Listing(models.Model):
 
-    host = models.ForeignKey(User, related_name = 'has_listings', on_delete=models.CASCADE)
+    host = models.ForeignKey(User, related_name = 'has_listings', null=True, on_delete=models.CASCADE)
     listing_type = models.TextField(max_length=50)
     privacy_type = models.TextField(max_length=10)
     bedroom = models.IntegerField()
@@ -28,7 +28,7 @@ class Listing(models.Model):
     num_guests = models.IntegerField()
     country = models.TextField(max_length=100, blank=True)
     address = models.TextField(blank=True)
-    amenities = models.ManyToManyField(Amenity, blank=True)
+    amenities = models.ManyToManyField(Amenity, null=True)
     
     name = models.TextField(max_length=200)
     desc = models.TextField(blank=True)

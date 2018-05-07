@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="row my-5">
+        <div class="col-6 offset-3">
+            <form action="{% url 'airbnbclone:create_listing' %}" method='POST'>
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" name="html_listing_type" id="" placeholder="listing_type" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="html_privacy_type" id="" placeholder="privacy type" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" name="html_bedroom" id="" placeholder="bedroom">
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" name="html_bath" id="" placeholder="bath">
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" name="html_bed" id="" placeholder="bed">
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" name="html_num_guests" id="" placeholder="guests">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="html_country" id="" placeholder="country">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="html_address" id="" placeholder="address">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="html_name" id="" placeholder="name">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="html_desc" id="" placeholder="desc">
+                </div>
+                
+                
+                <button class="btn btn-primary" role="submit">Save</button>
+    
+            </div>
+            </form>
+        </div>
+    
+    </div>
+    </div>
+
