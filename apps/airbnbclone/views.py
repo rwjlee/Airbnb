@@ -7,7 +7,7 @@ from apps.airbnbclone.models import User
 import googlemaps
 from datetime import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
-import apps.airbnbclone.models as m
+from apps.airbnbclone.models import User
 
 def index(request):
     return render(request, 'airbnbclone/index.html')
@@ -104,6 +104,7 @@ def listing(request):
     }
     return render(request, 'airbnbclone/listing.html', context)
 
+<<<<<<< HEAD
 def become_a_host(request):
 
     return render(request, 'airbnbclone/create_listing.html')
@@ -146,3 +147,6 @@ def create_listing(request):
         return redirect('airbnbclone:index')
 
     return render(request, 'airbnbclone/create_listing.html')
+=======
+
+>>>>>>> edcd3eefb8e1d53023cabebd928207b137f00668
