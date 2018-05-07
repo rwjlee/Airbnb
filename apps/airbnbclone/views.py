@@ -122,6 +122,9 @@ def listing(request, listing_id):
     print(room.address)
     return render(request, 'airbnbclone/listing.html', context)
 
+def filters(request):
+    return render(request, 'airbnbclone/filters.html')
+
 def results(request):
     query = request.GET['html_term']
     context = {
