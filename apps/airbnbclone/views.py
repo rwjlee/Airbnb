@@ -6,6 +6,7 @@ import apps.airbnbclone.models as m
 import googlemaps
 from datetime import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
+from django.db.models import Q
 
 # Create your views here.
 def index(request):
@@ -98,25 +99,33 @@ def logout(request):
     return redirect('airbnbclone:index')
 
 def listing(request, listing_id):
-    # query = request.GET["html_term".replace(" ", "+")]
 
-    room = m.Listing.objects.filter(listing_id = listing_id)
-    
+    try:
+        room = m.Listing.objects.get(id = listing_id)
+    except:
+        room = None
+        return redirect('airbnbclone:index')
 
     context = {
         'api_key' : MAP_API_KEY,
-        'address' : query
+        'room': room,
     }
+    print("listing got okay")
+    print(room.address)
     return render(request, 'airbnbclone/listing.html', context)
 
 def results(request):
-    return render(request, 'airbnbclone/results.html')
+    query = request.GET['html_term']
+    context = {
+        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(host__icontains=query) | Q(name__icontains=query))
+    }
+    listings = m.Listing.objects.filter()
+    return render(request, 'airbnbclone/results.html', context)
 
 def become_a_host(request):
 
     if 'user_id' not in request.session:
-        return redirect(request, 'airbnbclone:register')
-
+        return redirect('airbnbclone:register')
     return render(request, 'airbnbclone/create_listing.html')
 
 def create_listing(request):
