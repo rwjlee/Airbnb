@@ -93,8 +93,11 @@ def logout(request):
     request.session.clear()
     return redirect('airbnbclone:index')
 
-def listing(request):
-    query = request.GET["html_term".replace(" ", "+")]
+def listing(request, listing_id):
+    # query = request.GET["html_term".replace(" ", "+")]
+
+    room = m.Listing.objects.filter(listing_id = listing_id)
+    
 
     context = {
         'api_key' : MAP_API_KEY,
@@ -107,12 +110,15 @@ def results(request):
 
 def become_a_host(request):
 
+    if 'user_id' not in request.session:
+        return redirect(request, 'airbnbclone:register')
+
     return render(request, 'airbnbclone/create_listing.html')
 
 def create_listing(request):
 
-    # if 'user_id' in request.session:
-    #     return redirect('airbnbclone:index')
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
 
     if request.method == 'POST':
         try:
