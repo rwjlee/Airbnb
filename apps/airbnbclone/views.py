@@ -117,7 +117,7 @@ def listing(request, listing_id):
 def results(request):
     query = request.GET['html_term']
     context = {
-        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(host__icontains=query) | Q(name__icontains=query))
+        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query))
     }
     listings = m.Listing.objects.filter()
     return render(request, 'airbnbclone/results.html', context)
