@@ -7,22 +7,22 @@
         <div class="form-group">
             <label for="inputUserName1">Update Name</label>
             <input type="text" class="form-control" id="inputUserName1" aria-describedby="usernameHelp" placeholder="Enter Your Name"
-                name="html_username">
+                name="html_username" value="{{ request.session.username }}">
         </div>
         <div class="form-group">
             <label for="inputEmail1">Update Email Address</label>
             <input type="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp" placeholder="Enter Email Address"
-                name="html_email">
+                name="html_email" value="{{ request.session.email }}">
         </div>
         <div class="form-group">
             <label for="inputBirthday">Birth Date</label>
             <label for="inputBirthday" class="fineprint">To sign up, you must be 18 or older. Other people won’t see your birthday.</label>
-            <input type="date" class="form-control" id="inputBirthday" placeholder="Your Birthday" name="html_birthday">
+            <input type="date" class="form-control" id="inputBirthday" placeholder="Your Birthday" name="html_birthday"value="{{ request.session.birthday }}">
         </div>
 
         <div class="form-group">
             <label for="inputGender">I Am</label>
-            <select class="form-control" id="inputGender" name="html_gender">
+            <select class="form-control" id="inputGender" name="html_gender" value="{{ request.session.gender }}">
                 <option>Gender</option>
                 <option>Male</option>
                 <option>Female</option>
@@ -34,12 +34,12 @@
         <div class="form-group">
             <label for="inputDescription">Describe Yourself</label>
             <label for="inputBirthday" class="fineprint">Airbnb is built on relationships. Help other people get to know you. Tell them what it’s like to have you as a guest or host: What’s your style of traveling? Of Airbnb hosting?</label>
-            <textarea class="form-control" id="inputDescription" rows="3"></textarea>
+            <textarea class="form-control" id="inputDescription" rows="3" placeholder="Describe Yourself" name="html_description" value="{{ request.session.description }}"></textarea>
         </div>
 
         <div class="form-group">
             <label for="inputPassword1">Update Password</label>
-            <input type="password" class="form-control" id="inputPassword1" placeholder="Create Password" name="html_password">
+            <input type="password" class="form-control" id="inputPassword1" placeholder="Create Password" name="html_password" value="{{ request.session.password }}">
         </div>
         <button type="submit" class="btn btn-primary">Update Profile</button>
         <i class="fa fa-spinner ml-3 fa-spin" id="spinner" style="display: none"></i>

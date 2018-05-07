@@ -25,17 +25,21 @@ def edit_profile(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
     if request.method == 'POST':
-        if len(request.POST['html_email']) > 0 and request.POST['html_password'] == request.POST['html_confirm']:
+        if len(request.POST['html_email']) > 0:
             try:
-                user = m.User.objects.create(
+                user = m.User.objects.update(
                     username = request.POST['html_username'],
                     email = request.POST['html_email'], 
                     password = request.POST['html_password'],
-                    birthday = request.POST['html_birthday'])
+                    birthday = request.POST['html_birthday'],
+                    gender = request.POST['html_gender'],
+                    description = request.POST['html_description'])
                 request.session['username'] = user.username
                 request.session['user_id'] = user.id
                 request.session['email'] = user.email
                 request.session['birthday'] = user.birthday
+                request.session['gender'] = user.gender
+                request.session['description'] = user.description
             except:
                 raise
                 messages.error(request,'Account already in use')
