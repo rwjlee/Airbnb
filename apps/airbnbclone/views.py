@@ -8,6 +8,7 @@ import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
+import datetime
 
 # Create your views here.
 def index(request):
@@ -120,13 +121,19 @@ def view_profile(request, user_id):
     }
     return render(request, 'airbnbclone/view_profile.html', context)
 
+def cancel_booking(request, booking_id):
+    pass
+
 def my_bookings(request):
     user_id = request.session['user_id']
-    bookings = m.Booking.objects.filter(guest_id = user_id)
+    today = datetime.date.today()
+    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id)).all()
+    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id)).all()
 
     context = {
         'user_id': user_id,
-        'bookings': bookings
+        'current_bookings': current_bookings,
+        'past_bookings': past_bookings
     }
     return render(request, 'airbnbclone/my_bookings.html', context)
 
