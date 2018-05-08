@@ -8,7 +8,6 @@ import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
-import datetime
 
 # Create your views here.
 def index(request):
@@ -107,7 +106,6 @@ def logout(request):
     request.session.clear()
     return redirect('airbnbclone:index')
 
-
 def view_profile(request, user_id):
     try:
         profile = m.User.objects.get(id = user_id)
@@ -122,8 +120,22 @@ def view_profile(request, user_id):
     return render(request, 'airbnbclone/view_profile.html', context)
 
 def cancel_booking(request, booking_id):
-    pass
 
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    try:
+        booking = m.Booking.objects.get(id = booking_id)
+        user_id = request.session['user_id']
+
+        if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
+            booking.is_cancelled = 1
+            booking.save()
+    except:
+        return redirect('airbnbclone:index')
+
+    return redirect('airbnbclone:my_bookings')
+    
 def my_bookings(request):
     user_id = request.session['user_id']
     today = datetime.date.today()
@@ -189,9 +201,9 @@ def check_dates(start_date, end_date, listing_id):
     today = datetime.date.today()
     print(today)
     
-    # bookings = m.Booking.objects.filter(from_date__gte = today)
+    bookings = m.Booking.objects.filter(from_date__gte = today)
     
-    # print(bookings)
+    print(bookings)
 
     try:
         listing = m.Listing.objects.get(id=listing_id)
