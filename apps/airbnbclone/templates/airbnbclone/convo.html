@@ -1,18 +1,22 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">Conversation with NAME</h3>
+    {% for message in messages %}
+    <h3 class="text-center">Conversation with {{ message.recipient.username }}</h3>
+    {% endfor %}
     <hr>
-    <div class="largeprint">Conversation with Sarah</div>
-    <hr>
-    <div class="largeprint">Conversation with George</div>
-    <hr>
-    <div class="largeprint">Conversation with Tatiana</div>
-    <hr>
-    <div class="largeprint">Choose Your Next Adventure</div>
-    <div>Search for a
-        <a href="{% url 'airbnbclone:index' %}">great place to stay</a> on your next trip!</div>
-    <hr>
+    <form action="" method="post">
+        <div class="form-group">
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-outline-secondary pull-right">Send Message</button>
+    </form>
+    <hr> {% for message in messages %}
+    <div>{{ message.contents }}</div>
+    <div class="fineprint">Sent by {{ message.recipient.username }} on {{ message.created_at }}</div>
+    <hr> {% endfor %}
+
+
     <div class="largeprint">Current and Upcoming Trips</div>
     {% for booking in current_bookings %}
     <div class="listing-box">
