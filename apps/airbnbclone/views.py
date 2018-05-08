@@ -158,19 +158,32 @@ def all_messages(request):
     }
     return render(request, 'airbnbclone/all_messages.html', context)
 
-def convo(request, recipient_id):
+def convo(request, listing_id):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
 
-    messages = m.Message.objects.filter((Q(recipient_id = recipient_id) | Q(recipient_id = request.session['user_id']) & (Q(sender_id = recipient_id) | Q(sender_id = request.session['user_id'])))).order_by('-created_at')
+    listing = m.Listing.objects.get(id = listing_id)
+    messages = m.Message.objects.filter((Q(recipient_id = listing.host.id) & Q(listing_id = listing.id)) | (Q(recipient_id = request.session['user_id']) & Q(listing_id = listing.id))).order_by('-created_at')
 
     context = {
+        'listing': listing,
         'messages': messages,
     }
     return render(request, 'airbnbclone/convo.html', context)
 
-def send_message(request):
-    pass
+def send_message(request, listing_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    if request.method == 'POST':
+        if len(request.POST['html_contents']) > 0:
+            try:
+                message = m.Message.objects.create(
+                    contents = request.POST['html_contents'],
+                    sender_id = request.session['user_id'],
+                    recipient_id = 
+                )
+
+    return render(request, 'airbnbclone/convo.html')
 
 def authenticate_booking(request):
     if request.method== "POST":
@@ -311,36 +324,34 @@ def listing(request, listing_id):
 
 def get_price_range(request, input):
     if input == 1:
-        request.session['price'] = [0, 50]
+        request.session['price'] = [0.0, 50.0]
     elif input == 2:
-        request.session['price'] = [50, 100]
+        request.session['price'] = [50.0, 100.0]
     elif input == 3:
-        request.session['price'] = [100, 150]
+        request.session['price'] = [100.0, 150.0]
     elif input == 4:
-        request.session['price'] = [150, 200]
+        request.session['price'] = [150.0, 200.0]
     elif input == 5:
-        request.session['price'] = [200, 250]
+        request.session['price'] = [200.0, 250.0]
     elif input == 6:
-        request.session['price'] = [250, 300]
+        request.session['price'] = [250.0, 300.0]
     elif input == 7:
-        request.session['price'] = [300, 400]
+        request.session['price'] = [300.0, 400.0]
     elif input == 8:
-        request.session['price'] = [400, 500]
+        request.session['price'] = [400.0, 500.0]
     elif input == 9:
-        request.session['price'] = 500
+        request.session['price'] = 500.0
     else:
-        request.session['price'] = [0, 1000]
+        request.session['price'] = [0.0, 1000.0]
 
 def filters(request):
     request.session['from_date'] = request.POST["fromDate"]
     request.session['to_date'] = request.POST["toDate"]
 
     if request.POST['guests'] != "Guests":
-        request.session['guests'] = request.POST["guests"]
-        print(request.session['guests'] )
+        request.session['guests'] = int(request.POST["guests"])
     if request.POST['homeType'] != "Home Type":
         request.session['home_type'] = request.POST["homeType"]
-        print(request.session['home_type'])
     if request.POST['price'] != 'Price':
         get_price_range(request, int(request.POST["price"]))
     
@@ -350,42 +361,46 @@ def filter_by_date(request):
     pass
         
 def results(request):
-    query = request.GET['html_term']
     results = []
-    for listing in m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query)):
-        results.append(listing)
-
-    print(results)
+    if len(request.GET['html_term']) != 0:
+        query = request.GET['html_term']
+        for listing in m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query)):
+            results.append(listing)
 
     if 'guests' in request.session:
         for listing in m.Listing.objects.filter(num_guests=request.session['guests']):
             if listing not in results:
                 results.append(listing)
-            for result in results:
-                if request.session['guests'] != result.num_guests:
-                    results.remove(result)
-
-    print(results)
-            
+        for result in results:
+            if request.session['guests'] != result.num_guests:
+                results.remove(result)
+    
     if 'home_type' in request.session:
         for listing in m.Listing.objects.filter(privacy_type=request.session['home_type']):
             if listing not in results:
                 results.append(listing)
-            for result in results:
-                if request.session['home_type'] != result.privacy_type:
-                    results.remove(result)
+        for result in results:
+            if request.session['home_type'] != result.privacy_type:
+                results.remove(result)
 
-    print(results)
 
     if 'price' in request.session:
-        for listing in m.Listing.objects.filter(price=request.session['price']):
+        lower = request.session['price'][0]
+        higher = request.session['price'][1]
+        print(request.session['price'])
+        for listing in m.Listing.objects.filter(price__gte=lower).filter(price__lte=higher):
             if listing not in results:
                 results.append(listing)
-            for result in results:
-                if request.session['price'] != result.price:
-                    results.remove(result)
-    
-    print(results)
+
+        appender = []
+        for result in results:
+            if not(lower < result.price < higher):
+                appender.append(result)
+
+        for append in appender:
+            if append in results:
+                results.remove(append)
+
 
     context = {
         'listings' : results
