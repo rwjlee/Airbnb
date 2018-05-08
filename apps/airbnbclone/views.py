@@ -292,6 +292,6 @@ def create_listing(request):
             print('This is wrong')
             return redirect('airbnbclone:index')
 
-        return redirect('airbnbclone:index')
+        return redirect('airbnbclone:listing', listing.id)
 
     return render(request, 'airbnbclone/create_listing.html')
