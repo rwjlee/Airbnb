@@ -114,13 +114,21 @@ def view_profile(request, user_id):
     except:
         profile = None
         return redirect('airbnbclone:index')
-
     context = {
         'profile': profile,
         'listings': listings
     }
-
     return render(request, 'airbnbclone/view_profile.html', context)
+
+def my_bookings(request):
+    user_id = request.session['user_id']
+    bookings = m.Booking.objects.filter(guest_id = user_id)
+
+    context = {
+        'user_id': user_id,
+        'bookings': bookings
+    }
+    return render(request, 'airbnbclone/my_bookings.html', context)
 
 def authenticate_booking(request):
     if request.method== "POST":
