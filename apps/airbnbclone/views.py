@@ -203,14 +203,8 @@ def check_dates(start_date, end_date, listing_id):
     today = datetime.date.today()
     print(today)
     
-    if (start_date > end_date):
-        print("yes")
-    else:
-        print("no")
-
-    bookings = m.Booking.objects.filter(from_date__gte = today)
-    
-    print(bookings)
+    if (end_date <= start_date):
+        return False
 
     try:
         listing = m.Listing.objects.get(id=listing_id)
@@ -222,7 +216,10 @@ def check_dates(start_date, end_date, listing_id):
 check_dates("2000-11-12", "2000-11-11", 1)
 
 def update_availability(add_date, listing_id, available):
-    pass
+    try:
+        listing = m.Listing.objects.get(id = listing_id)
+    except:
+        pass
 
 
 def listing(request, listing_id):
