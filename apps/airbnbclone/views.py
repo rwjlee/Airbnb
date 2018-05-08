@@ -224,7 +224,7 @@ def check_dates(start_date, end_date, listing_id):
 
 check_dates("2000-11-12", "2000-11-11", 1)
 
-def update_avail(add_date, listing_id, available):
+def update_avail_one(add_date, listing_id, available):
     try:
         listing = m.Listing.objects.get(id = listing_id)
 
@@ -235,17 +235,31 @@ def update_avail(add_date, listing_id, available):
             print("=======available========")
         else:
             new_avail = m.Availability.objects.create(listing_id = listing_id, available=available, one_day = add_date)
-            print(new_avail.list.host.username)
+            print(new_avail.listing.host.username)
             print("========not available=======")
     except:
         raise
         print("cannot update")
 
-update_avail("2018-05-08", 5, 0)
+def update_avail(start_date, end_date, listing_id, available):
+   
+    mydates = pd.date_range(start_date, end_date).tolist()
+    d_range = [d.date() for d in mydates[:-1]]
+    
+    if available:
+        for day in d_range:
+            update_avail_one(day, listing_id, available)
 
-def update_avail_one(start_date, end_date, listing_id, available):
+
+def find_avail(one_day, listing_id):
     pass
 
+
+# listing = m.Listing.objects.get(id = 5)
+
+# for avail in listing.has_availability.all().order_by("-one_day"):
+#     print(avail.one_day)
+#     print(avail.available)
 
 def listing(request, listing_id):
     print("1111111 {}".format(request.method))
