@@ -70,8 +70,9 @@ class Availability(models.Model):
 
 class Message(models.Model):
     contents = models.TextField(max_length=500, default=None, null=True)
-    sender = models.ForeignKey(User, related_name = 'sends_message', on_delete=models.CASCADE)
-    recipient = models.ForeignKey(User, related_name = 'receives_message', on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, related_name= 'convo_about', on_delete=models.CASCADE, default=None)
+    sender = models.ForeignKey(User, related_name = 'sends_message', on_delete=models.CASCADE, default=None)
+    recipient = models.ForeignKey(User, related_name = 'receives_message', on_delete=models.CASCADE, default=None)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
