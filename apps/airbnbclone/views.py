@@ -8,6 +8,7 @@ import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
+import pandas as pd
 
 # Create your views here.
 def index(request):
@@ -148,8 +149,27 @@ def my_bookings(request):
     }
     return render(request, 'airbnbclone/my_bookings.html', context)
 
-def messages(request):
-    return render(request, 'airbnbclone/messages.html')
+def all_messages(request):
+    messages = m.Message.objects.all()
+
+    context = {
+        'messages': messages,
+    }
+    return render(request, 'airbnbclone/all_messages.html', context)
+
+def convo(request, recipient_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    messages = m.Message.objects.filter((Q(recipient_id = recipient_id) | Q(recipient_id = request.session['user_id']) & (Q(sender_id = recipient_id) | Q(sender_id = request.session['user_id'])))).order_by('-created_at')
+
+    context = {
+        'messages': messages,
+    }
+    return render(request, 'airbnbclone/convo.html', context)
+
+def send_message(request):
+    pass
 
 def authenticate_booking(request):
     if request.method== "POST":
@@ -178,7 +198,10 @@ def create_booking(request):
     charge = float(request.POST["html_charge"]) * 5
     listing_id = request.POST["html_listing_id"]
 
-    if not check_dates(checkin, checkout, listing_id):
+    avail_list = check_dates(checkin, checkout, listing_id)
+    date_list, open_list = zip(*avail_list)
+
+    if False in open_list:
         return None
 
     try:
@@ -191,6 +214,7 @@ def create_booking(request):
             charge_amount = charge,
         )
         
+        
     except:
         raise
     
@@ -198,32 +222,55 @@ def create_booking(request):
 
     return booking
 
-def check_dates(start_date, end_date, listing_id):
-    print("in check date")
-    today = datetime.date.today()
-    print(today)
-    
-    if (start_date > end_date):
-        print("yes")
-    else:
-        print("no")
-
-    bookings = m.Booking.objects.filter(from_date__gte = today)
-    
-    print(bookings)
-
+def update_avail_one(add_date, listing_id, available):
     try:
-        listing = m.Listing.objects.get(id=listing_id)
+        avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = add_date)).first()
+        if avail:
+            avail.available = available
+            avail.save()
+            print("=======available========")
+        else:
+            avail = m.Availability.objects.create(listing_id = listing_id, available=available, one_day = add_date)
+            print(avail.listing.host.username)
+            print("========not available=======")
     except:
-        return False
+        raise
+        print("cannot update")
+        return None
 
-    return True
+    return avail
 
-check_dates("2000-11-12", "2000-11-11", 1)
+def update_avail(start_date, end_date, listing_id, available):
 
-def update_availability(add_date, listing_id, available):
-    pass
+    if start_date >= end_date:
+        return None
 
+    mydates = pd.date_range(start_date, end_date).tolist()
+    d_range = [d.date() for d in mydates[:-1]]
+    avail_list = [update_avail_one(day, listing_id, available) for day in d_range]
+
+    return avail_list
+
+def find_avail(one_date, listing_id):
+    try:
+        avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = one_date)).first()
+        if avail.available == 1:
+            return (one_date, True)
+        else:
+            return (one_date, False)
+    except:
+        return (one_date, False)
+
+
+def check_dates(start_date, end_date, listing_id):
+    if (end_date <= start_date):
+        return None
+
+    mydates = pd.date_range(start_date, end_date).tolist()
+    d_range = [d.date() for d in mydates[:-1]]
+    avail_list = [find_avail(day, listing_id) for day in d_range]
+
+    return avail_list
 
 def listing(request, listing_id):
     print("1111111 {}".format(request.method))

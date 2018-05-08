@@ -3,8 +3,15 @@
 <div class="card my-4 col-6 offset-3 p-5">
     <h3 class="text-center">My Messages</h3>
     <hr>
-    <div class="largeprint">Conversation with Sarah</div>
+
+
+    {% for message in messages %}
+    <div class="largeprint">Conversation with {{ message.recipient.username }}</div>
+    <div>{{ message.contents }}</div>
+    <div class="fineprint">Sent on {{ message.created_at }}</div>
     <hr>
+    {% endfor %}
+
     <div class="largeprint">Conversation with George</div>
     <hr>
     <div class="largeprint">Conversation with Tatiana</div>
