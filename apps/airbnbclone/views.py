@@ -180,8 +180,10 @@ def send_message(request, listing_id):
                 message = m.Message.objects.create(
                     contents = request.POST['html_contents'],
                     sender_id = request.session['user_id'],
-                    recipient_id = 
+                    # recipient_id = 
                 )
+            except:
+                pass
 
     return render(request, 'airbnbclone/convo.html')
 
