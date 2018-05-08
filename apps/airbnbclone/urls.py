@@ -15,6 +15,7 @@ urlpatterns = [
     path('edit_profile', views.edit_profile, name='edit_profile'),
     path('view_profile/<int:user_id>', views.view_profile, name='view_profile'),
     path('listing/<int:listing_id>', views.listing, name='listing'),
+   
     path('results', views.results, name='results'),
     path('filters', views.filters, name='filters'),
     path('authenticate_booking', views.authenticate_booking, name='authenticate_booking'),
@@ -22,4 +23,5 @@ urlpatterns = [
     path('test_booking', views.test_booking, name='test_booking'),
     path('my_bookings', views.my_bookings, name='my_bookings'),
     path('messages', views.messages, name='messages'),
+    path('cancel_booking/<int:booking_id>', views.cancel_booking, name='cancel_booking'),
 ]

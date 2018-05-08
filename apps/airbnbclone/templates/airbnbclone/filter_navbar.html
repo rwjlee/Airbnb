@@ -1,0 +1,83 @@
+{% load static %}
+<script src="{% static 'airbnbclone/lib/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'airbnbclone/lib/popper.min.js' %}"></script>
+<script src="{% static 'airbnbclone/lib/bootstrap.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
+<script src="{% static 'airbnbclone/js/utilities.js' %}"></script>
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+
+        <div class="container">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav mr-auto">
+            <li>From</li>
+            <input type="date" name="from_date">
+            <li>To</li>
+            <input type="date" name="to_date">
+                <form action="{% url 'airbnbclone:filters' %}" method="POST" class="filter-form">
+                    <select class="Guests" name="guests" >
+                    <option selected>Guests</option>
+                        <option value="1">1 guest</option>
+                        <option value="2">2 guests</option>
+                        <option value="3">3 guests</option>
+                        <option value="4">4 guests</option>
+                        <option value="5">5 guests</option>
+                        <option value="6">6 guests</option>
+                        <option value="7">7 guests</option>
+                        <option value="8">8 guests</option>
+                        <option value="9">9 guests</option>
+                        <option value="10">10 guests</option>
+                    </select>
+                    <select class="Hometype" name="hometype" >
+                        <option selected>Home Type</option>
+                        <option value="Entire Place">Entire Place</option>
+                        <option value="Private Room">Private Room</option>
+                        <option value="Shared Room">Shared Room</option>
+                    </select>
+                    <select class="Price" name="price">
+                        <option selected>Price</option>
+                        <option value="1">$0 - 50</option>
+                        <option value="2">$50 - 100 </option>
+                        <option value="3">$100 - 150</option>
+                        <option value="4">$150 - 200</option>
+                        <option value="5">$200 - 250</option>
+                        <option value="6">$250 - 300</option>
+                        <option value="7">$300 - 400</option>
+                        <option value="8">$400 - 500</option>
+                        <option value="9">$500 +</option>
+                    </select>
+                </form>
+                <button class="btn apply btn-outline-success my-2 my-sm-0" type="submit">Apply</button>
+          </ul>
+          <ul class="navbar-nav"></ul>
+          </ul>
+        </div>
+        </div>
+    </nav>
+
+    {% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $(".apply").click(function(event) {
+                event.preventDefault()
+                $.ajax({
+                    beforeSend: setCsrfToken,
+                    type: "POST",
+                    url: $(".filter-form").attr("action"),
+                    data: {
+                    'fromDate' : $("input[name=from_date]").val(),
+                    'toDate' : $("input[name=to_date]").val(),
+                    'guests' : $("select[name=guests]").val(),
+                    'homeType' : $("select[name=hometype]").val(),
+                    'price' : $("select[name=price]").val()
+                    },
+                    success: function (response) {
+                        
+                    }
+                });
+            });
+        });
+    
+    </script>
+    {% endblock %}

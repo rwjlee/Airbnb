@@ -1,26 +1,8 @@
 {% extends 'airbnbclone/base.html' %}
 
 {% block body %}
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+{% include 'airbnbclone/filter_navbar.html' %}
 
-        <div class="container">
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav mr-auto">
-            <li>From</li>
-            <input type="date">
-            <li>To</li>
-            <input type="date">
-            <li>
-              <a href="">
-                More Filters
-              </a>
-            </li>
-          </ul>
-          <ul class="navbar-nav"></ul>
-          </ul>
-        </div>
-        </div>
-    </nav>
 <div class="results_container">
     <div class="homes">
         <p>300 + Homes</p>
@@ -31,7 +13,7 @@
             </a>
             <p>{{listing.listing_type}}, {{listing.bed}} beds</p>
             <p>{{listing.name}}</p>
-            <p>from PRICE per night - Free cancellation</p>
+            <p>from {{listing.price}} per night - Free cancellation</p>
             <p>5/5 stars</p>
 
         </div>

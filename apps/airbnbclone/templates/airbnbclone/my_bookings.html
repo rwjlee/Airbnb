@@ -10,8 +10,13 @@
     <div class="largeprint">Current and Upcoming Trips</div>
     {% for booking in current_bookings %}
     <div class="listing-box">
-        <div class="largeprint">
-            <a href="{% url 'airbnbclone:listing' listing_id=booking.home_listing.id %}">{{ booking.home_listing.name }}</a>
+        <div class="row justify-content-between">
+            <div class="largeprint col-8">
+                <a href="{% url 'airbnbclone:listing' listing_id=booking.home_listing.id %}">{{ booking.home_listing.name }}</a>
+            </div>
+            <div class="col-2 mr-3">
+                <a class="btn btn-danger" href="{% url 'airbnbclone:cancel_booking' booking_id=booking.id %}">Cancel</a>
+            </div>
         </div>
         <div>{{ booking.from_date }} to {{ booking.to_date }}</div>
         <div class="fineprint">{{ booking.home_listing.desc }}</div>

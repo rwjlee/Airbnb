@@ -8,7 +8,6 @@ import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
-import datetime
 
 # Create your views here.
 def index(request):
@@ -107,7 +106,6 @@ def logout(request):
     request.session.clear()
     return redirect('airbnbclone:index')
 
-
 def view_profile(request, user_id):
     try:
         profile = m.User.objects.get(id = user_id)
@@ -122,8 +120,22 @@ def view_profile(request, user_id):
     return render(request, 'airbnbclone/view_profile.html', context)
 
 def cancel_booking(request, booking_id):
-    pass
 
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    try:
+        booking = m.Booking.objects.get(id = booking_id)
+        user_id = request.session['user_id']
+
+        if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
+            booking.is_cancelled = 1
+            booking.save()
+    except:
+        return redirect('airbnbclone:index')
+
+    return redirect('airbnbclone:my_bookings')
+    
 def my_bookings(request):
     user_id = request.session['user_id']
     today = datetime.date.today()
@@ -192,9 +204,9 @@ def check_dates(start_date, end_date, listing_id):
     today = datetime.date.today()
     print(today)
     
-    # bookings = m.Booking.objects.filter(from_date__gte = today)
+    bookings = m.Booking.objects.filter(from_date__gte = today)
     
-    # print(bookings)
+    print(bookings)
 
     try:
         listing = m.Listing.objects.get(id=listing_id)
@@ -231,15 +243,88 @@ def listing(request, listing_id):
     # pprint(geo_address)
     return render(request, 'airbnbclone/listing.html', context)
 
-def filters(request):
-    return render(request, 'airbnbclone/filters.html')
+def get_price_range(request, input):
+    if input == 1:
+        request.session['price'] = [0, 50]
+    elif input == 2:
+        request.session['price'] = [50, 100]
+    elif input == 3:
+        request.session['price'] = [100, 150]
+    elif input == 4:
+        request.session['price'] = [150, 200]
+    elif input == 5:
+        request.session['price'] = [200, 250]
+    elif input == 6:
+        request.session['price'] = [250, 300]
+    elif input == 7:
+        request.session['price'] = [300, 400]
+    elif input == 8:
+        request.session['price'] = [400, 500]
+    elif input == 9:
+        request.session['price'] = 500
+    else:
+        request.session['price'] = [0, 1000]
 
+def filters(request):
+    request.session['from_date'] = request.POST["fromDate"]
+    print(request.session['from_date'])
+    request.session['to_date'] = request.POST["toDate"]
+    print(request.session['to_date'])
+
+    if request.POST['guests'] != "Guests":
+        request.session['guests'] = request.POST["guests"]
+        print(request.session['guests'] )
+    if request.POST['homeType'] != "Home Type":
+        request.session['home_type'] = request.POST["homeType"]
+        print(request.session['home_type'])
+    if request.POST['price'] != 'Price':
+        get_price_range(request, int(request.POST["price"]))
+    
+    return JsonResponse({})
+        
 def results(request):
     query = request.GET['html_term']
+    results = []
+    for listing in m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query)):
+        results.append(listing)
+
+    if 'guests' in request.session:
+        for listing in m.Listing.objects.filter(num_guests=request.session['guests']):
+            if listing not in results:
+                results.append(listing)
+            for result in results:
+                if request.session['guests'] != result.num_guests:
+                    results.remove(result)
+            
+    if 'home_type' in request.session:
+        for listing in m.Listing.objects.filter(privacy_type=request.session['home_type']):
+            if listing not in results:
+                results.append(listing)
+            for result in results:
+                if request.session['home_type'] != result.privacy_type:
+                    results.remove(result)
+
+    if 'price' in request.session:
+        for listing in m.listing.objects.filter(price=request.session['price']):
+            if listing not in results:
+                results.append(listing)
+            for result in results:
+                if request.session['price'] != result.price:
+                    results.remove(result)
+    
+    print(results)
+
     context = {
-        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query))
+        'listings' : results
     }
-    listings = m.Listing.objects.filter()
+    if 'guests' in request.session:
+        del request.session['guests']
+
+    if 'home_type' in request.session:
+        del request.session['home_type']
+    
+    if 'price' in request.session:
+        del request.session['price']
 
     return render(request, 'airbnbclone/results.html', context)
 
