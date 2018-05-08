@@ -150,7 +150,15 @@ def my_bookings(request):
     return render(request, 'airbnbclone/my_bookings.html', context)
 
 def messages(request):
-    return render(request, 'airbnbclone/messages.html')
+    messages = m.Message.objects.all()
+
+    context = {
+        'messages': messages,
+    }
+    return render(request, 'airbnbclone/messages.html', context)
+
+def convo(request):
+    return render(request, 'airbnbclone/convo.html')
 
 def authenticate_booking(request):
     if request.method== "POST":
