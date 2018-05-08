@@ -266,7 +266,6 @@ def create_listing(request):
             desc = request.POST['html_desc']
 
             amen = get_amenities("dryer")
-
             
             listing = m.Listing.objects.create(
                 listing_type = listing_type,
@@ -281,8 +280,10 @@ def create_listing(request):
                 name = name,
                 desc = desc,
                 price = price,
+                host_id = host,
             )
 
+            listing.active = True
             listing.amenities.add(amen)
             listing.save()
 
