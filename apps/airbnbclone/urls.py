@@ -22,7 +22,7 @@ urlpatterns = [
     
     path('test_booking', views.test_booking, name='test_booking'),
     path('my_bookings', views.my_bookings, name='my_bookings'),
-    path('messages', views.messages, name='messages'),
-    path('convo', views.convo, name='convo'),
+    path('all_messages', views.all_messages, name='all_messages'),
+    path('convo/<int:recipient_id>', views.convo, name='convo'),
     path('cancel_booking/<int:booking_id>', views.cancel_booking, name='cancel_booking'),
 ]
