@@ -130,6 +130,7 @@ def cancel_booking(request, booking_id):
 
         if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
             booking.is_cancelled = 1
+            update_avail(booking.from_date, booking.to_date, booking.home_listing_id, 1)
             booking.save()
     except:
         return redirect('airbnbclone:index')
@@ -213,7 +214,7 @@ def create_booking(request):
             guests = guests,
             charge_amount = charge,
         )
-        update_avail(checkin, checkout, listing_id, 0)
+        update_avail(booking.from_date, booking.to_date, listing_id, 0)
         
     except:
         raise
