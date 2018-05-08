@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from pprint import pprint
 import apps.airbnbclone.models as m
 import googlemaps
-from datetime import datetime
+import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
@@ -106,7 +106,6 @@ def logout(request):
     request.session.clear()
     return redirect('airbnbclone:index')
 
-
 def view_profile(request, user_id):
     try:
         profile = m.User.objects.get(id = user_id)
@@ -120,13 +119,33 @@ def view_profile(request, user_id):
     }
     return render(request, 'airbnbclone/view_profile.html', context)
 
+def cancel_booking(request, booking_id):
+
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    try:
+        booking = m.Booking.objects.get(id = booking_id)
+        user_id = request.session['user_id']
+
+        if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
+            booking.is_cancelled = 1
+            booking.save()
+    except:
+        return redirect('airbnbclone:index')
+
+    return redirect('airbnbclone:my_bookings')
+    
 def my_bookings(request):
     user_id = request.session['user_id']
-    bookings = m.Booking.objects.filter(guest_id = user_id)
+    today = datetime.date.today()
+    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id)).all()
+    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id)).all()
 
     context = {
         'user_id': user_id,
-        'bookings': bookings
+        'current_bookings': current_bookings,
+        'past_bookings': past_bookings
     }
     return render(request, 'airbnbclone/my_bookings.html', context)
 
@@ -179,6 +198,13 @@ def create_booking(request):
 
 def check_dates(start_date, end_date, listing_id):
     print("in check date")
+    today = datetime.date.today()
+    print(today)
+    
+    bookings = m.Booking.objects.filter(from_date__gte = today)
+    
+    print(bookings)
+
     try:
         listing = m.Listing.objects.get(id=listing_id)
     except:
@@ -186,6 +212,12 @@ def check_dates(start_date, end_date, listing_id):
         return False
 
     return True
+
+check_dates("2000-11-11", "1999-2-3", 1)
+
+def update_availability(add_date, listing_id, available):
+    pass
+
 
 def listing(request, listing_id):
     print("1111111 {}".format(request.method))
