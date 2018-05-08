@@ -213,7 +213,7 @@ def create_booking(request):
             guests = guests,
             charge_amount = charge,
         )
-        
+        update_avail(checkin, checkout, listing_id, 0)
         
     except:
         raise
