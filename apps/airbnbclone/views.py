@@ -137,6 +137,9 @@ def my_bookings(request):
     }
     return render(request, 'airbnbclone/my_bookings.html', context)
 
+def messages(request):
+    return render(request, 'airbnbclone/messages.html')
+
 def authenticate_booking(request):
     if request.method== "POST":
         booking = create_booking(request)
