@@ -8,6 +8,7 @@ import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
+import pandas as pd
 
 # Create your views here.
 def index(request):
@@ -215,11 +216,27 @@ def check_dates(start_date, end_date, listing_id):
 
 check_dates("2000-11-12", "2000-11-11", 1)
 
-def update_availability(add_date, listing_id, available):
+def update_avail(add_date, listing_id, available):
     try:
         listing = m.Listing.objects.get(id = listing_id)
+
+        avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = add_date)).first()
+        if avail:
+            avail.available = available
+            avail.save()
+            print("=======available========")
+        else:
+            new_avail = m.Availability.objects.create(listing_id = listing_id, available=available, one_day = add_date)
+            print(new_avail.list.host.username)
+            print("========not available=======")
     except:
-        pass
+        raise
+        print("cannot update")
+
+update_avail("2018-05-08", 5, 0)
+
+def update_avail_one(start_date, end_date, listing_id, available):
+    pass
 
 
 def listing(request, listing_id):
