@@ -359,10 +359,16 @@ def results(request):
         for listing in m.Listing.objects.filter(price__gte=lower).filter(price__lte=higher):
             if listing not in results:
                 results.append(listing)
+
+        appender = []
         for result in results:
-            if result.price < lower and result.price > higher:
-                results.remove(result)
-        print(results)
+            if not(lower < result.price < higher):
+                appender.append(result)
+
+        for append in appender:
+            if append in results:
+                results.remove(append)
+
 
     context = {
         'listings' : results
