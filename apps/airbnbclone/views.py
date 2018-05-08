@@ -120,7 +120,6 @@ def view_profile(request, user_id):
     return render(request, 'airbnbclone/view_profile.html', context)
 
 def cancel_booking(request, booking_id):
-
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
 
@@ -172,12 +171,12 @@ def test_booking(request):
     return render(request, 'airbnbclone/booking.html')
 
 def create_booking(request):
-    listing_id = request.POST["html_listing_id"]
     user_id = request.POST["html_user_id"]
     checkin = request.POST["html_checkin"]
     checkout = request.POST["html_checkout"]
     guests = request.POST["html_guests"]
     charge = float(request.POST["html_charge"]) * 5
+    listing_id = request.POST["html_listing_id"]
 
     if not check_dates(checkin, checkout, listing_id):
         return None

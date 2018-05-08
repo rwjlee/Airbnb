@@ -5,6 +5,7 @@
 <div class="listing-banner">
   <img src="https://a0.muscache.com/im/pictures/27217858/9d9dabee_original.jpg?aki_policy=xx_large" alt="Image here" class="big-picture">
   <a href="" class="view-photos">View Photos</a>
+  <button class="btn"> click here </button>
 </div>
 
 <div class="container">
@@ -80,7 +81,7 @@
       <div class="form-group">
           <input type="number" name="html_guests" id="numguests" placeholder="Guests" class="form-control">
       </div>
-      <button class="btn btn-danger col-12">Book</button>
+      <button class="btn book-btn btn-danger col-12">Book</button>
     </form>
     </div>
 
@@ -130,10 +131,9 @@
                     "html_checkin": $("input[name=html_checkin]").val(),
                     "html_checkout": $("input[name=html_checkout]").val(),
                     "html_guests": $("input[name=html_guests]").val(),
-                    "html_listing_id": "{{room.id}}",
                     "html_user_id": "{{request.session.user_id}}",
+                    "html_listing_id": "{{room.id}}",
                     "html_charge": "{{room.price}}",
-                    
                 },
                 success: function (response) {
                     console.log(response);
