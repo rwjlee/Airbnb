@@ -139,10 +139,22 @@ def listing(request, listing_id):
     return render(request, 'airbnbclone/listing.html', context)
 
 def filters(request):
-    return render(request, 'airbnbclone/filters.html')
-
+    request.session['from_date'] = request.POST["fromDate"]
+    print(request.session['from_date'])
+    request.session['to_date'] = request.POST["toDate"]
+    print(request.session['to_date'])
+    request.session['guests'] = request.POST["guests"]
+    print(request.session['guests'] )
+    request.session['home_type'] = request.POST["homeType"]
+    print(request.session['home_type'])
+    request.session['price'] = request.POST["price"]
+    print(request.session['price'])
+    print (request.session)
+    return JsonResponse({})
+        
 def results(request):
     query = request.GET['html_term']
+
     context = {
         'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query))
     }
