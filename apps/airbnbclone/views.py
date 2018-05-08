@@ -194,6 +194,26 @@ def listing(request, listing_id):
     # pprint(geo_address)
     return render(request, 'airbnbclone/listing.html', context)
 
+def get_price_range(input):
+    if input == 1:
+        request.session['price'] = [0, 50]
+    elif input == 2:
+        request.session['price'] = [50, 100]
+    elif input == 3:
+        request.session['price'] = [100, 150]
+    elif input == 4:
+        request.session['price'] = [150, 200]
+    elif input == 5:
+        request.session['price'] = [200, 250]
+    elif input == 6:
+        request.session['price'] = [250, 300]
+    elif input == 7:
+        request.session['price'] = [300, 400]
+    elif input == 8:
+        request.session['price'] = [400, 500]
+    elif input == 9:
+        request.session['price'] = 500
+
 def filters(request):
     request.session['from_date'] = request.POST["fromDate"]
     print(request.session['from_date'])
@@ -203,19 +223,19 @@ def filters(request):
     print(request.session['guests'] )
     request.session['home_type'] = request.POST["homeType"]
     print(request.session['home_type'])
-    request.session['price'] = request.POST["price"]
-    print(request.session['price'])
-    print (request.session)
+    get_price_range(int(request.POST["price"]))
     return JsonResponse({})
         
 def results(request):
     query = request.GET['html_term']
-
+    print('------------')
+    print(request.session['price'])
+    print('------------')
+    
+    
     context = {
-        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query))
+        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query) | Q(num_guests=request.session['guests']) | Q(privacy_type=request.session['home_type']) | Q(price__gte=request.session['price'][0]) & Q(price__lte=request.session['price'][1]))
     }
-    listings = m.Listing.objects.filter()
-
     return render(request, 'airbnbclone/results.html', context)
 
 def become_a_host(request):
