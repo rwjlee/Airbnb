@@ -249,7 +249,7 @@ def create_booking(request):
             home_listing_id = listing_id, 
             from_date = checkin,
             to_date = checkout,
-            guests = guests,
+            num_guests = guests,
             charge_amount = charge,
         )
         print("-------{}---------".format(booking.id))
@@ -300,7 +300,6 @@ def find_avail(one_date, listing_id):
             return (one_date, False)
     except:
         return (one_date, False)
-
 
 def check_dates(start_date, end_date, listing_id):
     if (end_date <= start_date):
@@ -384,11 +383,11 @@ def results(request):
             results.append(listing)
 
     if 'guests' in request.session:
-        for listing in m.Listing.objects.filter(num_guests=request.session['guests']):
+        for listing in m.Listing.objects.filter(max_guests=request.session['guests']):
             if listing not in results:
                 results.append(listing)
         for result in results:
-            if request.session['guests'] != result.num_guests:
+            if request.session['guests'] != result.max_guests:
                 results.remove(result)
     
     if 'home_type' in request.session:
@@ -480,7 +479,7 @@ def create_listing(request):
             bedroom = request.POST['html_bedroom']
             bath = request.POST['html_bath']
             bed = request.POST['html_bed']
-            num_guests= request.POST['html_num_guests']
+            max_guests= request.POST['html_max_guests']
 
             country = request.POST['html_country']
             city = request.POST['html_city']
@@ -499,7 +498,7 @@ def create_listing(request):
                 bedroom = bedroom,
                 bath = bath,
                 bed = bed,
-                num_guests= num_guests,
+                max_guests= max_guests,
                 country = country,
                 city = city,
                 address = address,
@@ -521,3 +520,7 @@ def create_listing(request):
         return redirect('airbnbclone:listing', listing.id)
 
     return render(request, 'airbnbclone/create_listing.html')
+
+def save_favorite(request):
+    pass
+    

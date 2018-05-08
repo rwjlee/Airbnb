@@ -36,7 +36,7 @@
       <h3>{{room.listing_type}}</h3>
       <h2>{{room.name}}</h2>
       <p>{{room.city}}, {{room.country}}</p>
-      <p>{{room.num_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
+      <p>{{room.max_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
       <p>{{room.desc}}</p>
       <a href="">Contact host</a>
     </div>
@@ -83,7 +83,7 @@
     </div>
   </div>
 
-  <div class="listing-avail col-4 border border-secondary">
+  <div class="listing-avail col-4 border">
     <div class="container">
     <div class="row">
       <div class="h3">${{room.price}}</div>
@@ -124,7 +124,9 @@
 <script>
 
     $(document).ready(function () {
-      console.log('{{request.session.user_id}}');
+
+
+
         let d = new Date();
         let dYear = d.getFullYear();
         let dMonth = d.getMonth()+1;
@@ -174,6 +176,10 @@
 
         });
     });
-</script> 
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap">
+</script>
 
 {% endblock %}
