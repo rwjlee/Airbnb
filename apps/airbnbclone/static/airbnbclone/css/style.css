@@ -81,10 +81,10 @@
 
 .big-picture {
     width: 100vw;
-    height: calc(100vh - 80px);
+    height: 368px;
     object-fit: cover;
 }
 
-.filter-display {
-
+.listing-avail {
+    height: 300px;
 }

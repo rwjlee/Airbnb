@@ -32,8 +32,9 @@ class Listing(models.Model):
     city = models.TextField(max_length=100, blank=True)
     country = models.TextField(max_length=100, blank=True)
     address = models.TextField(blank=True)
-    amenities = models.ManyToManyField(Amenity, null=True)
+    amenities = models.ManyToManyField(Amenity)
     price = models.FloatField(null=True)
+    active = models.BooleanField(default=False)
     
     name = models.TextField(max_length=200)
     desc = models.TextField(blank=True)
@@ -44,7 +45,8 @@ class Listing(models.Model):
 class Booking(models.Model):
     guest = models.ForeignKey(User, related_name = 'has_bookings', on_delete=models.CASCADE)
     home_listing = models.ForeignKey(Listing, related_name='has_guests', on_delete=models.CASCADE)
-    charge_amount = models.FloatField()
+    charge_amount = models.FloatField(null=True)
+    guests = models.IntegerField(null=True)
     
     from_date = models.DateField()
     to_date = models.DateField()

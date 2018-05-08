@@ -18,4 +18,5 @@ urlpatterns = [
    
     path('results', views.results, name='results'),
     path('filters', views.filters, name='filters'),
+    path('authenticate_booking', views.authenticate_booking, name='authenticate_booking'),
 ]
