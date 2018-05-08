@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from pprint import pprint
 import apps.airbnbclone.models as m
 import googlemaps
-from datetime import datetime
+import datetime
 from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
@@ -179,6 +179,13 @@ def create_booking(request):
 
 def check_dates(start_date, end_date, listing_id):
     print("in check date")
+    today = datetime.date.today()
+    print(today)
+    
+    # bookings = m.Booking.objects.filter(from_date__gte = today)
+    
+    # print(bookings)
+
     try:
         listing = m.Listing.objects.get(id=listing_id)
     except:
@@ -186,6 +193,12 @@ def check_dates(start_date, end_date, listing_id):
         return False
 
     return True
+
+check_dates("2000-11-11", "1999-2-3", 1)
+
+def update_availability(add_date, listing_id, available):
+    pass
+
 
 def listing(request, listing_id):
     print("1111111 {}".format(request.method))

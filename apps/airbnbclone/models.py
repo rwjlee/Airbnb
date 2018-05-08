@@ -51,14 +51,19 @@ class Booking(models.Model):
     from_date = models.DateField()
     to_date = models.DateField()
 
+    is_cancelled = models.IntegerField(default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
 class Availability(models.Model):
     listing = models.ForeignKey(Listing, related_name = 'has_availability', on_delete=models.CASCADE)
-    one_day = models.DateField()
-    available = models.BooleanField()
+    one_day = models.DateField(unique=True)
+    available = models.BooleanField(default=False)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = ('listing', 'one_day')
