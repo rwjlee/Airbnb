@@ -196,7 +196,7 @@ def listing(request, listing_id):
     # pprint(geo_address)
     return render(request, 'airbnbclone/listing.html', context)
 
-def get_price_range(input):
+def get_price_range(request, input):
     if input == 1:
         request.session['price'] = [0, 50]
     elif input == 2:
@@ -215,29 +215,41 @@ def get_price_range(input):
         request.session['price'] = [400, 500]
     elif input == 9:
         request.session['price'] = 500
+    else:
+        request.session['price'] = [0, 1000]
 
 def filters(request):
     request.session['from_date'] = request.POST["fromDate"]
     print(request.session['from_date'])
     request.session['to_date'] = request.POST["toDate"]
     print(request.session['to_date'])
-    request.session['guests'] = request.POST["guests"]
+    if request.POST['guests'] != "Guests":
+        request.session['guests'] = request.POST["guests"]
     print(request.session['guests'] )
-    request.session['home_type'] = request.POST["homeType"]
+    if request.POST['homeType'] != "Home Type":
+        request.session['home_type'] = request.POST["homeType"]
     print(request.session['home_type'])
-    get_price_range(int(request.POST["price"]))
+    if request.POST['price'] != 'Price':
+        get_price_range(request, int(request.POST["price"]))
+    print(request.session['price'])
     return JsonResponse({})
         
 def results(request):
     query = request.GET['html_term']
-    print('------------')
-    print(request.session['price'])
-    print('------------')
     
-    
+
     context = {
-        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query) | Q(num_guests=request.session['guests']) | Q(privacy_type=request.session['home_type']) | Q(price__gte=request.session['price'][0]) & Q(price__lte=request.session['price'][1]))
+        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query) | Q(num_guests=request.session['guests']) | Q(privacy_type=request.session['home_type'])).filter(Q(price__gte=request.session['price'][0]) & Q(price__lte=request.session['price'][1]))
     }
+    if 'guests' in request.session:
+        del request.session['guests']
+
+    if 'home_type' in request.session:
+        del request.session['home_type']
+    
+    if 'price' in request.session:
+        del request.session['price']
+
     return render(request, 'airbnbclone/results.html', context)
 
 def become_a_host(request):
