@@ -285,6 +285,8 @@ def results(request):
     for listing in m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query)):
         results.append(listing)
 
+    print(results)
+
     if 'guests' in request.session:
         for listing in m.Listing.objects.filter(num_guests=request.session['guests']):
             if listing not in results:
@@ -292,6 +294,8 @@ def results(request):
             for result in results:
                 if request.session['guests'] != result.num_guests:
                     results.remove(result)
+
+    print(results)
             
     if 'home_type' in request.session:
         for listing in m.Listing.objects.filter(privacy_type=request.session['home_type']):
@@ -301,8 +305,10 @@ def results(request):
                 if request.session['home_type'] != result.privacy_type:
                     results.remove(result)
 
+    print(results)
+
     if 'price' in request.session:
-        for listing in m.listing.objects.filter(price=request.session['price']):
+        for listing in m.Listing.objects.filter(price=request.session['price']):
             if listing not in results:
                 results.append(listing)
             for result in results:
