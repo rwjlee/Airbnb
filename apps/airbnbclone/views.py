@@ -203,6 +203,11 @@ def check_dates(start_date, end_date, listing_id):
     today = datetime.date.today()
     print(today)
     
+    if (start_date > end_date):
+        print("yes")
+    else:
+        print("no")
+
     bookings = m.Booking.objects.filter(from_date__gte = today)
     
     print(bookings)
@@ -210,12 +215,11 @@ def check_dates(start_date, end_date, listing_id):
     try:
         listing = m.Listing.objects.get(id=listing_id)
     except:
-        # raise
         return False
 
     return True
 
-check_dates("2000-11-11", "1999-2-3", 1)
+check_dates("2000-11-12", "2000-11-11", 1)
 
 def update_availability(add_date, listing_id, available):
     pass
@@ -353,7 +357,7 @@ def edit_listing(request, listing_id):
     if listing and listing.host_id == request.session['user_id']:
         print("do edit")
 
-    return redirect('airbnbclone:index') 
+    return redirect('airbnbclone:index')
 
 def get_amenities(amen):
     a = None
