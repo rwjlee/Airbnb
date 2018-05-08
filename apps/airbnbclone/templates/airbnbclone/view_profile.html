@@ -1,0 +1,20 @@
+{% extends 'airbnbclone/base.html' %} {% block body %}
+
+<div class="card my-4 col-6 offset-3 p-5">
+    <h3 class="text-center">Hi, I'm {{ profile.username }}</h3>
+    <div class="">Hi, my name is {{ profile.username }}. Nice to meet you!</div>
+    <div class="fineprint">Joined {{ profile.created_at }}</div>
+    <hr>
+    <div class="largeprint">{{ profile.description }}</div>
+    <hr>
+    <div class="largeprint">My Listings</div>
+    <hr>
+    <div class="largeprint">My Reviews</div>
+    {% if profile.email == request.session.email %}
+    <hr> 
+        <a class="btn btn-primary" href="{% url 'airbnbclone:edit_profile' %}">Edit Profile</a>
+    {% endif %}
+
+</div>
+
+{% endblock %}
