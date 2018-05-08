@@ -120,7 +120,6 @@ def view_profile(request, user_id):
     return render(request, 'airbnbclone/view_profile.html', context)
 
 def cancel_booking(request, booking_id):
-
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
 
@@ -139,8 +138,8 @@ def cancel_booking(request, booking_id):
 def my_bookings(request):
     user_id = request.session['user_id']
     today = datetime.date.today()
-    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id)).all()
-    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id)).all()
+    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
+    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
 
     context = {
         'user_id': user_id,
@@ -148,6 +147,9 @@ def my_bookings(request):
         'past_bookings': past_bookings
     }
     return render(request, 'airbnbclone/my_bookings.html', context)
+
+def messages(request):
+    return render(request, 'airbnbclone/messages.html')
 
 def authenticate_booking(request):
     if request.method== "POST":
@@ -169,12 +171,12 @@ def test_booking(request):
     return render(request, 'airbnbclone/booking.html')
 
 def create_booking(request):
-    listing_id = request.POST["html_listing_id"]
     user_id = request.POST["html_user_id"]
     checkin = request.POST["html_checkin"]
     checkout = request.POST["html_checkout"]
     guests = request.POST["html_guests"]
     charge = float(request.POST["html_charge"]) * 5
+    listing_id = request.POST["html_listing_id"]
 
     if not check_dates(checkin, checkout, listing_id):
         return None
