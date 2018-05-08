@@ -198,7 +198,10 @@ def create_booking(request):
     charge = float(request.POST["html_charge"]) * 5
     listing_id = request.POST["html_listing_id"]
 
-    if not check_dates(checkin, checkout, listing_id):
+    avail_list = check_dates(checkin, checkout, listing_id)
+    date_list, open_list = zip(*avail_list)
+
+    if False in open_list:
         return None
 
     try:
@@ -210,6 +213,7 @@ def create_booking(request):
             guests = guests,
             charge_amount = charge,
         )
+        update_avail(checkin, checkout, listing_id, 0)
         
     except:
         raise
@@ -218,59 +222,55 @@ def create_booking(request):
 
     return booking
 
-def check_dates(start_date, end_date, listing_id):
-    print("in check date")
-    today = datetime.date.today()
-    print(today)
-    
-    if (end_date <= start_date):
-        return False
-
-    try:
-        listing = m.Listing.objects.get(id=listing_id)
-    except:
-        return False
-
-    return True
-
-check_dates("2000-11-12", "2000-11-11", 1)
-
 def update_avail_one(add_date, listing_id, available):
     try:
-        listing = m.Listing.objects.get(id = listing_id)
-
         avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = add_date)).first()
         if avail:
             avail.available = available
             avail.save()
             print("=======available========")
         else:
-            new_avail = m.Availability.objects.create(listing_id = listing_id, available=available, one_day = add_date)
-            print(new_avail.listing.host.username)
+            avail = m.Availability.objects.create(listing_id = listing_id, available=available, one_day = add_date)
+            print(avail.listing.host.username)
             print("========not available=======")
     except:
         raise
         print("cannot update")
+        return None
+
+    return avail
 
 def update_avail(start_date, end_date, listing_id, available):
-   
+
+    if start_date >= end_date:
+        return None
+
     mydates = pd.date_range(start_date, end_date).tolist()
     d_range = [d.date() for d in mydates[:-1]]
-    
-    if available:
-        for day in d_range:
-            update_avail_one(day, listing_id, available)
+    avail_list = [update_avail_one(day, listing_id, available) for day in d_range]
+
+    return avail_list
+
+def find_avail(one_date, listing_id):
+    try:
+        avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = one_date)).first()
+        if avail.available == 1:
+            return (one_date, True)
+        else:
+            return (one_date, False)
+    except:
+        return (one_date, False)
 
 
-def find_avail(one_day, listing_id):
-    pass
+def check_dates(start_date, end_date, listing_id):
+    if (end_date <= start_date):
+        return None
 
+    mydates = pd.date_range(start_date, end_date).tolist()
+    d_range = [d.date() for d in mydates[:-1]]
+    avail_list = [find_avail(day, listing_id) for day in d_range]
 
-# listing = m.Listing.objects.get(id = 5)
-
-# for avail in listing.has_availability.all().order_by("-one_day"):
-#     print(avail.one_day)
-#     print(avail.available)
+    return avail_list
 
 def listing(request, listing_id):
     print("1111111 {}".format(request.method))
