@@ -208,7 +208,7 @@ def check_dates(start_date, end_date, listing_id):
     try:
         listing = m.Listing.objects.get(id=listing_id)
     except:
-        raise
+        # raise
         return False
 
     return True
