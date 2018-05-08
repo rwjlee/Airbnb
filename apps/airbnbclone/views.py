@@ -130,7 +130,7 @@ def cancel_booking(request, booking_id):
 
         if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
             booking.is_cancelled = 1
-            update_avail(booking.from_date, booking.to_date, booking.home_listing_id, 1)
+            update_avail(request, booking.from_date, booking.to_date, booking.home_listing_id, 1)
             booking.save()
     except:
         return redirect('airbnbclone:index')
@@ -175,6 +175,7 @@ def send_message(request):
 def authenticate_booking(request):
     if request.method== "POST":
         booking = create_booking(request)
+        print("==========={}=======".format(booking))
 
         if booking:
             return JsonResponse({"url": redirect('airbnbclone:index').url})
@@ -182,6 +183,8 @@ def authenticate_booking(request):
         errors = []
         for message in messages.get_messages(request):
             errors.append(str(message))
+        
+        print(errors)
 
         return JsonResponse({'errors': errors}, status=400)
         
@@ -200,9 +203,20 @@ def create_booking(request):
     listing_id = request.POST["html_listing_id"]
 
     avail_list = check_dates(checkin, checkout, listing_id)
+    if avail_list is None:
+        messages.error(request, "In correct dates")
+        return None
+
+    if len(avail_list) == 0:
+        messages.error(request, "No Available Dates")
+        return None
+
     date_list, open_list = zip(*avail_list)
 
     if False in open_list:
+        print("++++++++++++++")
+        print(avail_list)
+        messages.error(request, "The date range entered are not available")
         return None
 
     try:
@@ -214,13 +228,13 @@ def create_booking(request):
             guests = guests,
             charge_amount = charge,
         )
-        update_avail(booking.from_date, booking.to_date, listing_id, 0)
+        print("-------{}---------".format(booking.id))
+        update_avail(request, booking.from_date, booking.to_date, listing_id, 0)
         
     except:
+        messages.error(request, "Booking cannot be completed")
         raise
     
-    print("==========finish book=======")
-
     return booking
 
 def update_avail_one(add_date, listing_id, available):
@@ -241,9 +255,10 @@ def update_avail_one(add_date, listing_id, available):
 
     return avail
 
-def update_avail(start_date, end_date, listing_id, available):
+def update_avail(request, start_date, end_date, listing_id, available):
 
     if start_date >= end_date:
+        messages.error(request, "checkin date cannot be less than checkout date")
         return None
 
     mydates = pd.date_range(start_date, end_date).tolist()
@@ -330,6 +345,9 @@ def filters(request):
         get_price_range(request, int(request.POST["price"]))
     
     return JsonResponse({})
+
+def filter_by_date(request):
+    pass
         
 def results(request):
     query = request.GET['html_term']

@@ -81,9 +81,15 @@
       <div class="form-group">
           <input type="number" name="html_guests" id="numguests" placeholder="Guests" class="form-control">
       </div>
-      <button class="btn book-btn btn-danger col-12">Book</button>
+      <button id="book-btn" class="btn btn-danger col-12">Book</button>
     </form>
     </div>
+
+    <div class="my-3 messages">
+        
+    </div>
+
+
 
   </div>
   
@@ -119,7 +125,7 @@
         $("#checkout").attr("min", todayDate);
         $("#numguests").attr("max", 5);
         
-        $("button").click(function(event) {
+        $("#book-btn").click(function(event) {
           console.log(event);
             event.preventDefault();
             $(".messages").children().remove();
@@ -140,7 +146,9 @@
                     window.location = response.url;
                 },
                 error: function(response) {
-                    displayErrors($('.messages'), response.responseJSON.errors)
+                  console.log("Stupid error not working")
+                  console.log(response)
+                  displayErrors($('.messages'), response.responseJSON.errors)
                 }
             });
 
