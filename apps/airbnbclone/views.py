@@ -180,8 +180,10 @@ def send_message(request, listing_id):
                 message = m.Message.objects.create(
                     contents = request.POST['html_contents'],
                     sender_id = request.session['user_id'],
-                    recipient_id = 
+                    # recipient_id = 
                 )
+            except:
+                pass
 
     return render(request, 'airbnbclone/convo.html')
 
@@ -217,7 +219,7 @@ def create_booking(request):
 
     avail_list = check_dates(checkin, checkout, listing_id)
     if avail_list is None:
-        messages.error(request, "In correct dates")
+        messages.error(request, "Incorrect dates")
         return None
 
     if len(avail_list) == 0:
