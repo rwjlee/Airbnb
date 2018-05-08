@@ -137,6 +137,10 @@ def authenticate_booking(request):
         
     return JsonResponse({'message': 'method not allowed'})
 
+def test_booking(request):
+
+    return render(request, 'airbnbclone/booking.html')
+
 def create_booking(request):
     listing_id = request.POST["html_listing_id"]
     user_id = request.POST["html_user_id"]
