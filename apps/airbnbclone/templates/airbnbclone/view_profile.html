@@ -6,13 +6,21 @@
     <div class="fineprint">Joined {{ profile.created_at }}</div>
     <hr>
     <div class="largeprint">{{ profile.description }}</div>
-    <hr>
+    <hr> 
     <div class="largeprint">My Listings</div>
+    {% for listing in listings %}
+    {% if listing.host_id == profile.id %}
+    <div class="listing-box">
+        <div class="largeprint"> <a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">{{ listing.name }}</a></div>
+        <div>{{ listing.desc }}</div>
+    </div>
+    {% endif %}
+    {% endfor %}
     <hr>
     <div class="largeprint">My Reviews</div>
     {% if profile.email == request.session.email %}
-    <hr> 
-        <a class="btn btn-primary" href="{% url 'airbnbclone:edit_profile' %}">Edit Profile</a>
+    <hr>
+    <a class="btn btn-primary" href="{% url 'airbnbclone:edit_profile' %}">Edit Profile</a>
     {% endif %}
 
 </div>

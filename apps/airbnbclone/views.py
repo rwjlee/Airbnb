@@ -110,12 +110,14 @@ def logout(request):
 def view_profile(request, user_id):
     try:
         profile = m.User.objects.get(id = user_id)
+        listings = m.Listing.objects.all()
     except:
         profile = None
         return redirect('airbnbclone:index')
 
     context = {
-        'profile': profile
+        'profile': profile,
+        'listings': listings
     }
 
     return render(request, 'airbnbclone/view_profile.html', context)
