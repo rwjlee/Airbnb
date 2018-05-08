@@ -235,23 +235,52 @@ def filters(request):
     print(request.session['from_date'])
     request.session['to_date'] = request.POST["toDate"]
     print(request.session['to_date'])
+
     if request.POST['guests'] != "Guests":
         request.session['guests'] = request.POST["guests"]
-    print(request.session['guests'] )
+        print(request.session['guests'] )
     if request.POST['homeType'] != "Home Type":
         request.session['home_type'] = request.POST["homeType"]
-    print(request.session['home_type'])
+        print(request.session['home_type'])
     if request.POST['price'] != 'Price':
         get_price_range(request, int(request.POST["price"]))
-    print(request.session['price'])
+    
     return JsonResponse({})
         
 def results(request):
     query = request.GET['html_term']
+    results = []
+    for listing in m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query)):
+        results.append(listing)
+
+    if 'guests' in request.session:
+        for listing in m.Listing.objects.filter(num_guests=request.session['guests']):
+            if listing not in results:
+                results.append(listing)
+            for result in results:
+                if request.session['guests'] != result.num_guests:
+                    results.remove(result)
+            
+    if 'home_type' in request.session:
+        for listing in m.Listing.objects.filter(privacy_type=request.session['home_type']):
+            if listing not in results:
+                results.append(listing)
+            for result in results:
+                if request.session['home_type'] != result.privacy_type:
+                    results.remove(result)
+
+    if 'price' in request.session:
+        for listing in m.listing.objects.filter(price=request.session['price']):
+            if listing not in results:
+                results.append(listing)
+            for result in results:
+                if request.session['price'] != result.price:
+                    results.remove(result)
     
+    print(results)
 
     context = {
-        'listings' : m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query) | Q(num_guests=request.session['guests']) | Q(privacy_type=request.session['home_type'])).filter(Q(price__gte=request.session['price'][0]) & Q(price__lte=request.session['price'][1]))
+        'listings' : results
     }
     if 'guests' in request.session:
         del request.session['guests']
