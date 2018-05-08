@@ -69,18 +69,10 @@
 
     <hr>
 
-    <div class="neighborhood">
-      <p>The neighborhood</p>
-        <iframe
-        width="450"
-        height="250"
-        frameborder="0" style="border:0"
+    <div class="neighborhood" id="map">
 
-        src="https://www.google.com/maps/embed/v1/search?key={{api_key}} &q={{room.address}}+{{room.city}}+{{room.country}}">
-
-      </iframe>
-      <span>Exact location information is provided after a booking is confirmed.</span>
     </div>
+    <span>Exact location information is provided after a booking is confirmed.</span>
   </div>
 
   <div class="listing-avail col-4 border">
@@ -123,9 +115,35 @@
 
 <script>
 
+  function initMap() {
+
+    let addrLat = {{room.addr_lat}};
+    let addrLon = {{room.addr_lon}};
+    let map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 14,
+      center: {lat: addrLat, lng: addrLon},
+      mapTypeId: 'terrain',
+      radius: 300,
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.5,
+      strokeWeight: 1,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+    });
+    
+    let cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.5,
+        strokeWeight: 1,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: map.center,
+        radius: 300,
+    });
+  }
+
     $(document).ready(function () {
-
-
 
         let d = new Date();
         let dYear = d.getFullYear();

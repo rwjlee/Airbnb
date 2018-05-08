@@ -333,8 +333,6 @@ def listing(request, listing_id):
     }
     print("listing got okay")
     print(room.address)
-    # geo_address = get_json(get_url(room.address, room.city, room.country))
-    # pprint(geo_address)
     return render(request, 'airbnbclone/listing.html', context)
 
 def get_price_range(request, input):
@@ -481,9 +479,9 @@ def create_listing(request):
             bed = request.POST['html_bed']
             max_guests= request.POST['html_max_guests']
 
-            country = request.POST['html_country']
-            city = request.POST['html_city']
-            address = request.POST['html_address']
+            country = request.POST['html_country'].upper()
+            city = request.POST['html_city'].upper()
+            address = request.POST['html_address'].upper()
 
             price = request.POST['html_price']
             
@@ -491,6 +489,13 @@ def create_listing(request):
             desc = request.POST['html_desc']
 
             amen = get_amenities("dryer")
+
+            geo_address = get_json(get_url(address, city, country))['results'][0]
+            addr_lat = geo_address['geometry']['location']['lat']
+            addr_lon = geo_address['geometry']['location']['lng']
+
+            print("====lat: {}".format(addr_lat))
+            print("====lon: {}".format(addr_lon))
             
             listing = m.Listing.objects.create(
                 listing_type = listing_type,
@@ -506,6 +511,8 @@ def create_listing(request):
                 desc = desc,
                 price = price,
                 host_id = host,
+                addr_lat = addr_lat,
+                addr_lon = addr_lon,
             )
 
             listing.active = True

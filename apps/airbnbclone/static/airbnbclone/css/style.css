@@ -110,3 +110,9 @@
     left: 10px;
     color: white;
 }
+
+#map {
+    width: 450px;
+    height: 250px;
+    border: 1px solid grey;
+}

@@ -39,6 +39,9 @@ class Listing(models.Model):
     name = models.TextField(max_length=200)
     desc = models.TextField(blank=True)
 
+    addr_lat = models.FloatField(null=True)
+    addr_lon = models.FloatField(null=True)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
