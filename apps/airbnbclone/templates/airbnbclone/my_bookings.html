@@ -1,0 +1,41 @@
+{% extends 'airbnbclone/base.html' %} {% block body %}
+
+<div class="card my-4 col-6 offset-3 p-5">
+    <h3 class="text-center">My Bookings</h3>
+
+
+    <div class="largeprint">Current Trips</div>
+    {% for booking in bookings %}
+    <div class="listing-box">
+        <div class="largeprint">
+            <a href="{% url 'airbnbclone:listing' listing_id=booking.home_listing.id %}">{{ booking.home_listing.name }}</a>
+            </div>
+        <div>{{ booking.from_date }} to {{ booking.to_date }}</div>
+        <div class="fineprint">{{ booking.home_listing.desc }}</div>
+    </div>
+    {% endfor %}
+    <hr>
+
+
+
+    <div class="largeprint">Past Trips</div>
+    <hr>
+
+
+
+    <div class="largeprint">My Listings</div>
+    {% for listing in listings %} {% if listing.host_id == profile.id %}
+    <div class="listing-box">
+        <div class="largeprint">
+            <a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">{{ listing.name }}</a>
+        </div>
+        <div>{{ listing.desc }}</div>
+    </div>
+    {% endif %} {% endfor %} {% if profile.email == request.session.email %}
+    <hr>
+    <a class="btn btn-primary" href="{% url 'airbnbclone:edit_profile' %}">Edit Profile</a>
+    {% endif %}
+
+</div>
+
+{% endblock %}

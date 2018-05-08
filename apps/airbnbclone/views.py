@@ -114,13 +114,21 @@ def view_profile(request, user_id):
     except:
         profile = None
         return redirect('airbnbclone:index')
-
     context = {
         'profile': profile,
         'listings': listings
     }
-
     return render(request, 'airbnbclone/view_profile.html', context)
+
+def my_bookings(request):
+    user_id = request.session['user_id']
+    bookings = m.Booking.objects.filter(guest_id = user_id)
+
+    context = {
+        'user_id': user_id,
+        'bookings': bookings
+    }
+    return render(request, 'airbnbclone/my_bookings.html', context)
 
 def authenticate_booking(request):
     if request.method== "POST":
@@ -136,6 +144,10 @@ def authenticate_booking(request):
         return JsonResponse({'errors': errors}, status=400)
         
     return JsonResponse({'message': 'method not allowed'})
+
+def test_booking(request):
+
+    return render(request, 'airbnbclone/booking.html')
 
 def create_booking(request):
     listing_id = request.POST["html_listing_id"]
@@ -338,6 +350,6 @@ def create_listing(request):
             print('This is wrong')
             return redirect('airbnbclone:index')
 
-        return redirect('airbnbclone:index')
+        return redirect('airbnbclone:listing', listing.id)
 
     return render(request, 'airbnbclone/create_listing.html')
