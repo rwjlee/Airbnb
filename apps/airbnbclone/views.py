@@ -270,9 +270,7 @@ def get_price_range(request, input):
 
 def filters(request):
     request.session['from_date'] = request.POST["fromDate"]
-    print(request.session['from_date'])
     request.session['to_date'] = request.POST["toDate"]
-    print(request.session['to_date'])
 
     if request.POST['guests'] != "Guests":
         request.session['guests'] = request.POST["guests"]
