@@ -291,6 +291,12 @@ def update_avail(request, start_date, end_date, listing_id, available):
 
     return avail_list
 
+## add avail from html page using ajax
+def add_avail(request):
+
+    return render(request, 'airbnbclone/add_avail.html')
+
+
 def find_avail(one_date, listing_id):
     try:
         avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = one_date)).first()
