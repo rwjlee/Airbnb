@@ -206,8 +206,17 @@ def authenticate_booking(request):
     return JsonResponse({'message': 'method not allowed'})
 
 def test_booking(request):
+    avail = m.Availability.objects.filter(Q(listing_id=6) & Q(available=1)).all()
+    room = [a.one_day.strftime('%m-%d-%Y') for a in avail]
+    # room = {"2018-12-11": 1, "2018-06-07": 0}
+    
+    print("----------test_booking---------")
+    print(room)
+    context = {
+        'room': room,
+    }
 
-    return render(request, 'airbnbclone/booking.html')
+    return render(request, 'airbnbclone/booking.html', context)
 
 def create_booking(request):
     user_id = request.POST["html_user_id"]
@@ -295,6 +304,11 @@ def find_avail(one_date, listing_id):
 
 def check_dates(start_date, end_date, listing_id):
     if (end_date <= start_date):
+        return None
+        
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    print("-------{}--------".format(today))
+    if start_date < today:
         return None
 
     mydates = pd.date_range(start_date, end_date).tolist()

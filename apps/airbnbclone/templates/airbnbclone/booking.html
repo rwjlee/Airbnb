@@ -1,32 +1,29 @@
 {% extends 'airbnbclone/base.html' %} 
 
 {% block body %}
+<div class="bootstrap-iso">
+<div class="container-fluid">
 
-<div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">Booking</h3>
-    <form method="POST" action="{% url 'airbnbclone:authenticate_booking' %}" id="booking-form">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="inputEmail1">Checkin Date</label>
-            <input type="date" class="form-control" id="checkin" aria-describedby="emailHelp" placeholder="Checkin"
-                name="html_checkin">
-        </div>
-        <div class="form-group">
-            <label for="inputUserName1">Checkout Date</label>
-            <input type="date" class="form-control" id="checkout" aria-describedby="usernameHelp" placeholder="Checkout"
-                name="html_checkout">
-        </div>
-        <div class="form-group">
-            <label for="inputPassword1">Number of Guests</label>
-            <input type="number" class="form-control" id="numguests" min="1" placeholder="Number of Guests" name="html_guests">
-        </div>
-        <button type="submit" class="booking-btn btn btn-primary">booking</button>
-        <i class="fa fa-spinner ml-3 fa-spin" id="spinner" style="display: none"></i>
-    </form>
+   <!-- Form code begins -->
 
-    <div class="my-3 messages">
-        
+   <form method="post">
+    <div class="row">
+     <div class="form-group col-2"> <!-- Date input -->
+       <label class="control-label" for="date">Date</label>
+       <input class="form-control date" name="from_date" placeholder="YYYY-MM-DD" type="text"/>
+     </div>
+     <div class="form-group col-2"> <!-- Date input -->
+        <label class="control-label" for="date">Date</label>
+        <input class="form-control date" name="to_date" placeholder="YYYY-MM-DD" type="text"/>
+      </div>
     </div>
+     <div class="form-group"> <!-- Submit button -->
+       <button class="btn btn-primary " name="submit" type="submit">Submit</button>
+     </div>
+    </form>
+    <!-- Form code ends --> 
+ 
+</div>
 </div>
 
 {% endblock %} {% block scripts %}
@@ -35,53 +32,26 @@
 
     $(document).ready(function () {
 
-        let d = new Date();
-        let dYear = d.getFullYear();
-        let dMonth = d.getMonth()+1;
+    
+    $(".date").click(function(event) {
 
-        if (dMonth < 10) {
-            dMonth = "0" + dMonth;
-        }
+      let date_input=$('input[name="from_date"]'); //our date input has the name "date"
+    //   let container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      
+      let open_date = "{{room}}";
 
-        let dDate = d.getDate();
-
-        if (dDate < 10) {
-            dDate = "0" + dDate;
-        }
-        
-        todayDate = dYear + "-" + dMonth + "-" + dDate;
-
-        $("#checkin").attr("min", todayDate);
-        $("#checkout").attr("min", todayDate);
-        $("#numguests").attr("max", 5);
-        
-        $(".booking-btn").click(function(event) {
-            event.preventDefault();
-            $(".messages").children().remove();
-            $.ajax({
-                beforeSend: setCsrfToken,
-                type: $("#booking-form").attr("method"),
-                url: $("#booking-form").attr("action"),
-                data: {
-                    "html_checkin": $("input[name=html_checkin]").val(),
-                    "html_checkout": $("input[name=html_checkout]").val(),
-                    "html_guests": $("input[name=html_guests]").val(),
-                    "html_listing_id": 3,
-                    "html_user_id": 1,
-                    "html_charge": 200,
-                },
-                success: function (response) {
-                    console.log(response);
-                    window.location = response.url;
-                },
-                error: function(response) {
-                    console.log("error error");
-                    console.log(response);
-                }
-            });
-
-        });
+      console.log(open_date);
+      let options={
+        format: 'yyyy-mm-dd',
+        // container: container,
+        todayHighlight: true,
+        startDate: new Date(),
+        autoclose: true,
+        datesDisabled: open_date,
+      };
+      date_input.datepicker(options);
     });
+    })
 </script> 
 
 {% endblock %}

@@ -89,8 +89,25 @@
     height: 300px;
 }
 
+.listing-banner {
+    background-image: url("https://a0.muscache.com/im/pictures/27217858/9d9dabee_original.jpg");
+    width: 100vw;
+    height: 368px;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 20px;
+}
+
 .listing-box {
     margin: 10px;
     border: 2px solid black;
     padding: 10px;
+}
+
+.photo-button {
+    text-align: bottom;
+    position: absolute;
+    top: 300px;
+    left: 10px;
+    color: white;
 }
