@@ -5,42 +5,20 @@
     <hr>
 
 
-    {% for message in messages %}
-    <div class="largeprint">Conversation with {{ message.recipient.username }}</div>
-    <div>{{ message.contents }}</div>
-    <div class="fineprint">Sent on {{ message.created_at }}</div>
+    {% for conversation in conversations %}
+    <div class="largeprint"><a href="{% url 'airbnbclone:convo' conversation_id=conversation.id %}">Conversation with
+        {% if request.session.user_id != conversation.guest.id %}
+         {{ conversation.guest.username }}
+         {% else %}
+         {{ conversation.host.username }}
+        {% endif %}
+        </a></div>
+
     <hr>
     {% endfor %}
 
-    <div class="largeprint">Conversation with George</div>
-    <hr>
-    <div class="largeprint">Conversation with Tatiana</div>
-    <hr>
-    <div class="largeprint">Choose Your Next Adventure</div>
-    <div>Search for a
-        <a href="{% url 'airbnbclone:index' %}">great place to stay</a> on your next trip!</div>
-    <hr>
-    <div class="largeprint">Current and Upcoming Trips</div>
-    {% for booking in current_bookings %}
-    <div class="listing-box">
-        <div class="largeprint">
-            <a href="{% url 'airbnbclone:listing' listing_id=booking.home_listing.id %}">{{ booking.home_listing.name }}</a>
-        </div>
-        <div>{{ booking.from_date }} to {{ booking.to_date }}</div>
-        <div class="fineprint">{{ booking.home_listing.desc }}</div>
-    </div>
-    {% endfor %}
-    <hr>
-    <div class="largeprint">Past Trips</div>
-    {% for booking in past_bookings %}
-    <div class="listing-box">
-        <div class="largeprint">
-            <a href="{% url 'airbnbclone:listing' listing_id=booking.home_listing.id %}">{{ booking.home_listing.name }}</a>
-        </div>
-        <div>{{ booking.from_date }} to {{ booking.to_date }}</div>
-        <div class="fineprint">{{ booking.home_listing.desc }}</div>
-    </div>
-    {% endfor %}
+
+  
 
 </div>
 
