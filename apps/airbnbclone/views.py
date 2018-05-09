@@ -9,12 +9,15 @@ from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
 import pandas as pd
-
+from math import sin, cos, sqrt, atan2, radians
 from django.core import serializers
 
 # Create your views here.
 def index(request):
-    return render(request, 'airbnbclone/index.html')
+    context = {
+        "api_key": MAP_API_KEY,
+    }
+    return render(request, 'airbnbclone/index.html', context)
 
 def start_session(request, user):
     request.session['user_id'] = user.id
@@ -397,8 +400,6 @@ def listing(request, listing_id):
     print(room.address)
     return render(request, 'airbnbclone/listing.html', context)
 
-
-
 def get_price_range(request, input):
     if input == 1:
         request.session['price'] = [0.0, 50.0]
@@ -442,14 +443,19 @@ def results(request):
         query = request.GET['html_term']
         for listing in m.Listing.objects.filter(active=1).filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query)):
             results.append(listing)
+    
     print(results)
-
+    
+    if 'from_date' in request.session and 'to_date' in request.session:
+        print("==========From Date: {}".format(request.session['from_date']))
+        print("==========To Date: {}".format(request.session['to_date']))
+    
     if 'guests' in request.session:
-        for listing in m.Listing.objects.filter(max_guests=request.session['guests']).filter(active=1):
+        for listing in m.Listing.objects.filter(max_guests__gte=request.session['guests']).filter(active=1):
             if listing not in results:
                 results.append(listing)
         for result in results:
-            if request.session['guests'] != result.max_guests:
+            if request.session['guests'] > result.max_guests:
                 results.remove(result)
     
     if 'home_type' in request.session:
@@ -509,9 +515,6 @@ def become_a_host(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:register')
     return render(request, 'airbnbclone/create_listing.html')
-
-
-
 
 def get_url(address, city, country):
     url = "https://maps.googleapis.com/maps/api/geocode/json?address={},+{},+{}&key={}".format(address, city, country, MAP_API_KEY)
@@ -610,20 +613,46 @@ def save_favorite(request):
     pass
 
 
-def search_by_date(request):
-    pass
+def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
+    # approximate radius of earth in km
+    R = 6373.0
+
+    lat1 = radians(addr_lat)
+    lon1 = radians(addr_lon)
+    lat2 = radians(center_lat)
+    lon2 = radians(center_lon)
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    distance = R * c
+
+    return distance
 
 def search_by_map(request):
     address = request.POST['html_loc']
     geo_address = get_json(get_url(address, '', ''))['results'][0]
     center_lat = geo_address['geometry']['location']['lat']
     center_lon = geo_address['geometry']['location']['lng']
+
     context = {
         'center_lat': center_lat,
         'center_lon': center_lon,
         'results' : json.loads(serializers.serialize("json", m.Listing.objects.all()))
     }
     return JsonResponse(context)
+
+def results_edit(request):
+    context = {
+        'listings': m.Listing.objects.all(),
+        'api_key': MAP_API_KEY,
+    }
+
+    return render(request, 'airbnbclone/results_edit.html', context)
+
 
 def view_maps(request):
     context = {

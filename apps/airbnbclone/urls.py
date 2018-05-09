@@ -35,4 +35,6 @@ urlpatterns = [
     path('add_avail', views.add_avail, name='add_avail'),
     path('view_maps', views.view_maps, name="view_maps"),
     path('search_by_map', views.search_by_map, name='search_by_map'),
+
+    path('results_edit', views.results_edit, name='results_edit'),
 ]
