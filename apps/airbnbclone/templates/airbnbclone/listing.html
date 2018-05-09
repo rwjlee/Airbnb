@@ -169,9 +169,9 @@
 
   function initMap() {
 
-    let addrLat = {{ room.addr_lat }
-  };
+  let addrLat = {{ room.addr_lat }};
   let addrLon = {{ room.addr_lon }};
+
   let map = new google.maps.Map(document.getElementById('map'), {
     zoom: 14,
     center: { lat: addrLat, lng: addrLon },
