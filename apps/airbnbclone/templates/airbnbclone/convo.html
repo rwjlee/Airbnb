@@ -3,7 +3,8 @@
 <div class="card my-4 col-6 offset-3 p-5">
     <h3 class="text-center">Conversation with {{ listing.host.username }}</h3>
     <hr>
-    <form action="{% url 'airbnbclone:send_message' %}" method="POST"id="send_message">
+    <form action="{% url 'airbnbclone:send_message' conversation_id=conversation.id %}" method="POST"id="send_message">
+            {% csrf_token %}
         <div class="form-group">
             <textarea class="form-control" id="html_contents" name="html_contents" rows="3"></textarea>
         </div>
@@ -12,11 +13,11 @@
     <hr> 
     {% for message in messages %}
     <div>{{ message.contents }}</div>
-    <div class="fineprint">Sent by {{ message.recipient.username }} on {{ message.created_at }}</div>
+    <div class="fineprint">Sent by {{ message.from_user.username }} on {{ message.created_at }}</div>
     <hr> 
     {% endfor %}
     <div class="largeprint">Details for this listing:</div>
-    <div><a href="{% url 'airbnbclone:listing' listing_id=listing.id %}" >{{ listing.name }}</a></div>
+    <div><a href="{% url 'airbnbclone:listing' listing_id=conversation.listing.id %}" >{{ listing.name }}</a></div>
     <div class="fineprint">{{ listing.desc }}</div>
 
 

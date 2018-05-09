@@ -82,11 +82,19 @@ class Availability(models.Model):
     class Meta:
         unique_together = ('listing', 'one_day')
 
+class Conversation(models.Model):
+    listing = models.ForeignKey(Listing, related_name= 'convo_about', on_delete=models.CASCADE)
+
+    host = models.ForeignKey(User, related_name='host_conversations', on_delete=models.CASCADE)
+    guest = models.ForeignKey(User, related_name='guest_conversations', on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Message(models.Model):
-    contents = models.TextField(max_length=500, default=None, null=True)
-    listing = models.ForeignKey(Listing, related_name= 'convo_about', on_delete=models.CASCADE, default=None)
-    sender = models.ForeignKey(User, related_name = 'sends_message', on_delete=models.CASCADE, default=None)
-    recipient = models.ForeignKey(User, related_name = 'receives_message', on_delete=models.CASCADE, default=None)
+    contents = models.TextField(max_length=500)
+    conversation = models.ForeignKey(Conversation, related_name= 'message_in_convo', on_delete=models.CASCADE)
+    from_user = models.ForeignKey(User, related_name = 'messages', on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
