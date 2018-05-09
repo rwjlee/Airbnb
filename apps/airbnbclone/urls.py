@@ -33,5 +33,6 @@ urlpatterns = [
     path('send_message/<int:conversation_id>', views.send_message, name='send_message'),
 
     path('add_avail', views.add_avail, name='add_avail'),
-    path('view_maps', views.view_maps, name="view_maps")
+    path('view_maps', views.view_maps, name="view_maps"),
+    path('search_by_map', views.search_by_map, name='search_by_map'),
 ]

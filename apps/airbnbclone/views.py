@@ -10,6 +10,9 @@ from django.db.models import Q
 import json, requests
 import pandas as pd
 
+from django.core import serializers
+
+# Create your views here.
 def index(request):
     return render(request, 'airbnbclone/index.html')
 
@@ -377,7 +380,6 @@ def check_dates(start_date, end_date, listing_id):
 #### LISTINGS
 
 def listing(request, listing_id):
-    print("1111111 {}".format(request.method))
     
     try:
         room = m.Listing.objects.get(id = listing_id)
@@ -612,12 +614,25 @@ def search_by_date(request):
     pass
 
 def search_by_map(request):
-    pass
+    address = request.POST['html_loc']
+    geo_address = get_json(get_url(address, '', ''))['results'][0]
+    center_lat = geo_address['geometry']['location']['lat']
+    center_lon = geo_address['geometry']['location']['lng']
+    context = {
+        'center_lat': center_lat,
+        'center_lon': center_lon,
+        'results' : json.loads(serializers.serialize("json", m.Listing.objects.all()))
+    }
+    return JsonResponse(context)
 
 def view_maps(request):
     context = {
-        'api_key' : MAP_API_KEY,
+        'api_key': MAP_API_KEY,
     }
 
     return render(request, 'airbnbclone/view_maps.html', context)
+
+
+
+
     

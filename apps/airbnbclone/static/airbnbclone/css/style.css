@@ -251,13 +251,11 @@
     height: 250px;
     border: 1px solid grey;
 }
-<<<<<<< HEAD
 
 #map-search {
     width: 450px;
     height: 250px;
 }
-=======
 input.search_input:focus {
     outline-width: 0;
 }
@@ -288,6 +286,7 @@ input.search_input:focus {
     color: rgb(72, 72, 72) !important;
 }
 .cities {
+    display: default;
 
 }
 .city_box {
@@ -321,4 +320,3 @@ input.search_input:focus {
     font-weight: 700 !important;
     margin: 0px !important;
 }
->>>>>>> 1955a06c389174860cef1f90fbc9f64c23f2cb4b
