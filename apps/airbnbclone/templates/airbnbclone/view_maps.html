@@ -26,6 +26,7 @@ let map;
 var infoWindow;
 var service;
 var mapCenter = {lat: -33.867, lng: 151.206};
+var all_places;
 
 function initMap() {
     var input = document.getElementById('searchInput');
@@ -63,17 +64,14 @@ function performSearch() {
 }
 
 function callback(locations) {
-    console.log(locations);
     for (var i = 0, result; result = locations[i]; i++) {
-        console.log(result['fields'])
         addMarker(result);
-  }
-    console.log("finish callback");
+    }   
 }
 
 function addMarker(place) {
-    let addr_lat = place[1]
-    let addr_lon = place[2]
+    let addr_lat = place['fields']['addr_lat']
+    let addr_lon = place['fields']['addr_lon']
     var myLatLng = {lat: addr_lat, lng: addr_lon};
   
   console.log(myLatLng)
@@ -85,23 +83,16 @@ function addMarker(place) {
   console.log("finish marker begin listener");
 
   google.maps.event.addListener(marker, 'click', function() {
+
+    let redirectlink = "/listing/" + place['pk']
     
+  var contentString = 
+      '<div><a href=' + redirectlink + '>'+ place['fields']['address'] +'</a></div>';
 
-  var contentString = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
-      '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
-      '<div id="bodyContent">'+
-      '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-      'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-      '(last visited June 22, 2009).</p>'+
-      '</div>'+
-      '</div>';
-
-    let request = {placeId: place[3]}
+    let request = {placeId: place['pk']}
 
     service.getDetails(request, function(result, status) {
-      infoWindow.setContent("This");
+      infoWindow.setContent(contentString);
       infoWindow.open(map, marker);
     });
   });
@@ -112,7 +103,6 @@ $(document).ready(function() {
     console.log("ready");
 
     $("#searchInput").keypress(function(event) {
-
         if (event.keyCode == 13) {
         
             event.preventDefault();
@@ -127,8 +117,9 @@ $(document).ready(function() {
                 },
                 success: function (response) {
                     console.log(response);
-                    mapCenter = {lat: 0, lng: 100.206},
+                    mapCenter = {lat: response['center_lat'], lng: response['center_lon']}
                     initMap();
+                    callback(response['results']);
                     map.addListener('idle', performSearch);
                 },
 
