@@ -5,7 +5,7 @@
 <script src="{% static 'airbnbclone/js/utilities.js' %}"></script>
 
 <div>
-    <nav class="navbar navbar-expand-lg filter_nav">
+    <nav class="navbar navbar-expand-lg filter_nav" id="navbars">
     
             <div class="filter_nav_div">
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -59,6 +59,16 @@
 
     {% block scripts %}
     <script>
+        window.onscroll = function() {myFunctions()};
+    var navbars = document.getElementById("navbars");
+    var stickys = navbars.offsetTop;
+    function myFunctions() {
+  if (window.pageYOffset >= stickys) {
+    navbars.classList.add("sticky")
+  } else {
+    navbars.classList.remove("sticky");
+  }
+}
         $(document).ready(function() {
             $(".apply").click(function(event) {
                 event.preventDefault()
