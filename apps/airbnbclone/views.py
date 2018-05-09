@@ -26,6 +26,8 @@ def check_length(request, data, name):
         return False
     return True
 
+#### LOGIN AND REGISTRATION
+
 def edit_profile(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:index')
@@ -122,35 +124,7 @@ def view_profile(request, user_id):
     }
     return render(request, 'airbnbclone/view_profile.html', context)
 
-def cancel_booking(request, booking_id):
-    if 'user_id' not in request.session:
-        return redirect('airbnbclone:index')
-
-    try:
-        booking = m.Booking.objects.get(id = booking_id)
-        user_id = request.session['user_id']
-
-        if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
-            booking.is_cancelled = 1
-            update_avail(booking.from_date, booking.to_date, booking.home_listing_id, 1)
-            booking.save()
-    except:
-        return redirect('airbnbclone:index')
-
-    return redirect('airbnbclone:my_bookings')
-    
-def my_bookings(request):
-    user_id = request.session['user_id']
-    today = datetime.date.today()
-    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
-    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
-
-    context = {
-        'user_id': user_id,
-        'current_bookings': current_bookings,
-        'past_bookings': past_bookings
-    }
-    return render(request, 'airbnbclone/my_bookings.html', context)
+#### MESSAGES AND CONVERSATIONS
 
 def all_messages(request):
     if 'user_id' not in request.session:
@@ -222,6 +196,37 @@ def display_convo(request, conversation_id):
 
     return render(request, 'airbnbclone/convo.html', context)
 
+#### BOOKINGS
+
+def cancel_booking(request, booking_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    try:
+        booking = m.Booking.objects.get(id = booking_id)
+        user_id = request.session['user_id']
+
+        if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
+            booking.is_cancelled = 1
+            update_avail(booking.from_date, booking.to_date, booking.home_listing_id, 1)
+            booking.save()
+    except:
+        return redirect('airbnbclone:index')
+
+    return redirect('airbnbclone:my_bookings')
+    
+def my_bookings(request):
+    user_id = request.session['user_id']
+    today = datetime.date.today()
+    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
+    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
+
+    context = {
+        'user_id': user_id,
+        'current_bookings': current_bookings,
+        'past_bookings': past_bookings
+    }
+    return render(request, 'airbnbclone/my_bookings.html', context)
 
 def authenticate_booking(request):
     if request.method== "POST":
@@ -297,6 +302,13 @@ def create_booking(request):
     
     return booking
 
+#### REVIEWS
+
+def write_review(request, booking_id):
+    pass
+
+#### AVAILABILITIES
+
 def update_avail_one(add_date, listing_id, available):
     try:
         avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = add_date)).first()
@@ -358,6 +370,8 @@ def check_dates(start_date, end_date, listing_id):
     avail_list = [find_avail(day, listing_id) for day in d_range]
 
     return avail_list
+
+#### LISTINGS
 
 def listing(request, listing_id):
     print("1111111 {}".format(request.method))

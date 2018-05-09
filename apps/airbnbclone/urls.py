@@ -22,12 +22,15 @@ urlpatterns = [
     
     path('test_booking', views.test_booking, name='test_booking'),
     path('my_bookings', views.my_bookings, name='my_bookings'),
-    path('all_messages', views.all_messages, name='all_messages'),
-    path('send_message/<int:conversation_id>', views.send_message, name='send_message'),
-    path('convo/<int:conversation_id>', views.convo, name='convo'),
     path('cancel_booking/<int:booking_id>', views.cancel_booking, name='cancel_booking'),
+
+    path('write_review/<int:booking_id>', views.write_review, name='write_review'),
+
+    path('convo/<int:conversation_id>', views.convo, name='convo'),
     path('start_convo/<int:listing_id>', views.start_convo, name='start_convo'),
     path('display_convo/<int:conversation_id>', views.display_convo, name='display_convo'),
+    path('all_messages', views.all_messages, name='all_messages'),
+    path('send_message/<int:conversation_id>', views.send_message, name='send_message'),
 
     path('add_avail', views.add_avail, name='add_avail'),
     path('view_maps', views.view_maps, name="view_maps"),
