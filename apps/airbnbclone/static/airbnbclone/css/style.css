@@ -592,3 +592,7 @@ button.listing_a:focus {
 .bluecolor {
     color: rgb(0, 132, 137);
 }
+
+.copy-me {
+    display: none;
+}

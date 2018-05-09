@@ -38,4 +38,5 @@ urlpatterns = [
     path('search_by_map', views.search_by_map, name='search_by_map'),
 
     path('results_edit', views.results_edit, name='results_edit'),
+    path('filter_by', views.filter_by, name='filter_by'),
 ]
