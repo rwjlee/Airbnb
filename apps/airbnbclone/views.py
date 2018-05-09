@@ -9,6 +9,7 @@ from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
 import pandas as pd
+import math
 
 from django.core import serializers
 
@@ -322,14 +323,27 @@ def submit_review(request, booking_id):
         description = request.POST["html_description"],
         star_rating = request.POST["html_star_rating"],
     )
-    print("-------{}---------".format(review.id))
 
+    listing = m.Listing.objects.get(id = booking.home_listing_id)
+
+
+    listing.number_reviews += 1
+    listing.save()
+
+    ratings = m.Review.objects.filter(booking__home_listing__id = booking.home_listing_id).all()
+
+    rating_list = [rating.star_rating for rating in ratings]
+    avg_rating = sum(rating_list) / float(len(rating_list))
+    listing.average_rating = avg_rating
+    listing.save()
 
     context = {
         'booking': booking,
         'review': review,
+        'listing': listing,
     } 
     return render(request, 'airbnbclone/my_bookings.html', context)
+
 
 #### AVAILABILITIES
 
@@ -403,13 +417,16 @@ def listing(request, listing_id):
         room = m.Listing.objects.get(id = listing_id)
         if not room.active:
             return redirect('airbnbclone:index')
+        reviews = m.Review.objects.filter(booking__home_listing_id=listing_id)
     except:
+        raise
         room = None
         return redirect('airbnbclone:index')
 
     context = {
         'api_key' : MAP_API_KEY,
         'room': room,
+        'reviews': reviews,
     }
     print("listing got okay")
     print(room.address)
