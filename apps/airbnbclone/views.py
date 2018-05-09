@@ -366,11 +366,12 @@ def results(request):
     results = []
     if len(request.GET['html_term']) != 0:
         query = request.GET['html_term']
-        for listing in m.Listing.objects.filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query)):
+        for listing in m.Listing.objects.filter(active=1).filter(Q(address__icontains=query) | Q(country__icontains=query) | Q(name__icontains=query)):
             results.append(listing)
+    print(results)
 
     if 'guests' in request.session:
-        for listing in m.Listing.objects.filter(num_guests=request.session['guests']):
+        for listing in m.Listing.objects.filter(num_guests=request.session['guests']).filter(active=1):
             if listing not in results:
                 results.append(listing)
         for result in results:
@@ -378,19 +379,18 @@ def results(request):
                 results.remove(result)
     
     if 'home_type' in request.session:
-        for listing in m.Listing.objects.filter(privacy_type=request.session['home_type']):
+        for listing in m.Listing.objects.filter(privacy_type=request.session['home_type']).filter(active=1):
             if listing not in results:
                 results.append(listing)
         for result in results:
             if request.session['home_type'] != result.privacy_type:
                 results.remove(result)
 
-
     if 'price' in request.session:
         lower = request.session['price'][0]
         higher = request.session['price'][1]
         print(request.session['price'])
-        for listing in m.Listing.objects.filter(price__gte=lower).filter(price__lte=higher):
+        for listing in m.Listing.objects.filter(price__gte=lower).filter(price__lte=higher).filter(active=1):
             if listing not in results:
                 results.append(listing)
 
@@ -403,9 +403,21 @@ def results(request):
             if append in results:
                 results.remove(append)
 
+    # gmaps = googlemaps.Client(key = MAP_API_KEY)
+    # print(gmaps)
+    
+    # geocode_result = gmaps.geocode('query')
+
+    # pprint(geocode_result[0][0])
+    # latitude = (geocode_result[2]['geometry']['location']['lat'])
+    # longitude = (geocode_result[2]['geometry']['location']['lng'])
 
     context = {
-        'listings' : results
+        'listings' : results,
+        'api_key' : MAP_API_KEY,
+        # 'longitude' : longitude,
+        # 'latitude' : latitude,
+        
     }
     if 'guests' in request.session:
         del request.session['guests']
