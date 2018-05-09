@@ -77,13 +77,51 @@
 
       <div class="view-reviews">
         <div class="largeprint">{{room.number_reviews}} Reviews</div>
-        <div class="largeprint">{{room.average_rating}}</div>
+        <div class="largeprint">Average rating: {{ room.average_rating }}
+          <span class="bluecolor">
+          {% if room.average_rating < 0.5 %}
+          <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 1 %}
+          <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 1.5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 2 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 2.5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 3 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 3.5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 4 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 4.5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i>
+          {% elif room.average_rating == 5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+          {% endif %}</span>
+        </div>
         <div></div>
         <hr>
         {% for review in reviews %}
           <div>{{review.booking.guest.username}}</div>
-          <div>{{review.star_rating}}</div>
+          <div class="bluecolor">
+              {% if review.star_rating == 1 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+              {% elif review.star_rating == 2 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+              {% elif review.star_rating == 3 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+              {% elif review.star_rating == 4 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
+              {% elif review.star_rating == 5 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+              {% endif %}
+          </div>
           <div>{{review.description}}</div>
+          <div class="fineprint">{{review.created_at}}</div>
           <hr>
         {% endfor %}
       </div>

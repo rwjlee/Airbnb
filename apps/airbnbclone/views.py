@@ -420,7 +420,7 @@ def listing(request, listing_id):
         room = m.Listing.objects.get(id = listing_id)
         if not room.active:
             return redirect('airbnbclone:index')
-        reviews = m.Review.objects.filter(booking__home_listing_id=listing_id)
+        reviews = m.Review.objects.filter(booking__home_listing_id=listing_id).order_by('-created_at')
     except:
         raise
         room = None
