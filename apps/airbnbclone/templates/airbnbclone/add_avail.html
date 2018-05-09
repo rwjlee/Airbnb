@@ -51,24 +51,15 @@ $(document).ready(function () {
     });
 
     $(".todate").click(function(event) {
-
         let date_input=$('input[name="to_date"]');
 
-        let setDate = todayDate;
-        fromdateVal = new Date($(".fromdate").val());
-        console.log(fromdateVal.getTime());
-        console.log(setDate.getTime());
-
-        if (setDate.getTime() < fromdateVal.getTime()) {
-          setDate=fromdateVal;
-        } else {
-          console.log("nothing");
-        }
+        let fromdateVal = $(".fromdate").val();
+        console.log(fromdateVal);
 
         let options={
           format: 'yyyy-mm-dd',
-          todayHighlight: true,
-          startDate: setDate,
+          todayHighlight: false,
+          startDate: fromdateVal,
           autoclose: true,
         };
 
