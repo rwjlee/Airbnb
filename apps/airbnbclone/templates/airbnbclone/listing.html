@@ -38,7 +38,7 @@
       <p>{{room.city}}, {{room.country}}</p>
       <p>{{room.max_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
       <p>{{room.desc}}</p>
-      <a href="">Contact host</a>
+      <a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact host</a>
     </div>
 
     <hr>
@@ -64,7 +64,7 @@
     <div class="hosted-by">
       <span>Hosted by {{room.host.username}}</span>
       <p>Languages: </p>
-      <a href="">Contact Host</a>
+      <a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact Host</a>
     </div>
 
     <hr>

@@ -2,6 +2,10 @@ from django.contrib import admin
 
 # Register your models here.
 
-from apps.airbnbclone.models import Amenity
+import apps.airbnbclone.models as m
 
-admin.site.register(Amenity)
+admin.site.register(m.Amenity)
+admin.site.register(m.User)
+admin.site.register(m.Conversation)
+admin.site.register(m.Message)
+admin.site.register(m.Listing)
