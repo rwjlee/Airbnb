@@ -307,11 +307,29 @@ def write_review(request, booking_id):
         return redirect('airbnbclone:index')
 
     booking = m.Booking.objects.get(id = booking_id)
-
     context = {
         'booking': booking,
     } 
     return render(request, 'airbnbclone/write_review.html', context)
+
+def submit_review(request, booking_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    booking = m.Booking.objects.get(id = booking_id)
+
+    review = m.Review.objects.create(
+        booking_id = booking_id,
+        description = request.POST["html_description"],
+        star_rating = request.POST["html_star_rating"],
+    )
+    print("-------{}---------".format(review.id))
+
+
+    context = {
+        'booking': booking,
+        'review': review,
+    } 
+    return render(request, 'airbnbclone/my_bookings.html', context)
 
 #### AVAILABILITIES
 

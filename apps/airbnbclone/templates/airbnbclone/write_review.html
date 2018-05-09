@@ -8,12 +8,12 @@
     </div>
     <hr>
 
-    <form method="POST" action="" id="review-form">
+    <form method="POST" action="{% url 'airbnbclone:submit_review' booking_id=booking.id %}" id="review-form">
         {% csrf_token %}
 
         <div class="form-group">
-            <label for="inputDescription">Describe Your Experience</label>
-            <label for="inputDescription" class="fineprint">Your review will be public on your host's profile.</label>
+            <label for="inputDescription">Describe Your Experience:</label>
+            <label for="inputDescription" class="fineprint">How was your stay? Your review will be public on your host's profile.</label>
             <textarea class="form-control" id="inputDescription" rows="3" placeholder="What was it like to stay with this host?" name="html_description"
                 autofocus></textarea>
         </div>
@@ -23,35 +23,35 @@
             <div class="row">
                 <div class="col-6 offset-1">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="starRadio5" id="starRadio5" value="5" required>
+                        <input class="form-check-input" type="radio" id="starRadio5" value="5" name="html_star_rating">
                         <label class="form-check-label" for="starRadio5">
                             <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
                         </label>
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="starRadio4" id="starRadio4" value="4" required>
+                        <input class="form-check-input" type="radio" id="starRadio4" value="4" name="html_star_rating">
                         <label class="form-check-label" for="starRadio4">
                             <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
                         </label>
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="starRadio3" id="starRadio3" value="3" required>
+                        <input class="form-check-input" type="radio" id="starRadio3" value="3" name="html_star_rating">
                         <label class="form-check-label" for="starRadio3">
                             <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
                         </label>
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="starRadio2" id="starRadio2" value="2" required>
+                        <input class="form-check-input" type="radio" id="starRadio2" value="2" name="html_star_rating">
                         <label class="form-check-label" for="starRadio2">
                             <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
                         </label>
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="starRadio1" id="starRadio1" value="1" required>
+                        <input class="form-check-input" type="radio" id="starRadio1" value="1" name="html_star_rating">
                         <label class="form-check-label" for="starRadio1">
                             <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
                         </label>

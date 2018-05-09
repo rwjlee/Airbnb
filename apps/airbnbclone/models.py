@@ -36,6 +36,9 @@ class Listing(models.Model):
     price = models.FloatField(null=True)
     active = models.BooleanField(default=False)
     
+    number_reviews = models.IntegerField(default=0)
+    average_rating = models.FloatField(default=0)
+
     name = models.TextField(max_length=200)
     desc = models.TextField(blank=True)
 
