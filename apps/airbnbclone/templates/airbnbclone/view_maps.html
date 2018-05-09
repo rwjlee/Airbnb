@@ -5,6 +5,9 @@
 
 <h1>Hello Map</h1>
 
+<input id="searchInput" class="controls" type="text" name="html_loc" value="" placeholder="Everywhere">
+</input>
+
 <div><a href="{% url 'airbnbclone:view_maps' %}" target="_blank">New Tab</a></div>
 
 
@@ -16,52 +19,21 @@
 
 {% block scripts %}
 
-<!-- <script>
-
-        function initMap() {
-          var myLatLng = {lat: 40.784513, lng: -73.976630};
-  
-          var map = new google.maps.Map(document.getElementById('map-search'), {
-            zoom: 15,
-            center: myLatLng
-          });
-  
-          var marker = new google.maps.Marker({
-            position: myLatLng,
-            map: map,
-            title: 'Hello World!'
-          });
-        }
-      </script>
-      <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap&libraries=places">
-      </script> -->
-
 <script>
 
 
-var map;
+let map;
 var infoWindow;
 var service;
-
-let random_places = [
-  ['Moscow1', 55.822083, 37.665453, 4],
-  ['Moscow2', 55.604697, 37.642107, 4],
-  ['Lisbon1', 38.749402, -9.120034, 4],
-  ['Lisbon2', 38.708960, -9.169130, 4],
-  ['NewYork1', 40.784513, -73.976630, 4],
-  ['NewYork2', 40.707522, -74.037055, 4],
-  ['Bondi Beach', -33.890542, 151.274856, 4],
-  ['Coogee Beach', -33.923036, 151.259052, 5],
-  ['Cronulla Beach', -34.028249, 151.157507, 3],
-  ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-  ['Maroubra Beach', -33.950198, 151.259302, 1]
-];
+var mapCenter = {lat: -33.867, lng: 151.206};
 
 function initMap() {
-  map = new google.maps.Map(document.getElementById('map-search'), {
-    center: {lat: -33.867, lng: 151.206},
-    zoom: 15,
+    var input = document.getElementById('searchInput');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    
+    map = new google.maps.Map(document.getElementById('map-search'), {
+    center: mapCenter,
+    zoom: 10,
     styles: [{
       stylers: [{ visibility: 'simplified' }]
     }, {
@@ -77,7 +49,7 @@ function initMap() {
 
   // The idle event is a debounced event, so we can query & listen without
   // throwing too many requests at the server.
-  map.addListener('idle', performSearch);
+//   map.addListener('idle', performSearch);
 }
 
 function performSearch() {
@@ -85,15 +57,16 @@ function performSearch() {
     bounds: map.getBounds(),
     keyword: 'best view'
   };
-  service.radarSearch(request, callback(random_places));
+  service.radarSearch(request, callback);
+
   console.log("in perform Search");
 }
 
 function callback(locations) {
-
-  for (var i = 0, result; result = locations[i]; i++) {
-    console.log(result[0]);
-    addMarker(result);
+    console.log(locations);
+    for (var i = 0, result; result = locations[i]; i++) {
+        console.log(result['fields'])
+        addMarker(result);
   }
     console.log("finish callback");
 }
@@ -107,7 +80,6 @@ function addMarker(place) {
   var marker = new google.maps.Marker({
     map: map,
     position: myLatLng,
-
   });
 
   console.log("finish marker begin listener");
@@ -129,7 +101,7 @@ function addMarker(place) {
     let request = {placeId: place[3]}
 
     service.getDetails(request, function(result, status) {
-      infoWindow.setContent(place[0]);
+      infoWindow.setContent("This");
       infoWindow.open(map, marker);
     });
   });
@@ -138,6 +110,34 @@ function addMarker(place) {
 
 $(document).ready(function() {
     console.log("ready");
+
+    $("#searchInput").keypress(function(event) {
+
+        if (event.keyCode == 13) {
+        
+            event.preventDefault();
+            console.log($(this).val())
+
+            $.ajax({
+                beforeSend: setCsrfToken,
+                type: "POST",
+                url: "/search_by_map",
+                data: {
+                    "html_loc": $("input[name=html_loc").val(),
+                },
+                success: function (response) {
+                    console.log(response);
+                    mapCenter = {lat: 0, lng: 100.206},
+                    initMap();
+                    map.addListener('idle', performSearch);
+                },
+
+                error: function(response) {
+                    console.log("No Such Location");
+                }
+            });
+        }
+    });
 });
 
 </script>
