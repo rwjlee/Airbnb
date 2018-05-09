@@ -141,30 +141,30 @@
     
 }
 .search_input {
-    font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif !important;
-    font-size: 16px !important;
-    line-height: 22px !important;
-    letter-spacing: undefined !important;
-    padding-top: undefined !important;
-    padding-bottom: undefined !important;
-    color: #484848 !important;
-    background-color: transparent !important;
-    border: 0px !important;
-    padding: 11px !important;
-    width: 100% !important;
-    font-weight: normal !important;
-    text-overflow: ellipsis !important;
+    font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif ;
+    font-size: 16px ;
+    line-height: 22px ;
+    letter-spacing: undefined ;
+    padding-top: undefined ;
+    padding-bottom: undefined ;
+    color: #484848 ;
+    background-color: transparent ;
+    border: 0px ;
+    padding: 11px ;
+    width: 100% ;
+    font-weight: normal ;
+    text-overflow: ellipsis ;
 }
 .search_button {
     display: none;
 }
 .navbar_right {
-    display: table !important;
-    list-style: none !important;
-    padding: 0px !important;
-    height: 64px !important;
+    display: table ;
+    list-style: none ;
+    padding: 0px ;
+    height: 64px ;
     vertical-align: middle;
-    font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif !important;
+    font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif ;
     margin-right: 20px;
 }
 
@@ -273,35 +273,52 @@ input.search_input:focus {
 .travel {
     width: 90%;
     margin: 0 auto;
+    margin-top: 30px;
+}
+.top_rated_listings {
+    width: 90%;
+    margin: 0 auto;
+}
+.praises {
+    width: 90%;
+    margin: 0 auto;
 }
 .travel_the_world {
-    font-weight: 700 !important;
-    margin-bottom: 0px !important;
-    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
-    font-size: 25px !important;
-    line-height: 30px !important;
-    letter-spacing: normal !important;
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
-    color: rgb(72, 72, 72) !important;
+    font-weight: 700 ;
+    margin-bottom: 0px ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 25px ;
+    line-height: 30px ;
+    letter-spacing: normal ;
+    padding-top: 2px ;
+    padding-bottom: 18px ;
+    color: rgb(72, 72, 72) ;
+    margin-left: 7px;
 }
 .cities {
-    display: default;
-
+    width: 100%;
+    font-size: 0px;
+    
 }
+.city_a {
+    width: 25%;
+    border: none;
+    padding: 0%;
+}
+
 .city_box {
-    background-color: transparent !important;
-    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px !important;
-    margin-bottom: 4px !important;
-    text-align: left !important;
-    width: 100% !important;
-    border-width: 1px !important;
-    border-style: solid !important;
-    border-color: rgba(0, 0, 0, 0.1) !important;
-    border-image: initial !important;
-    border-radius: 3px !important;
-    padding: 0px !important;
-    overflow: hidden !important;
+    width: 95%;
+    height: 72px;
+    background-color: transparent ;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px ;
+    text-align: left ;
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: rgba(0, 0, 0, 0.1) ;
+    border-image: initial ;
+    border-radius: 3px ;
+    padding: 0px ;
+    overflow: hidden ;
 }
 .city_image {
     width: 96px;
@@ -309,14 +326,265 @@ input.search_input:focus {
     background-image: url(https://a0.muscache.com/im/pictures/e3b8d12c-07dc-4f3d-9cdc-c79e0a442dd4.jpg?aki_policy=large);
 }
 .city_name {
+    word-wrap: break-word ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 16px ;
+    line-height: 18px ;
+    letter-spacing: normal ;
+    color: rgb(72, 72, 72) ;
+    font-weight: 700 ;
+    margin-left: 15px;
+    position: relative;
+    bottom: 30px;
+}
+.top_rated_listings {
+    width: 90%;
+    margin: 0 auto;
+}
+.top_rated_homes {
+    font-weight: 700 ;
+    margin-bottom: 0px ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 25px ;
+    line-height: 30px ;
+    letter-spacing: normal ;
+    padding-top: 2px ;
+    color: rgb(72, 72, 72) ;
+    margin-left: 7px;
+    margin-top: 40px;
+}
+.explore {
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 16px ;
+    line-height: 22px ;
+    padding-top: 0px ;
+    padding-bottom: 0px ;
+    color: rgb(72, 72, 72) ;
+    font-weight: 300 ;
+    margin-top: 0px ;
+    margin-left: 7px;
+}
+.listings {
+    width: 100%;
+
+}
+.listing_row {
+    width: 100%;
+    font-size: 0%;
+
+}
+.listing_a {
+    width: 25%;
+    border: none;
+    padding: 0%;
+}
+button.listing_a:focus {
+    outline-width: 0;
+}
+.listing_box {
+    align-content: flex-start;
+    display: flex;
+    width: 95%;
+
+}
+.listing_image_box {
+    position: relative ;
+    width: 100% ;
+    z-index: 0 ;
+    border-bottom-left-radius: 3px ;
+    border-bottom-right-radius: 3px ;
+    border-top-left-radius: 3px ;
+    border-top-right-radius: 3px ;
+    overflow: hidden ;
+
+}
+.listing_image {
+    width: 100%;
+    height: 205px;
+    background-image: url(https://a0.muscache.com/im/pictures/e3b8d12c-07dc-4f3d-9cdc-c79e0a442dd4.jpg?aki_policy=large);
+    
+
+}
+.listing_TEXT {
+    margin-top: 8px;
+
+
+}
+.listing_type {
+    word-wrap: break-word ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 13px ;
+    line-height: 16px ;
+    letter-spacing: normal ;
+    padding-top: 0px ;
+    padding-bottom: 0px ;
+    color: rgb(72, 72, 72) ;
+    font-weight: 700 ;
+    margin: 0px ;
+
+}
+.listing_name {
+    word-wrap: break-word ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 16px ;
+    line-height: 22px ;
+    padding-top: 0px ;
+    padding-bottom: 0px ;
+    color: rgb(72, 72, 72) ;
+    font-weight: 700 ;
+    margin: 0px ;
+
+}
+.listing_price {
+    word-wrap: break-word ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 14px ;
+    line-height: 18px ;
+    letter-spacing: normal ;
+    padding-top: 0px ;
+    padding-bottom: 0px ;
+    color: rgb(72, 72, 72) ;
+    font-weight: 300 ;
+    margin-top: 3px;
+    margin-bottom: 3px;
+
+}
+.listing_review {
+
+}
+.review_stars {
+
+}
+.star {
+    display: inline-block ;
+    color: rgb(0, 132, 137) ;
+    font-size: 9px ;
+    height: 10px ;
+    margin-right: 1px ;
+    width: 9px ;
+}
+.review_text {
+
+    font-weight: normal ;
+    word-wrap: break-word ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 12px ;
+    line-height: 16px ;
+    letter-spacing: normal ;
+    padding-top: 0px ;
+    padding-bottom: 0px ;
+    color: rgb(72, 72, 72) ;
+    display: inline ;
+    margin: 0px ;
+}
+.praises {
+    margin-top: 30px;
+    font-size: 0px;
+    padding-top: 25px;
+    padding-bottom: 30px;
+    padding-left: 35px;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+
+}
+.customer_support_box {
+    width: 33.33%;
+    
+}
+.customer_support {
+    width: 88%;
+}
+.twentyfourseven {
     word-wrap: break-word !important;
     font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
-    font-size: 21px !important;
-    line-height: 18px !important;
+    font-size: 19px !important;
+    line-height: 26px !important;
     letter-spacing: normal !important;
     padding-top: 0px !important;
     padding-bottom: 0px !important;
     color: rgb(72, 72, 72) !important;
     font-weight: 700 !important;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.dayornight {
+    color: rgb(72, 72, 72) !important;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    word-wrap: break-word !important;
+    font-size: 16px !important;
+    line-height: 22px !important;
+    letter-spacing: normal !important;
+    font-weight: 300 !important;
     margin: 0px !important;
+}
+.hospitality_box {
+    width: 33.33%;
+    
+}
+.hospitality {
+    width: 88%;
+}
+.global {
+    word-wrap: break-word !important;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    font-size: 19px !important;
+    line-height: 26px !important;
+    letter-spacing: normal !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    color: rgb(72, 72, 72) !important;
+    font-weight: 700 !important;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.guests {
+    color: rgb(72, 72, 72) !important;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    word-wrap: break-word !important;
+    font-size: 16px !important;
+    line-height: 22px !important;
+    letter-spacing: normal !important;
+    font-weight: 300 !important;
+    margin: 0px !important;
+}
+.five_star_box {
+    width: 33.33%;
+
+}
+.five_star {
+    width: 88%;
+}
+.hosts {
+    word-wrap: break-word !important;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    font-size: 19px !important;
+    line-height: 26px !important;
+    letter-spacing: normal !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    color: rgb(72, 72, 72) !important;
+    font-weight: 700 !important;
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+}
+.from_fresh {
+    color: rgb(72, 72, 72) !important;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    word-wrap: break-word !important;
+    font-size: 16px !important;
+    line-height: 22px !important;
+    letter-spacing: normal !important;
+    font-weight: 300 !important;
+    margin: 0px !important;
+
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%
+  }
+.sticky + .filter_navbar_awesome {
+    padding-top: 60px;
 }

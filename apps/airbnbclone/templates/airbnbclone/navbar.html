@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+<nav class="navbar navbar-expand-lg nav_main ml-2 navbar-static-top" id="navbar">
+>>>>>>> 438af0a0b34c7f85e90c652cbf7ccd4d534513d4
 
 <nav class="navbar navbar-expand-lg nav_main ml-2">
 
@@ -42,4 +46,25 @@
       </div>
 
     </div>
+<<<<<<< HEAD
 </nav>
+=======
+</nav>
+{% block scripts %}
+<script>
+    window.onscroll = function() {myFunction()};
+    var navbar = document.getElementById("navbar");
+    var sticky = navbar.offsetTop;
+    function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
+    
+</script>
+{% endblock %}
+
+
+>>>>>>> 438af0a0b34c7f85e90c652cbf7ccd4d534513d4

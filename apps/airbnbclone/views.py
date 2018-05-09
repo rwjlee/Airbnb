@@ -9,7 +9,8 @@ from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
 import pandas as pd
-from math import sin, cos, sqrt, atan2, radians
+import math as math
+
 from django.core import serializers
 
 # Create your views here.
@@ -310,11 +311,42 @@ def write_review(request, booking_id):
         return redirect('airbnbclone:index')
 
     booking = m.Booking.objects.get(id = booking_id)
-
     context = {
         'booking': booking,
     } 
     return render(request, 'airbnbclone/write_review.html', context)
+
+def submit_review(request, booking_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    booking = m.Booking.objects.get(id = booking_id)
+
+    review = m.Review.objects.create(
+        booking_id = booking_id,
+        description = request.POST["html_description"],
+        star_rating = request.POST["html_star_rating"],
+    )
+
+    listing = m.Listing.objects.get(id = booking.home_listing_id)
+
+
+    listing.number_reviews += 1
+    listing.save()
+
+    ratings = m.Review.objects.filter(booking__home_listing__id = booking.home_listing_id).all()
+
+    rating_list = [rating.star_rating for rating in ratings]
+    avg_rating = sum(rating_list) / float(len(rating_list))
+    listing.average_rating = avg_rating
+    listing.save()
+
+    context = {
+        'booking': booking,
+        'review': review,
+        'listing': listing,
+    } 
+    return render(request, 'airbnbclone/my_bookings.html', context)
+
 
 #### AVAILABILITIES
 
@@ -388,13 +420,16 @@ def listing(request, listing_id):
         room = m.Listing.objects.get(id = listing_id)
         if not room.active:
             return redirect('airbnbclone:index')
+        reviews = m.Review.objects.filter(booking__home_listing_id=listing_id)
     except:
+        raise
         room = None
         return redirect('airbnbclone:index')
 
     context = {
         'api_key' : MAP_API_KEY,
         'room': room,
+        'reviews': reviews,
     }
     print("listing got okay")
     print(room.address)
@@ -613,24 +648,24 @@ def save_favorite(request):
     pass
 
 
-def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
-    # approximate radius of earth in km
-    R = 6373.0
+# def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
+#     # approximate radius of earth in km
+#     R = 6373.0
 
-    lat1 = radians(addr_lat)
-    lon1 = radians(addr_lon)
-    lat2 = radians(center_lat)
-    lon2 = radians(center_lon)
+#     lat1 = radians(addr_lat)
+#     lon1 = radians(addr_lon)
+#     lat2 = radians(center_lat)
+#     lon2 = radians(center_lon)
 
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
+#     dlon = lon2 - lon1
+#     dlat = lat2 - lat1
 
-    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+#     a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+#     c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-    distance = R * c
+#     distance = R * c
 
-    return distance
+#     return distance
 
 def search_by_map(request):
     address = request.POST['html_loc']
