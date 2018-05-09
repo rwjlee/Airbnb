@@ -1,0 +1,81 @@
+{% extends 'airbnbclone/base.html' %} 
+
+{% block body %}
+<div class="bootstrap-iso">
+    <h3>Make Your Listing Available</h3>
+<div class="container-fluid">
+   <form action="{% url 'airbnbclone:add_avail' %}" method="POST">
+    <div class="row">
+     <div class="form-group col-2">
+       <label class="control-label" for="date">Date</label>
+       <input class="form-control fromdate" name="from_date" placeholder="YYYY-MM-DD" type="text"/>
+     </div>
+     <div class="form-group col-2"> 
+        <label class="control-label" for="date">Date</label>
+        <input class="form-control todate" name="to_date" placeholder="YYYY-MM-DD" type="text"/>
+      </div>
+    </div>
+     <div class="form-group"> 
+       <button class="btn btn-primary avail-button" name="submit" type="submit">Submit</button>
+     </div>
+    </form>
+
+ 
+</div>
+</div>
+
+{% endblock %} 
+
+{% block scripts %}
+
+<script>
+
+$(document).ready(function () {
+
+
+    let todayDate = new Date();
+
+    $(".fromdate").click(function(event) {
+
+      let date_input=$('input[name="from_date"]');
+
+      let options={
+        format: 'yyyy-mm-dd',
+        todayHighlight: true,
+        startDate: todayDate,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+
+      console.log($(this).val());
+    });
+
+    $(".todate").click(function(event) {
+
+        let date_input=$('input[name="to_date"]');
+
+        let setDate = todayDate;
+        fromdateVal = new Date($(".fromdate").val());
+        console.log(fromdateVal.getTime());
+        console.log(setDate.getTime());
+
+        if (setDate.getTime() < fromdateVal.getTime()) {
+          setDate=fromdateVal;
+        } else {
+          console.log("nothing");
+        }
+
+        let options={
+          format: 'yyyy-mm-dd',
+          todayHighlight: true,
+          startDate: setDate,
+          autoclose: true,
+        };
+
+        date_input.datepicker(options);
+    });
+
+})
+</script> 
+
+{% endblock %}

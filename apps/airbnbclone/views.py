@@ -206,8 +206,17 @@ def authenticate_booking(request):
     return JsonResponse({'message': 'method not allowed'})
 
 def test_booking(request):
+    avail = m.Availability.objects.filter(Q(listing_id=6) & Q(available=1)).all()
+    room = [a.one_day.strftime('%m-%d-%Y') for a in avail]
+    # room = {"2018-12-11": 1, "2018-06-07": 0}
+    
+    print("----------test_booking---------")
+    print(room)
+    context = {
+        'room': room,
+    }
 
-    return render(request, 'airbnbclone/booking.html')
+    return render(request, 'airbnbclone/booking.html', context)
 
 def create_booking(request):
     user_id = request.POST["html_user_id"]
@@ -219,7 +228,7 @@ def create_booking(request):
 
     avail_list = check_dates(checkin, checkout, listing_id)
     if avail_list is None:
-        messages.error(request, "In correct dates")
+        messages.error(request, "Incorrect dates")
         return None
 
     if len(avail_list) == 0:
@@ -240,7 +249,7 @@ def create_booking(request):
             home_listing_id = listing_id, 
             from_date = checkin,
             to_date = checkout,
-            guests = guests,
+            num_guests = guests,
             charge_amount = charge,
         )
         print("-------{}---------".format(booking.id))
@@ -282,6 +291,12 @@ def update_avail(request, start_date, end_date, listing_id, available):
 
     return avail_list
 
+## add avail from html page using ajax
+def add_avail(request):
+
+    return render(request, 'airbnbclone/add_avail.html')
+
+
 def find_avail(one_date, listing_id):
     try:
         avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = one_date)).first()
@@ -292,9 +307,13 @@ def find_avail(one_date, listing_id):
     except:
         return (one_date, False)
 
-
 def check_dates(start_date, end_date, listing_id):
     if (end_date <= start_date):
+        return None
+        
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    print("-------{}--------".format(today))
+    if start_date < today:
         return None
 
     mydates = pd.date_range(start_date, end_date).tolist()
@@ -320,8 +339,6 @@ def listing(request, listing_id):
     }
     print("listing got okay")
     print(room.address)
-    # geo_address = get_json(get_url(room.address, room.city, room.country))
-    # pprint(geo_address)
     return render(request, 'airbnbclone/listing.html', context)
 
 def get_price_range(request, input):
@@ -371,11 +388,11 @@ def results(request):
     print(results)
 
     if 'guests' in request.session:
-        for listing in m.Listing.objects.filter(num_guests=request.session['guests']).filter(active=1):
+        for listing in m.Listing.objects.filter(max_guests=request.session['guests']).filter(active=1):
             if listing not in results:
                 results.append(listing)
         for result in results:
-            if request.session['guests'] != result.num_guests:
+            if request.session['guests'] != result.max_guests:
                 results.remove(result)
     
     if 'home_type' in request.session:
@@ -478,11 +495,11 @@ def create_listing(request):
             bedroom = request.POST['html_bedroom']
             bath = request.POST['html_bath']
             bed = request.POST['html_bed']
-            num_guests= request.POST['html_num_guests']
+            max_guests= request.POST['html_max_guests']
 
-            country = request.POST['html_country']
-            city = request.POST['html_city']
-            address = request.POST['html_address']
+            country = request.POST['html_country'].upper()
+            city = request.POST['html_city'].upper()
+            address = request.POST['html_address'].upper()
 
             price = request.POST['html_price']
             
@@ -490,6 +507,13 @@ def create_listing(request):
             desc = request.POST['html_desc']
 
             amen = get_amenities("dryer")
+
+            geo_address = get_json(get_url(address, city, country))['results'][0]
+            addr_lat = geo_address['geometry']['location']['lat']
+            addr_lon = geo_address['geometry']['location']['lng']
+
+            print("====lat: {}".format(addr_lat))
+            print("====lon: {}".format(addr_lon))
             
             listing = m.Listing.objects.create(
                 listing_type = listing_type,
@@ -497,7 +521,7 @@ def create_listing(request):
                 bedroom = bedroom,
                 bath = bath,
                 bed = bed,
-                num_guests= num_guests,
+                max_guests= max_guests,
                 country = country,
                 city = city,
                 address = address,
@@ -505,6 +529,8 @@ def create_listing(request):
                 desc = desc,
                 price = price,
                 host_id = host,
+                addr_lat = addr_lat,
+                addr_lon = addr_lon,
             )
 
             listing.active = True
@@ -519,3 +545,7 @@ def create_listing(request):
         return redirect('airbnbclone:listing', listing.id)
 
     return render(request, 'airbnbclone/create_listing.html')
+
+def save_favorite(request):
+    pass
+    

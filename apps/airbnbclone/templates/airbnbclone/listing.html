@@ -3,9 +3,29 @@
 {% block body %}
 
 <div class="listing-banner">
-  <img src="https://a0.muscache.com/im/pictures/27217858/9d9dabee_original.jpg?aki_policy=xx_large" alt="Image here" class="big-picture">
-  <a href="" class="view-photos">View Photos</a>
-  <button class="btn"> click here </button>
+
+  <div class="row justify-content-between">
+  <div class="col-8">
+    <div class="p-3 photo-button">
+      <a href="" class="btn btn-light">View Photos</a>
+    </div>
+
+  </div>
+  <div class="col-4">
+    <div class="row p-3 float-right">
+      <a href="" class="btn btn-light mr-3">
+        <i class="fa fa-share"></i>
+        Share
+      </a>
+      <a href="" class="btn btn-light mr-3">
+        <i class="fa fa-heart-o"></i>
+        Save
+      </a>
+    </div>
+ 
+  </div>
+  
+  </div>
 </div>
 
 <div class="container">
@@ -16,7 +36,7 @@
       <h3>{{room.listing_type}}</h3>
       <h2>{{room.name}}</h2>
       <p>{{room.city}}, {{room.country}}</p>
-      <p>{{room.num_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
+      <p>{{room.max_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
       <p>{{room.desc}}</p>
       <a href="">Contact host</a>
     </div>
@@ -49,21 +69,13 @@
 
     <hr>
 
-    <div class="neighborhood">
-      <p>The neighborhood</p>
-        <iframe
-        width="450"
-        height="250"
-        frameborder="0" style="border:0"
+    <div class="neighborhood" id="map">
 
-        src="https://www.google.com/maps/embed/v1/search?key={{api_key}} &q={{room.address}}+{{room.city}}+{{room.country}}">
-
-      </iframe>
-      <span>Exact location information is provided after a booking is confirmed.</span>
     </div>
+    <span>Exact location information is provided after a booking is confirmed.</span>
   </div>
 
-  <div class="listing-avail col-4 border border-secondary">
+  <div class="listing-avail col-4 border">
     <div class="container">
     <div class="row">
       <div class="h3">${{room.price}}</div>
@@ -103,8 +115,36 @@
 
 <script>
 
+  function initMap() {
+
+    let addrLat = {{room.addr_lat}};
+    let addrLon = {{room.addr_lon}};
+    let map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 14,
+      center: {lat: addrLat, lng: addrLon},
+      mapTypeId: 'terrain',
+      radius: 300,
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.5,
+      strokeWeight: 1,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+    });
+    
+    let cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.5,
+        strokeWeight: 1,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: map.center,
+        radius: 300,
+    });
+  }
+
     $(document).ready(function () {
-      console.log('{{request.session.user_id}}');
+
         let d = new Date();
         let dYear = d.getFullYear();
         let dMonth = d.getMonth()+1;
@@ -154,6 +194,10 @@
 
         });
     });
-</script> 
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap">
+</script>
 
 {% endblock %}

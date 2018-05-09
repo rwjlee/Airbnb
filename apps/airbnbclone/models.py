@@ -28,7 +28,7 @@ class Listing(models.Model):
     bedroom = models.IntegerField()
     bath = models.IntegerField()
     bed = models.IntegerField()
-    num_guests = models.IntegerField()
+    max_guests = models.IntegerField()
     city = models.TextField(max_length=100, blank=True)
     country = models.TextField(max_length=100, blank=True)
     address = models.TextField(blank=True)
@@ -39,14 +39,28 @@ class Listing(models.Model):
     name = models.TextField(max_length=200)
     desc = models.TextField(blank=True)
 
+    addr_lat = models.FloatField(null=True)
+    addr_lon = models.FloatField(null=True)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Favorite(models.Model):
+    guest = models.ForeignKey(User, related_name = 'likes', on_delete=models.CASCADE)
+    home_listing = models.ForeignKey(Listing, related_name= 'saved_by', on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('guest', 'home_listing')
 
 class Booking(models.Model):
     guest = models.ForeignKey(User, related_name = 'has_bookings', on_delete=models.CASCADE)
     home_listing = models.ForeignKey(Listing, related_name='has_guests', on_delete=models.CASCADE)
     charge_amount = models.FloatField(null=True)
-    guests = models.IntegerField(null=True)
+    num_guests = models.IntegerField(null=True)
     
     from_date = models.DateField()
     to_date = models.DateField()
