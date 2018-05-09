@@ -3,10 +3,101 @@
 {% block body %}
 {% include 'airbnbclone/filter_navbar.html' %}
 
-<div class="jumbotron jumbotron-fluid index-bg">
-    <div class="container col-md-6 offset-md-3">
-        <h1 class="display-4 text-center text-white">Hello, Where do you want to go?</h1>
-        <p class="text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, repellat.</p>
+<div class="page">
+    <div class="travel debug">
+        <div class="travel_the_world">Travel the world with Airbnb</div>
+        <div class="cities">
+            <a class="city_box">
+                <div class="city_image d-inline-block"></div>
+                <div class="city_name d-inline-block">Paris</div>
+            </a>
+            <a class="city_box">
+                <div class="city_image d-inline-block"></div>
+                <div class="city_name d-inline-block">Paris</div>
+            </a>
+            <a class="city_box">
+                <div class="city_image d-inline-block"></div>
+                <div class="city_name d-inline-block">Paris</div>
+            </a>
+            <a class="city_box">
+                <div class="city_image d-inline-block"></div>
+                <div class="city_name d-inline-block">Paris</div>
+            </a>
+        </div>
     </div>
+
+
+    <div class="top_rated_listings">
+        <span class="top_rated_homes d-block">
+            Top-rated homes
+        </span>
+        <span class="explore d-block">
+            Explore some of the best-reviewed homes in the world
+        </span>
+        <div class="listings">
+            <div class="listing_row d-block">
+                <div class="listing_box d-inline-block">
+                    <div class="listing_image d-block"></div>
+                    <span class="listing_type d-block">
+                        Listing Type
+                    </span>
+                    <span class="listing_name d-block">
+                        listing name
+                    </span>
+                    <span class="listing_price d-block">
+                        listing price
+                    </span>
+                    <span class="listing_review d-block">
+                        listing review
+                    </span>
+                    
+                </div>
+            </div>
+        </div>
+        <span class="show_all">
+
+        </span>
+    </div>
+
+    <hr>
+
+    <div class="praises">
+        <div class="customer_support d-inline-block">
+            <span class="message_icon d-block">
+                icon 
+            </span>
+            <span class="247 d-block">
+                24/7 customer service
+            </span>
+            <span class="day d-block">
+                Day or night
+            </span>
+        </div>
+        <div class="hospitality d-inline-block">
+            <span class="house_icon d-block">
+                icon 
+            </span>
+            <span class="global d-block">
+                Global hospitality standards
+            </span>
+            <span class="guests d-block">
+                Guests review their
+            </span>
+        </div>
+        <div class="5star d-inline-block">
+            <span class="star_icon d-block">
+                icon 
+            </span>
+            <span class="hosts d-block">
+                5-star hosts
+            </span>
+            <span class="from_fresh d-block">
+                From fresh-pressed sheets
+            </span>
+        </div>
+
+    </div>
+
+    <hr>
 </div>
 {% endblock %}

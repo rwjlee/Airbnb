@@ -260,3 +260,57 @@ input.search_input:focus {
 .debug {
     border: 1px solid red;
 }
+
+/* INDEX PAGE */
+.page {
+    width: 100%;
+}
+.travel {
+    width: 90%;
+    margin: 0 auto;
+}
+.travel_the_world {
+    font-weight: 700 !important;
+    margin-bottom: 0px !important;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    font-size: 25px !important;
+    line-height: 30px !important;
+    letter-spacing: normal !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    color: rgb(72, 72, 72) !important;
+}
+.cities {
+
+}
+.city_box {
+    background-color: transparent !important;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px !important;
+    margin-bottom: 4px !important;
+    text-align: left !important;
+    width: 100% !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    border-image: initial !important;
+    border-radius: 3px !important;
+    padding: 0px !important;
+    overflow: hidden !important;
+}
+.city_image {
+    width: 96px;
+    height: 72px;
+    background-image: url(https://a0.muscache.com/im/pictures/e3b8d12c-07dc-4f3d-9cdc-c79e0a442dd4.jpg?aki_policy=large);
+}
+.city_name {
+    word-wrap: break-word !important;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    font-size: 21px !important;
+    line-height: 18px !important;
+    letter-spacing: normal !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    color: rgb(72, 72, 72) !important;
+    font-weight: 700 !important;
+    margin: 0px !important;
+}
