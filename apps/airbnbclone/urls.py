@@ -26,6 +26,8 @@ urlpatterns = [
     path('send_message/<int:conversation_id>', views.send_message, name='send_message'),
     path('convo/<int:conversation_id>', views.convo, name='convo'),
     path('cancel_booking/<int:booking_id>', views.cancel_booking, name='cancel_booking'),
+    path('start_convo/<int:listing_id>', views.start_convo, name='start_convo'),
+    path('display_convo/<int:conversation_id>', views.display_convo, name='display_convo'),
 
     path('add_avail', views.add_avail, name='add_avail'),
 ]

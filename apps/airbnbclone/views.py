@@ -151,10 +151,15 @@ def my_bookings(request):
     return render(request, 'airbnbclone/my_bookings.html', context)
 
 def all_messages(request):
-    messages = m.Message.objects.all()
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    user_id = request.session['user_id']
+
+    conversations = m.Conversation.objects.filter(Q(host_id = user_id) | Q(guest_id = user_id)).order_by('-created_at')
 
     context = {
-        'messages': messages,
+        'conversations': conversations,
     }
     return render(request, 'airbnbclone/all_messages.html', context)
 
@@ -188,6 +193,33 @@ def send_message(request, conversation_id):
                 pass
 
     return redirect('airbnbclone:convo', conversation_id=conversation_id)
+
+def start_convo(request, listing_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    
+    listing = m.Listing.objects.get(id = listing_id)
+
+    conversation = m.Conversation.objects.create(
+        listing_id = listing.id,
+        host_id = listing.host_id,
+        guest_id = request.session['user_id'],
+    )
+
+    return redirect('airbnbclone:display_convo', conversation_id=conversation.id)
+
+def display_convo(request, conversation_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    conversation = m.Conversation.objects.get(id = conversation_id)
+
+    context = {
+        'conversation': conversation,
+    } 
+
+    return render(request, 'airbnbclone/convo.html', context)
+
 
 def authenticate_booking(request):
     if request.method== "POST":

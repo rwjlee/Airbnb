@@ -1,7 +1,14 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">Conversation with {{ listing.host.username }}</h3>
+    <h3 class="text-center">Conversation with
+            {% if request.session.user_id != conversation.guest.id %}
+            {{ conversation.guest.username }}
+            {% else %}
+            {{ conversation.host.username }}
+           {% endif %}
+
+    </h3>
     <hr>
     <form action="{% url 'airbnbclone:send_message' conversation_id=conversation.id %}" method="POST"id="send_message">
             {% csrf_token %}
@@ -12,13 +19,13 @@
     </form>
     <hr> 
     {% for message in messages %}
-    <div>{{ message.contents }}</div>
+    <div class="mb-2">{{ message.contents }}</div>
     <div class="fineprint">Sent by {{ message.from_user.username }} on {{ message.created_at }}</div>
     <hr> 
     {% endfor %}
     <div class="largeprint">Details for this listing:</div>
-    <div><a href="{% url 'airbnbclone:listing' listing_id=conversation.listing.id %}" >{{ listing.name }}</a></div>
-    <div class="fineprint">{{ listing.desc }}</div>
+    <div><a href="{% url 'airbnbclone:listing' listing_id=conversation.listing.id %}" >{{ conversation.listing.name }}</a></div>
+    <div class="fineprint">{{ conversation.listing.desc }}</div>
 
 
 </div>
