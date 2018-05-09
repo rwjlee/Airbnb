@@ -130,7 +130,7 @@ def cancel_booking(request, booking_id):
 
         if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
             booking.is_cancelled = 1
-            update_avail(request, booking.from_date, booking.to_date, booking.home_listing_id, 1)
+            update_avail(booking.from_date, booking.to_date, booking.home_listing_id, 1)
             booking.save()
     except:
         return redirect('airbnbclone:index')
@@ -253,7 +253,7 @@ def create_booking(request):
             charge_amount = charge,
         )
         print("-------{}---------".format(booking.id))
-        update_avail(request, booking.from_date, booking.to_date, listing_id, 0)
+        update_avail(booking.from_date, booking.to_date, listing_id, 0)
         
     except:
         messages.error(request, "Booking cannot be completed")
@@ -264,14 +264,15 @@ def create_booking(request):
 def update_avail_one(add_date, listing_id, available):
     try:
         avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = add_date)).first()
+        print("=================avail")
         if avail:
             avail.available = available
             avail.save()
             print("=======available========")
         else:
-            avail = m.Availability.objects.create(listing_id = listing_id, available=available, one_day = add_date)
-            print(avail.listing.host.username)
             print("========not available=======")
+            avail = m.Availability.objects.create(listing_id = listing_id, available=available, one_day = add_date)
+            print(avail.listing.address)
     except:
         raise
         print("cannot update")
@@ -279,7 +280,7 @@ def update_avail_one(add_date, listing_id, available):
 
     return avail
 
-def update_avail(request, start_date, end_date, listing_id, available):
+def update_avail(start_date, end_date, listing_id, available):
 
     if start_date >= end_date:
         messages.error(request, "checkin date cannot be less than checkout date")
@@ -290,7 +291,7 @@ def update_avail(request, start_date, end_date, listing_id, available):
     avail_list = [update_avail_one(day, listing_id, available) for day in d_range]
 
     return avail_list
-
+    
 ## add avail from html page using ajax
 def add_avail(request):
 
@@ -340,6 +341,8 @@ def listing(request, listing_id):
     print("listing got okay")
     print(room.address)
     return render(request, 'airbnbclone/listing.html', context)
+
+
 
 def get_price_range(request, input):
     if input == 1:
@@ -452,6 +455,9 @@ def become_a_host(request):
     if 'user_id' not in request.session:
         return redirect('airbnbclone:register')
     return render(request, 'airbnbclone/create_listing.html')
+
+
+
 
 def get_url(address, city, country):
     url = "https://maps.googleapis.com/maps/api/geocode/json?address={},+{},+{}&key={}".format(address, city, country, MAP_API_KEY)
