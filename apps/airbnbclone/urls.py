@@ -28,4 +28,5 @@ urlpatterns = [
     path('cancel_booking/<int:booking_id>', views.cancel_booking, name='cancel_booking'),
 
     path('add_avail', views.add_avail, name='add_avail'),
+    path('view_maps', views.view_maps, name="view_maps")
 ]

@@ -379,8 +379,7 @@ def filters(request):
     
     return JsonResponse({})
 
-def filter_by_date(request):
-    pass
+
         
 def results(request):
     results = []
@@ -554,4 +553,18 @@ def create_listing(request):
 
 def save_favorite(request):
     pass
+
+
+def search_by_date(request):
+    pass
+
+def search_by_map(request):
+    pass
+
+def view_maps(request):
+    context = {
+        'api_key' : MAP_API_KEY,
+    }
+
+    return render(request, 'airbnbclone/view_maps.html', context)
     

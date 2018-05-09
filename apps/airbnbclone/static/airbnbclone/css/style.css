@@ -196,3 +196,8 @@
     height: 250px;
     border: 1px solid grey;
 }
+
+#map-search {
+    width: 450px;
+    height: 250px;
+}
