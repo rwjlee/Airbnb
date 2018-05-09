@@ -588,3 +588,7 @@ button.listing_a:focus {
 .sticky + .filter_navbar_awesome {
     padding-top: 60px;
 }
+
+.bluecolor {
+    color: rgb(0, 132, 137);
+}
