@@ -73,7 +73,7 @@ class Booking(models.Model):
 
 class Availability(models.Model):
     listing = models.ForeignKey(Listing, related_name = 'has_availability', on_delete=models.CASCADE)
-    one_day = models.DateField(unique=True)
+    one_day = models.DateField(unique=False)
     available = models.BooleanField(default=False)
     
     created_at = models.DateTimeField(auto_now_add=True)
