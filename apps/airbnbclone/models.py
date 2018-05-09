@@ -82,6 +82,14 @@ class Availability(models.Model):
     class Meta:
         unique_together = ('listing', 'one_day')
 
+class Review(models.Model):
+    booking = models.ForeignKey(Booking, related_name = 'booking_reviewed', on_delete=models.CASCADE)
+    description = models.CharField(max_length=500, default=None)
+    star_rating = models.IntegerField()
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Conversation(models.Model):
     listing = models.ForeignKey(Listing, related_name= 'convo_about', on_delete=models.CASCADE)
 

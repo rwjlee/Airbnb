@@ -48,9 +48,7 @@ def edit_profile(request):
         return redirect('airbnbclone:index')
 
     user = m.User.objects.get(id = request.session['user_id'])
-    print("*****")
-    print(str(user.birthday))
-    print("*****")
+
     context = {
         "user": user,
         "birthday": str(user.birthday),
@@ -302,7 +300,15 @@ def create_booking(request):
 #### REVIEWS
 
 def write_review(request, booking_id):
-    pass
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    booking = m.Booking.objects.get(id = booking_id)
+
+    context = {
+        'booking': booking,
+    } 
+    return render(request, 'airbnbclone/write_review.html', context)
 
 #### AVAILABILITIES
 
