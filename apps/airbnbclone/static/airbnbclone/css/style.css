@@ -117,6 +117,7 @@
     background: rgb(255, 255, 255) ;
     border-bottom: 1px solid lightgray;
     padding: 16px ;
+    padding-left: 0%;
 }
 .searchbar_div{
     height: 48px;
@@ -134,11 +135,65 @@
     position: relative ;
 }
 .search_icon {
+    padding-left: 12px;
+    padding-top: 11px;
     
+}
+.search_input {
+    font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif !important;
+    font-size: 16px !important;
+    line-height: 22px !important;
+    letter-spacing: undefined !important;
+    padding-top: undefined !important;
+    padding-bottom: undefined !important;
+    color: #484848 !important;
+    background-color: transparent !important;
+    border: 0px !important;
+    padding: 11px !important;
+    width: 100% !important;
+    font-weight: normal !important;
+    text-overflow: ellipsis !important;
 }
 .search_button {
     display: none;
 }
+.navbar_right {
+    display: table !important;
+    list-style: none !important;
+    padding: 0px !important;
+    height: 64px !important;
+    vertical-align: middle;
+    font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif !important;
+    margin-right: 20px;
+}
+
+.navbar_link {
+    display: inline-block ;
+    margin: 0px 4px 0px 8px ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 14px ;
+    line-height: 18px ;
+    letter-spacing: normal ;
+    padding-top: 6px ;
+    padding-bottom: 6px ;
+    color: rgb(72, 72, 72) ;
+    cursor: pointer ;
+    display: inline-block ;
+    padding-left: 12px ;
+    padding-right: 12px ;
+    position: relative ;
+    text-align: center ;
+    width: auto ;
+    background: none ;
+    text-decoration: none ;
+    vertical-align: center ;
+    margin-top: 16px;
+}
+.navbar_link:hover {
+    text-decoration: none;
+    color: none;
+}
+
 
 .filter_nav {
     padding: 16px 72px ;
@@ -147,7 +202,7 @@
     position: relative ;
     height: 64px ;
     background: rgb(255, 255, 255) ;
-    border-bottom: 0px ;
+    border-bottom: 1px solid lightgray ;
     padding: 16px ;
 }
 .filter_nav_div {
@@ -194,4 +249,13 @@
     width: 450px;
     height: 250px;
     border: 1px solid grey;
+}
+input.search_input:focus {
+    outline-width: 0;
+}
+.search_input::-webkit-input-placeholder {
+    color: rgb(67, 67, 67);
+}
+.debug {
+    border: 1px solid red;
 }
