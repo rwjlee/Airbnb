@@ -9,6 +9,9 @@ from apps.airbnbclone.constants import MAP_API_KEY
 from django.db.models import Q
 import json, requests
 import pandas as pd
+import math
+
+from django.core import serializers
 
 # Create your views here.
 def index(request):
@@ -23,6 +26,8 @@ def check_length(request, data, name):
         messages.error(request, name + ' cannot be left blank')
         return False
     return True
+
+#### LOGIN AND REGISTRATION
 
 def edit_profile(request):
     if 'user_id' not in request.session:
@@ -47,9 +52,7 @@ def edit_profile(request):
         return redirect('airbnbclone:index')
 
     user = m.User.objects.get(id = request.session['user_id'])
-    print("*****")
-    print(str(user.birthday))
-    print("*****")
+
     context = {
         "user": user,
         "birthday": str(user.birthday),
@@ -120,35 +123,7 @@ def view_profile(request, user_id):
     }
     return render(request, 'airbnbclone/view_profile.html', context)
 
-def cancel_booking(request, booking_id):
-    if 'user_id' not in request.session:
-        return redirect('airbnbclone:index')
-
-    try:
-        booking = m.Booking.objects.get(id = booking_id)
-        user_id = request.session['user_id']
-
-        if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
-            booking.is_cancelled = 1
-            update_avail(booking.from_date, booking.to_date, booking.home_listing_id, 1)
-            booking.save()
-    except:
-        return redirect('airbnbclone:index')
-
-    return redirect('airbnbclone:my_bookings')
-    
-def my_bookings(request):
-    user_id = request.session['user_id']
-    today = datetime.date.today()
-    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
-    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
-
-    context = {
-        'user_id': user_id,
-        'current_bookings': current_bookings,
-        'past_bookings': past_bookings
-    }
-    return render(request, 'airbnbclone/my_bookings.html', context)
+#### MESSAGES AND CONVERSATIONS
 
 def all_messages(request):
     if 'user_id' not in request.session:
@@ -220,6 +195,37 @@ def display_convo(request, conversation_id):
 
     return render(request, 'airbnbclone/convo.html', context)
 
+#### BOOKINGS
+
+def cancel_booking(request, booking_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    try:
+        booking = m.Booking.objects.get(id = booking_id)
+        user_id = request.session['user_id']
+
+        if booking.guest_id == user_id or booking.home_listing.host_id == user_id:
+            booking.is_cancelled = 1
+            update_avail(booking.from_date, booking.to_date, booking.home_listing_id, 1)
+            booking.save()
+    except:
+        return redirect('airbnbclone:index')
+
+    return redirect('airbnbclone:my_bookings')
+    
+def my_bookings(request):
+    user_id = request.session['user_id']
+    today = datetime.date.today()
+    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
+    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
+
+    context = {
+        'user_id': user_id,
+        'current_bookings': current_bookings,
+        'past_bookings': past_bookings
+    }
+    return render(request, 'airbnbclone/my_bookings.html', context)
 
 def authenticate_booking(request):
     if request.method== "POST":
@@ -295,6 +301,52 @@ def create_booking(request):
     
     return booking
 
+#### REVIEWS
+
+def write_review(request, booking_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+
+    booking = m.Booking.objects.get(id = booking_id)
+    context = {
+        'booking': booking,
+    } 
+    return render(request, 'airbnbclone/write_review.html', context)
+
+def submit_review(request, booking_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    booking = m.Booking.objects.get(id = booking_id)
+
+    review = m.Review.objects.create(
+        booking_id = booking_id,
+        description = request.POST["html_description"],
+        star_rating = request.POST["html_star_rating"],
+    )
+
+    listing = m.Listing.objects.get(id = booking.home_listing_id)
+
+
+    listing.number_reviews += 1
+    listing.save()
+
+    ratings = m.Review.objects.filter(booking__home_listing__id = booking.home_listing_id).all()
+
+    rating_list = [rating.star_rating for rating in ratings]
+    avg_rating = sum(rating_list) / float(len(rating_list))
+    listing.average_rating = avg_rating
+    listing.save()
+
+    context = {
+        'booking': booking,
+        'review': review,
+        'listing': listing,
+    } 
+    return render(request, 'airbnbclone/my_bookings.html', context)
+
+
+#### AVAILABILITIES
+
 def update_avail_one(add_date, listing_id, available):
     try:
         avail = m.Availability.objects.filter(Q(listing_id = listing_id) & Q(one_day = add_date)).first()
@@ -357,20 +409,24 @@ def check_dates(start_date, end_date, listing_id):
 
     return avail_list
 
+#### LISTINGS
+
 def listing(request, listing_id):
-    print("1111111 {}".format(request.method))
     
     try:
         room = m.Listing.objects.get(id = listing_id)
         if not room.active:
             return redirect('airbnbclone:index')
+        reviews = m.Review.objects.filter(booking__home_listing_id=listing_id)
     except:
+        raise
         room = None
         return redirect('airbnbclone:index')
 
     context = {
         'api_key' : MAP_API_KEY,
         'room': room,
+        'reviews': reviews,
     }
     print("listing got okay")
     print(room.address)
@@ -413,8 +469,7 @@ def filters(request):
     
     return JsonResponse({})
 
-def filter_by_date(request):
-    pass
+
         
 def results(request):
     results = []
@@ -588,4 +643,31 @@ def create_listing(request):
 
 def save_favorite(request):
     pass
+
+
+def search_by_date(request):
+    pass
+
+def search_by_map(request):
+    address = request.POST['html_loc']
+    geo_address = get_json(get_url(address, '', ''))['results'][0]
+    center_lat = geo_address['geometry']['location']['lat']
+    center_lon = geo_address['geometry']['location']['lng']
+    context = {
+        'center_lat': center_lat,
+        'center_lon': center_lon,
+        'results' : json.loads(serializers.serialize("json", m.Listing.objects.all()))
+    }
+    return JsonResponse(context)
+
+def view_maps(request):
+    context = {
+        'api_key': MAP_API_KEY,
+    }
+
+    return render(request, 'airbnbclone/view_maps.html', context)
+
+
+
+
     
