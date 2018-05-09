@@ -10,11 +10,34 @@
                 
                 {% for listing in listings %}
                 <div class="home col-4">
-                    <a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">Go to Page</a>
-                    <p>{{listing.listing_type}}</p>
-                    <p>{{listing.name}}</p>
+                    <a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">{{ listing.name }}</a>
+                    <p>{{listing.listing_type}}, {{listing.bed}} beds</p>
                     <p>from {{listing.price}} per night - Free cancellation</p>
-                    <p>5/5 stars</p>
+                    <p>{{listing.average_rating}}/5 stars<span class="bluecolor fineprint">
+                            {% if listing.average_rating < 0.5 %}
+                            <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 1 %}
+                            <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 1.5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 2 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 2.5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 3 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 3.5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 4 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 4.5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i>
+                            {% elif listing.average_rating == 5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+                            {% endif %}</span></p>
+
                 </div>
                 {% endfor %}
             </div>

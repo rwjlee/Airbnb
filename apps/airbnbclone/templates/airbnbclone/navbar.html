@@ -21,7 +21,7 @@
 
       <div class="navbar-nav navbar_right">
           {% if request.session.user_id %}
-          <a class="navbar_link" href="{% url 'airbnbclone:my_bookings' %}">Become a Host</a>
+          <a class="navbar_link" href="{% url 'airbnbclone:create_listing' %}">Become a Host</a>
           <a class="navbar_link" href="{% url 'airbnbclone:my_bookings' %}">Saved</a>
           <a class="navbar_link" href="{% url 'airbnbclone:my_bookings' %}">Trips</a>
           <a class="navbar_link" href="{% url 'airbnbclone:all_messages' %}">Messages</a>
@@ -38,7 +38,6 @@
           {% else %}
           <a class="navbar_link" href="{% url 'airbnbclone:login' %}">Login</a>
           <a class="navbar_link" href="{% url 'airbnbclone:register' %}">Register</a>
-          <a>Account</a>
           {% endif %}
       </div>
 
