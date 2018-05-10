@@ -43,4 +43,5 @@ urlpatterns = [
 
     path('results_edit', views.results_edit, name='results_edit'),
     path('filter_by', views.filter_by, name='filter_by'),
+    path('save_favorite', views.save_favorite, name='save_favorite'),
 ]

@@ -643,3 +643,20 @@ button.listing_a:focus {
 .copy-me {
     display: none;
 }
+.slideshow {
+    margin: 0 auto;
+    width: 65%;
+}
+.photo_container {
+    width: 90%;
+    margin: 0 auto;
+    height: 475px;
+    margin-top: 30px;
+}
+.scroll_buttons {
+    
+    
+}
+.photo_button {
+    width: 100%;
+}
