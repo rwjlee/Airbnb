@@ -18,7 +18,7 @@ gmaps = googlemaps.Client(key='AIzaSyDSLQt7KusqUJAwSxviZ2iBJ371b5mI3EQ')
 
 
 MEDIA_DIR = 'media/'
-IMAGE_ROOT = '/Users/CryptoWork/Downloads/images/'
+IMAGE_ROOT = '/Users/pesomerville/CodeRemote/images/'
 file_names = []
 def create_images():
     print('suck it')
