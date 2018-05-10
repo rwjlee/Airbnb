@@ -12,9 +12,8 @@
     </div>
     <div class="col-4 ">
       <div class="row p-3 float-right" style="position: relative; top: -355px; left: -20px;">
-        <a href="" class="btn save ml-5">
-          <i class="fa fa-heart-o mr-2"></i>
-          Save
+        <a href="" class="btn save ml-5" id="save-btn">
+          
         </a>
       </div>
 
@@ -164,10 +163,8 @@
 
   function initMap() {
     
-    let input = document.getElementById('search_id');
-    let autocomplete = new google.maps.places.Autocomplete(input);   
-
-
+  let input = document.getElementById('search_id');
+  let autocomplete = new google.maps.places.Autocomplete(input);   
 
   let addrLat = {{ room.addr_lat }};
   let addrLon = {{ room.addr_lon }};
@@ -217,6 +214,47 @@
     $("#checkin").attr("min", todayDate);
     $("#checkout").attr("min", todayDate);
     $("#numguests").attr("max", 5);
+
+
+    let favStr = '<i class="fa fa-heart mr-2" style="color:red"></i>Saved'
+    let unfavStr = '<i class="fa fa-heart-o mr-2" style="color:red"></i>Save'
+
+    let favDiv = $("#save-btn")
+
+    if ("{{fav_status}}" == "1") {
+      favDiv.append(favStr);
+    } else {
+      favDiv.append(unfavStr)
+    }
+
+    $("#save-btn").click(function (event) {
+      console.log(event);
+      event.preventDefault();
+      $.ajax({
+        beforeSend: setCsrfToken,
+        type: "POST",
+        url: "/save_favorite",
+        data: {
+          "html_user_id": "{{request.session.user_id}}",
+          "html_listing": "{{room.id}}",
+        },
+        success: function (response) {
+          console.log(response);
+          favDiv.empty();
+          if (response.fav == 1) {
+            favDiv.append(favStr);
+          } else {
+            favDiv.append(unfavStr);
+          }
+          
+        },
+        error: function (response) {
+          console.log(response);
+        }
+
+      })
+
+    })
 
     $("#book-btn").click(function (event) {
       console.log(event);

@@ -417,7 +417,6 @@ def check_dates(start_date, end_date, listing_id):
 #### LISTINGS
 
 def listing(request, listing_id):
-    
     try:
         room = m.Listing.objects.get(id = listing_id)
         if not room.active:
@@ -426,6 +425,16 @@ def listing(request, listing_id):
         primary_photo = m.Photo.objects.get(listing_id = room.id, is_primary = True)
         photos = m.Photo.objects.filter(listing_id = room.id)
 
+        if 'user_id' in request.session:
+            user_id = request.session['user_id']
+            fav_list = m.Favorite.objects.filter(Q(home_listing_id = room.id) & Q(guest_id = user_id))
+            fav = len(fav_list)
+            print("============fav")
+        else:
+            fav = 0
+
+        print("========{}fav".format(fav))
+        
     except:
         raise
         room = None
@@ -437,6 +446,7 @@ def listing(request, listing_id):
         'reviews': reviews,
         'primary' : primary_photo,
         'photos' : photos,
+        'fav_status': fav,
     }
     print("listing got okay")
     print(room.address)
@@ -688,11 +698,29 @@ def create_listing(request):
     return render(request, 'airbnbclone/create_listing.html')
 
 def save_favorite(request):
-    pass
 
+    if "user_id" not in request.session:
+        return JsonResponse({'errors': "Login First", "url": redirect('airbnbclone:login').url}, status=400)
     
+    if request.method == "POST":
+        listing_id = request.POST["html_listing"]
+        user_id = request.session['user_id']
 
+        try:
+            fav = m.Favorite.objects.get(Q(home_listing_id=listing_id) & Q(guest_id = user_id))
+            fav.delete()
+            fav_status = 0
+        except:
+            fav = m.Favorite.objects.create(home_listing_id=listing_id, guest_id=user_id)
+            fav_status = 1
 
+        context = {
+            "fav": fav_status,
+        }
+        return JsonResponse(context)
+    
+    return JsonResponse({'errors': "Not Allowed", "url": redirect('airbnbclone:index').url}, status=400)
+    
 
 def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
     # approximate radius of earth in km
@@ -714,20 +742,28 @@ def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
     return distance
 
 def filter_by(request):
+    
+    all_listings = m.Listing.objects.filter(active=1)
 
+    if len(all_listings)==0:
+        return JsonResponse({'errors': "No Result"}, status=400)
+    
     fromDate = request.POST['html_fromDate']
     toDate = request.POST['html_toDate']
     guests = request.POST['html_guests']
     homeType = request.POST['html_homeType']
     price = request.POST['html_price']
 
-    all_listings = m.Listing.objects.filter(active=1)
-
     if guests!="Guests":
         all_listings = all_listings.filter(max_guests__gte=guests)
+        if len(all_listings)==0:
+            return JsonResponse({'errors': "No Result"}, status=400)
         
     if homeType!="Home Type":
         all_listings = all_listings.filter(privacy_type=homeType)
+        if len(all_listings)==0:
+            return JsonResponse({'errors': "No Result"}, status=400)
+        
     
     if price!="Price":
         price_list = get_price_range(int(price))
@@ -735,7 +771,9 @@ def filter_by(request):
             all_listings = all_listings.filter(price__gte=price_list[0]).filter(price__lte=higher)
         elif len(price_list) == 2:
             all_listings = all_listings.filter(price__gte=price_list[0]).filter(price__lte=price_list[1])
-        
+
+        if len(all_listings)==0:
+            return JsonResponse({'errors': "No Result"}, status=400)
 
     if fromDate and toDate:
         final_list = []
@@ -749,12 +787,9 @@ def filter_by(request):
             if 0 not in open_list:
                 final_list.append(listing)
 
-        
         all_listings = final_list
 
-    print("all listing =========")
-    print(all_listings)
-    
+
     if len(all_listings)==0:
         return JsonResponse({'errors': "No Result"}, status=400)
     
@@ -809,8 +844,7 @@ def search_by_map(request):
     return JsonResponse(context)
 
 def results_edit(request):
-
-
+    print(request.GET)
     context = {
         'listings': m.Listing.objects.all(),
         'api_key': MAP_API_KEY,
