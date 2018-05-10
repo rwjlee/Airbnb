@@ -482,12 +482,20 @@ def my_favorites(request):
         return redirect('airbnbclone:index')
     
     user_id = request.session['user_id']
-    my_favorites = m.Listing.objects.filter(saved_by = user_id)
-    print(len(my_favorites))
+    my_favorites = m.Listing.objects.filter(saved_by__guest_id = user_id)
+
+    fav_photos = []
+
+    for my_favorite in my_favorites:
+        photo = m.Photo.objects.get(listing_id = my_favorite.id, is_primary = 1)
+        fav_photos.append(photo)
+
+    print(fav_photos)
 
     context = {
         'user_id': user_id,
         'my_favorites': my_favorites,
+        'fav_photos': fav_photos,
     }
     return render(request, 'airbnbclone/my_favorites.html', context)
 
