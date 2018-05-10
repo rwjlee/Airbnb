@@ -747,7 +747,7 @@ def create_listing(request):
 
         return redirect('airbnbclone:listing', listing_obj.id)
 
-    return render(request, 'airbnbclone/create_listing.html')
+    return render(request, 'airbnbclone/create_listing.html', {'hide_search': True, 'api_key': MAP_API_KEY})
 
 def save_favorite(request):
 
@@ -864,10 +864,15 @@ def filter_by(request):
     center_lat = final_results[0].addr_lat
     center_lon = final_results[0].addr_lon
 
+    photo_array = [m.Photo.objects.get(listing_id = listing.id) for listing in final_results]
+
+    print("photoarrya okay")
+
     context = {
         'center_lat': center_lat,
         'center_lon': center_lon,
-        'results' : json.loads(serializers.serialize("json", final_results))
+        'results' : json.loads(serializers.serialize("json", final_results)),
+        'images' : json.loads(serializers.serialize("json", photo_array)),
     }
     return JsonResponse(context)
 
@@ -878,11 +883,11 @@ def search_by_map(request):
     center_lat = geo_address['geometry']['location']['lat']
     center_lon = geo_address['geometry']['location']['lng']
 
-    all_listings = m.Listing.objects.filter(active=1).all()
+    all_listings = m.Listing.objects.filter(active=1).order_by("id").all()[:38]
 
     if len(all_listings)==0:
         return JsonResponse({'errors': "No Result"}, status=400)
-    
+
     results_tuple = [(distance_to_center(listing.addr_lat, listing.addr_lon, center_lat, center_lon), listing) for listing in all_listings]
 
     results_tuple.sort(key=itemgetter(0))
@@ -892,10 +897,13 @@ def search_by_map(request):
     center_lat = final_results[0].addr_lat
     center_lon = final_results[0].addr_lon
 
+    photo_array = [m.Photo.objects.get(listing_id = listing.id) for listing in final_results]
+
     context = {
         'center_lat': center_lat,
         'center_lon': center_lon,
-        'results' : json.loads(serializers.serialize("json", final_results))
+        'results' : json.loads(serializers.serialize("json", final_results)),
+        'images' : json.loads(serializers.serialize("json", photo_array)),
     }
     return JsonResponse(context)
 
