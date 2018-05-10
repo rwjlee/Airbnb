@@ -678,6 +678,7 @@ def create_listing(request):
                         photo.save()
 
 
+
         except:
             raise
             print('This is wrong')
@@ -830,7 +831,6 @@ def photos(request, listing_id):
     photos = m.Photo.objects.filter(listing_id = listing_id)
     context = {
         'photos' : photos,
-
     }
     return render(request, 'airbnbclone/photos.html', context)
 
