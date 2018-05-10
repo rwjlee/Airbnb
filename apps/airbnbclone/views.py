@@ -349,7 +349,6 @@ def submit_review(request, booking_id):
 
     listing = m.Listing.objects.get(id = booking.home_listing_id)
 
-
     listing.number_reviews += 1
     listing.save()
 
@@ -365,7 +364,8 @@ def submit_review(request, booking_id):
         'review': review,
         'listing': listing,
     } 
-    return render(request, 'airbnbclone/my_bookings.html', context)
+    # return render(request, 'airbnbclone/my_bookings.html', context)
+    return redirect('airbnbclone:my_bookings')
 
 
 #### AVAILABILITIES
@@ -728,12 +728,15 @@ def create_listing(request):
 
             listing_obj.active = True
 
-            amen_list = m.Amenity.objects.all()
+            # amen_list = m.Amenity.objects.all()
 
-            for amen in amen_list:
-                if amen.name in request.POST:
-                    listing_obj.amenities.add(amen)
-
+            # for amen in amen_list:
+            #     if request.POST[amen.name]!='':
+            #         listing_obj.amenities.add(amen)
+            
+            from_date = request.POST['html_start_date']
+            to_date = request.POST['html_end_date']
+            
             try:
                 update_avail(from_date, to_date, listing_obj.id, 1)
             except:
