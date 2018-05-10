@@ -459,7 +459,6 @@ def my_listings(request):
         return redirect('airbnbclone:index')
     
     user_id = request.session['user_id']
-    today = datetime.date.today()
     my_listings = m.Listing.objects.filter(host_id = user_id)
 
     context = {
@@ -467,6 +466,20 @@ def my_listings(request):
         'my_listings': my_listings,
     }
     return render(request, 'airbnbclone/my_listings.html', context)
+
+def my_favorites(request):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    
+    user_id = request.session['user_id']
+    my_favorites = m.Listing.objects.filter(saved_by = user_id)
+    print(len(my_favorites))
+
+    context = {
+        'user_id': user_id,
+        'my_favorites': my_favorites,
+    }
+    return render(request, 'airbnbclone/my_favorites.html', context)
 
 def get_price_range(input):
     # if input == 1:
