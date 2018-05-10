@@ -53,6 +53,33 @@
                 <div class="form-group">
                         <input type="file" name="html_photo" multiple required class="form-control mb-3 picturetitle" id="exampleFormControlFile1">
                 </div>
+
+                <div class="form-group">
+                    <input type="date" class="form-control" name="html_checkout" id="">
+                </div>
+                <div class="form-group">
+                    <input type="date" class="form-control" name="html_checkin" id="">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="parking" value="0" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                        Parking
+                    </label>
+                </div>
+                <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="shower" value="0" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                            Shower
+                        </label>
+                    </div>
+                    <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="wifi" value="0" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">
+                                Wifi
+                            </label>
+                        </div>
+
+                
                 
                 
                 <button class="btn btn-primary" role="submit">Save</button>
@@ -63,4 +90,11 @@
     
     </div>
     </div>
+
+{% block scripts %}
+<script>
+
+</script>
+
+{% endblock %}
 
