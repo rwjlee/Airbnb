@@ -109,3 +109,10 @@ class Message(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Photo(models.Model):
+    url = models.TextField(max_length=128)
+    listing = models.ForeignKey(Listing, related_name= 'photos', on_delete=models.CASCADE)
+    is_primary = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

@@ -37,5 +37,7 @@ urlpatterns = [
     path('view_maps', views.view_maps, name="view_maps"),
     path('search_by_map', views.search_by_map, name='search_by_map'),
 
+    path('photos/<int:listing_id>', views.photos, name='photos'),
+
     path('results_edit', views.results_edit, name='results_edit'),
 ]

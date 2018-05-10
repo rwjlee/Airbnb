@@ -10,6 +10,7 @@ from django.db.models import Q
 import json, requests
 import pandas as pd
 import math as math
+from django.core.files.storage import FileSystemStorage
 
 from django.core import serializers
 
@@ -421,6 +422,9 @@ def listing(request, listing_id):
         if not room.active:
             return redirect('airbnbclone:index')
         reviews = m.Review.objects.filter(booking__home_listing_id=listing_id).order_by('-created_at')
+        primary_photo = m.Photo.objects.get(listing_id = room.id, is_primary = True)
+        photos = m.Photo.objects.filter(listing_id = room.id)
+
     except:
         raise
         room = None
@@ -430,6 +434,8 @@ def listing(request, listing_id):
         'api_key' : MAP_API_KEY,
         'room': room,
         'reviews': reviews,
+        'primary' : primary_photo,
+        'photos' : photos,
     }
     print("listing got okay")
     print(room.address)
@@ -606,14 +612,15 @@ def create_listing(request):
 
             amen = get_amenities("dryer")
 
-            geo_address = get_json(get_url(address, city, country))['results'][0]
-            addr_lat = geo_address['geometry']['location']['lat']
-            addr_lon = geo_address['geometry']['location']['lng']
+            try:
+                geo_address = get_json(get_url(address, city, country))['results'][0]
+                addr_lat = geo_address['geometry']['location']['lat']
+                addr_lon = geo_address['geometry']['location']['lng']
+            except:
+                pass
 
-            print("====lat: {}".format(addr_lat))
-            print("====lon: {}".format(addr_lon))
             
-            listing = m.Listing.objects.create(
+            listing_obj = m.Listing.objects.create(
                 listing_type = listing_type,
                 privacy_type = privacy_type,
                 bedroom = bedroom,
@@ -631,16 +638,31 @@ def create_listing(request):
                 addr_lon = addr_lon,
             )
 
-            listing.active = True
-            listing.amenities.add(amen)
-            listing.save()
+            listing_obj.active = True
+            listing_obj.amenities.add(amen)
+            listing_obj.save()
+
+            if 'html_photo' in request.FILES:
+                html_photo = request.FILES.getlist('html_photo')
+                print(html_photo)
+                fs = FileSystemStorage()
+                for file in html_photo:
+                    filename = fs.save(file.name, file)
+                    photo = m.Photo.objects.create(listing_id = listing_obj.id, url = fs.url(filename), is_primary = False)
+                    print(photo.url)
+                    print(html_photo[0].name) 
+                    print(photo.is_primary)
+                    if "/media/{}".format(html_photo[0].name) == photo.url:
+                        photo.is_primary = True
+                        photo.save()
+
 
         except:
             raise
             print('This is wrong')
             return redirect('airbnbclone:index')
 
-        return redirect('airbnbclone:listing', listing.id)
+        return redirect('airbnbclone:listing', listing_obj.id)
 
     return render(request, 'airbnbclone/create_listing.html')
 
@@ -696,7 +718,13 @@ def view_maps(request):
 
     return render(request, 'airbnbclone/view_maps.html', context)
 
+def photos(request, listing_id):
+    photos = m.Photo.objects.filter(listing_id = listing_id)
+    context = {
+        'photos' : photos,
 
+    }
+    return render(request, 'airbnbclone/photos.html', context)
 
 
     

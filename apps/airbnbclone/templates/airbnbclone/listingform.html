@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row my-5">
         <div class="col-6 offset-3">
-            <form action="{% url 'airbnbclone:create_listing' %}" method='POST'>
+            <form action="{% url 'airbnbclone:create_listing' %}" method='POST' enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="listing-type-form">Listing Type</label>
@@ -49,7 +49,10 @@
                 </div>
                 <div class="form-group">
                         <input type="number" class="form-control" min="0" name="html_price" id="" placeholder="price">
-                    </div>
+                </div>
+                <div class="form-group">
+                        <input type="file" name="html_photo" multiple class="form-control mb-3 picturetitle" id="exampleFormControlFile1">
+                </div>
                 
                 
                 <button class="btn btn-primary" role="submit">Save</button>
