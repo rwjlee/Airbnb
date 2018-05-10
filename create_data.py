@@ -1,4 +1,3 @@
-
 from shutil import copyfile
 import googlemaps
 from datetime import datetime
@@ -18,18 +17,17 @@ django.setup()
 gmaps = googlemaps.Client(key='AIzaSyDSLQt7KusqUJAwSxviZ2iBJ371b5mI3EQ')
 
 
-MEDIA_DIR = 'media/'
+MEDIA_DIR = '/media/'
 IMAGE_ROOT = '/Users/pesomerville/CodeRemote/images/'
 file_names = []
 def create_images():
-    print('suck it')
     for image in (os.listdir(IMAGE_ROOT)):
-        file_names.append(image)
+        file_names.append(image)    
     for name in file_names:
-        copyfile(IMAGE_ROOT+name, MEDIA_DIR+name)
-    for i in m.Listing.objects.all():
-        print(i)
-        m.Photo.objects.create(listing_id = i.id, url = MEDIA_DIR + file_names[i.id], is_primary = True)
+        print(IMAGE_ROOT+name)
+        copyfile(IMAGE_ROOT+name, './'+MEDIA_DIR+name)
+    for listing in m.Listing.objects.all():
+        m.Photo.objects.create(listing=listing, url = MEDIA_DIR + file_names[listing.id], is_primary = True)
 
 
 FIRST_NAMES = ['Ned', 'John', 'Arya', 'Sansa', 'Cersei', 'Rob', 'Jorah', 'Daenerys', 'Joffrey', 'Robert', 'Samwell', 'Catelyn', 'Oberyn', 'Gregor', 'Rhaegar', 'Sandor']
@@ -187,5 +185,4 @@ def create_data():
     create_amenities()
     create_users()
     create_listings()
->>>>>>> eaf4655c55d7165dfc3847c2e905ca1d9f965560
-
+    create_images()

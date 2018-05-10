@@ -716,12 +716,14 @@ def create_listing(request):
 
             listing_obj.active = True
 
-            amen_list = m.Amenity.objects.all()
+            # amen_list = m.Amenity.objects.all()
 
-            for amen in amen_list:
-                if request.POST[amen.name]!='':
-                    listing_obj.amenities.add(amen)
+            # for amen in amen_list:
+            #     if request.POST[amen.name]!='':
+            #         listing_obj.amenities.add(amen)
             
+            from_date = request.POST['html_start_date']
+            to_date = request.POST['html_end_date']
             try:
                 update_avail(from_date, to_date, listing_obj.id, 1)
             except:
@@ -733,12 +735,13 @@ def create_listing(request):
             if 'html_photo' in request.FILES:
                 html_photo = request.FILES.getlist('html_photo')
                 fs = FileSystemStorage()
+                photo = None
                 for file in html_photo:
                     filename = fs.save(file.name, file)
                     photo = m.Photo.objects.create(listing_id = listing_obj.id, url = fs.url(filename), is_primary = False)
-                    if "/media/{}".format(html_photo[0].name) == photo.url:
-                        photo.is_primary = True
-                        photo.save()
+                
+                photo.is_primary = True
+                photo.save()
 
         except:
             raise
