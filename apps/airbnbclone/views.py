@@ -81,7 +81,6 @@ def register(request):
                 request.session['username'] = user.username
                 request.session['user_id'] = user.id
                 request.session['email'] = user.email
-                request.session['birthday'] = user.birthday
             except:
                 raise
                 messages.error(request,'Account already in use')
@@ -101,6 +100,19 @@ def login(request):
                 request.session['username'] = user.username
                 request.session['user_id'] = user.id
                 request.session['email'] = user.email
+                request.session['has_listings'] = len(user.has_listings.all())
+
+                # try:
+                #     print(user.has_listings)
+                #     has_listings = len(user.has_listings)
+                # except:
+                #     raise
+                #     has_listings = 0
+
+                # print(has_listings)
+
+                # request.session['has_listings'] = has_listings
+
                 return redirect('airbnbclone:index')
             else:
                 messages.error(request, 'Invalid login')
@@ -452,6 +464,20 @@ def listing(request, listing_id):
     print(room.address)
     return render(request, 'airbnbclone/listing.html', context)
 
+def my_listings(request):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    
+    user_id = request.session['user_id']
+    today = datetime.date.today()
+    my_listings = m.Listing.objects.filter(host_id = user_id)
+
+    context = {
+        'user_id': user_id,
+        'my_listings': my_listings,
+    }
+    return render(request, 'airbnbclone/my_listings.html', context)
+
 def get_price_range(input):
     # if input == 1:
     #     request.session['price'] = [0.0, 50.0]
@@ -688,6 +714,7 @@ def create_listing(request):
                         photo.save()
 
 
+
         except:
             raise
             print('This is wrong')
@@ -864,7 +891,6 @@ def photos(request, listing_id):
     photos = m.Photo.objects.filter(listing_id = listing_id)
     context = {
         'photos' : photos,
-
     }
     return render(request, 'airbnbclone/photos.html', context)
 
