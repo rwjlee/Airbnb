@@ -1,112 +1,191 @@
+
+from shutil import copyfile
+import googlemaps
+from datetime import datetime
+
 import django
 
-import data_constants as const
 import apps.airbnbclone.models as m
 import random
+from django.core.files.storage import FileSystemStorage
+
+import os
+
+from pprint import pprint
 
 django.setup()
 
+gmaps = googlemaps.Client(key='AIzaSyDSLQt7KusqUJAwSxviZ2iBJ371b5mI3EQ')
+
+
+MEDIA_DIR = 'media/'
+IMAGE_ROOT = '/Users/pesomerville/CodeRemote/images/'
+file_names = []
+def create_images():
+    print('suck it')
+    for image in (os.listdir(IMAGE_ROOT)):
+        file_names.append(image)
+    for name in file_names:
+        copyfile(IMAGE_ROOT+name, MEDIA_DIR+name)
+    for i in m.Listing.objects.all():
+        print(i)
+        m.Photo.objects.create(listing_id = i.id, url = MEDIA_DIR + file_names[i.id], is_primary = True)
+
+
+FIRST_NAMES = ['Ned', 'John', 'Arya', 'Sansa', 'Cersei', 'Rob', 'Jorah', 'Daenerys', 'Joffrey', 'Robert', 'Samwell', 'Catelyn', 'Oberyn', 'Gregor', 'Rhaegar', 'Sandor']
+LAST_NAMES = ['Clegane', 'Baratheon', 'Targareyen', 'Stark', 'Lannister', 'Arryn', 'Tully', 'Greyjoy', 'Umber', 'Martel', 'Tarly', 'Mormont', 'Glover']
+
 NAMES = ['Mansion', 'Party House', 'Riverfront', 'Time of your Life', 'FOMO', 'YOLO', 'Boathouse', 'Beach villa', 'Dreams come true', 'Trump Palace', 'Royal Residences', 'Grand Hotel']
 
+STAY_TYPE = ['Entire place','Private room','Shared room']
+PROP_TYPE = ['House','Apartment','Bed and breakfast','Boutique hotel','Bungalow', 'Cabin','Chalet','Cottage','Guest suite','Guesthouse','Hostel','Hotel','Loft','Resort','Townhouse', 'Villa']
+UNIQ_TYPE = ['Barn','Boat','Camper/RV','Campsite','Casa particular','Castle','Cave','Cycladic house','Dammuso','Dome house','Earth house','Farm stay','Houseboat','Hut','Igloo','Island','Lighthouse','Minsu','Nature lodge','Pension (South Korea)','Plane','Ryokan','Shepherdshut (U.K., France)','Tent','Tiny house','Tipi','Train','Treehouse','Trullo','Windmill','Yurt']
+AMENITIES = [{ 'icon': 'fa-cutlery', 'name': 'Kitchen'},
+{ 'icon': 'fa-shower', 'name': 'Shower'},
+{ 'icon': 'fa-snowflake-o', 'name': 'A/C'},
+{ 'icon': 'fa-bathtub', 'name': 'Bathtub'},
+{ 'icon': 'fa-wifi', 'name': 'Wifi'},
+{ 'icon': 'fa-coffee', 'name': 'Breakfast'},
+{ 'icon': 'fa-fire', 'name': 'Fireplace'},
+{ 'icon': 'fa-bell', 'name': 'Buzzer/wireless intercom'},
+{ 'icon': 'fa-male', 'name': 'Doorman'},
+{ 'icon': 'fa-female', 'name': 'Hair dryer'},
+{ 'icon': 'fa-desktop', 'name': 'Workspace'},
+{ 'icon': 'fa-television', 'name': 'TV'},
+{ 'icon': 'fa-child', 'name': 'High chair'},
+{ 'icon': 'fa-video-camera', 'name': 'Self check-in'},
+{ 'icon': 'fa-fire-extinguisher', 'name': 'Fire extinguisher'},
+{ 'icon': 'fa-gamepad', 'name': 'Game console'},]
+
+FACILITIES = ['Free parking','Gym','Hot tub','Pool']
+RULES = [('Events allowed','No events allowed'),('Pets allowed','No pets allowed'),('Smoking permitted','Smoking not permitted')]
+
 ADDRESSES = [
-    { 'street_addr': '5757 Wilshire Blvd #106', 'zip_code': '90036', 'country': 'USA', },
-    { 'street_addr': '1161 Westwood Blvd', 'zip_code': '90024', 'country': 'USA', },
-    { 'street_addr': '11707 San Vicente Blvd', 'zip_code': '90049', 'country': 'USA', },
-    { 'street_addr': '3242 Cahuenga Blvd W', 'zip_code': '90068', 'country': 'USA', },
-    { 'street_addr': '5453 Hollywood Blvd', 'zip_code': '90027', 'country': 'USA', },
-    { 'street_addr': '138 S Central Ave', 'zip_code': '90012', 'country': 'USA', },
-    { 'street_addr': '3722 Crenshaw Blvd', 'zip_code': '90016', 'country': 'USA', },
-    { 'street_addr': '8817 S Sepulveda Blvd', 'zip_code': '90045', 'country': 'USA', },
-    { 'street_addr': '5855 W Century Blvd', 'zip_code': '90045', 'country': 'USA', },
-    { 'street_addr': '120 S Los Angeles St #110', 'zip_code': '90012', 'country': 'USA', },
-    { 'street_addr': '555 W 5th St', 'zip_code': '90013', 'country': 'USA', },
-    { 'street_addr': '800 W Olympic Blvd #102', 'zip_code': '90015', 'country': 'USA', },
-    { 'street_addr': '1850 W Slauson Ave', 'zip_code': '90047', 'country': 'USA', },
-    { 'street_addr': '5857 S Central Ave', 'zip_code': '90001', 'country': 'USA', },
-    { 'street_addr': '906 Goodrich Blvd', 'zip_code': '90022', 'country': 'USA', },
-    { 'street_addr': '7724 Telegraph Rd', 'zip_code': '90040', 'country': 'USA', },
-    { 'street_addr': '17254 Lakewood Blvd', 'zip_code': '90706', 'country': 'USA', },
-    { 'street_addr': '429 Los Cerritos Center', 'zip_code': '90703', 'country': 'USA', },
-    { 'street_addr': '3575 Katella Ave', 'zip_code': '90720', 'country': 'USA', },
-    { 'street_addr': '1680 W Lomita Blvd', 'zip_code': '90710', 'country': 'USA', },
-    { 'street_addr': '8152 Sunset Blvd', 'zip_code': '90046', 'country': 'USA', },
-    { 'street_addr': '5223 W Century Blvd', 'zip_code': '90045', 'country': 'USA', },
-    { 'street_addr': '4947 Huntington Dr', 'zip_code': '90032', 'country': 'USA', },
-    { 'street_addr': '14742 Oxnard St', 'zip_code': '91411', 'country': 'USA', },
-    { 'street_addr': '5933 York Blvd', 'zip_code': '90042', 'country': 'USA', },
-    { 'street_addr': '2319 N San Fernando Rd', 'zip_code': '90065', 'country': 'USA', },
-    { 'street_addr': '4655 Hollywood Blvd', 'zip_code': '90027', 'country': 'USA', },
-    { 'street_addr': '6250 Hollywood Blvd', 'zip_code': '90028', 'country': 'USA', },
-    { 'street_addr': '400 World Way', 'zip_code': '90045', 'country': 'USA', },
-    { 'street_addr': '11603 Slater St', 'zip_code': '90059', 'country': 'USA', },
-    { 'street_addr': '8581 W Pico Blvd', 'zip_code': '90035', 'country': 'USA', },
-    { 'street_addr': '189 The Grove Dr', 'zip_code': '90036', 'country': 'USA', },
-    { 'street_addr': '901 South La Brea Ave #2', 'zip_code': '90036', 'country': 'USA', },
-    { 'street_addr': '4301 W Pico Blvd', 'zip_code': '90019', 'country': 'USA', },
-    { 'street_addr': '2575 W Pico Blvd', 'zip_code': '90006', 'country': 'USA', },
-    { 'street_addr': '852 S Broadway', 'zip_code': '90014', 'country': 'USA', },
-    { 'street_addr': '5601 Melrose Ave', 'zip_code': '90038', 'country': 'USA', },
-    { 'street_addr': '1528 North Vermont Avenue C', 'zip_code': '90027', 'country': 'USA', },
-    { 'street_addr': '523 N Fairfax Ave', 'zip_code': '90048', 'country': 'USA', },
+    { 'street_addr': '5757 Wilshire Blvd #106'},
+    { 'street_addr': '1161 Westwood Blvd'},
+    { 'street_addr': '11707 San Vicente Blvd'},
+    { 'street_addr': '3242 Cahuenga Blvd W'},
+    { 'street_addr': '5453 Hollywood Blvd'},
+    { 'street_addr': '138 S Central Ave'},
+    { 'street_addr': '3722 Crenshaw Blvd'},
+    { 'street_addr': '8817 S Sepulveda Blvd'},
+    { 'street_addr': '5855 W Century Blvd'},
+    { 'street_addr': '120 S Los Angeles St #110'},
+    { 'street_addr': '555 W 5th St'},
+    { 'street_addr': '800 W Olympic Blvd #102'},
+    { 'street_addr': '1850 W Slauson Ave'},
+    { 'street_addr': '5857 S Central Ave'},
+    { 'street_addr': '906 Goodrich Blvd'},
+    { 'street_addr': '7724 Telegraph Rd'},
+    { 'street_addr': '17254 Lakewood Blvd'},
+    { 'street_addr': '429 Los Cerritos Center'},
+    { 'street_addr': '3575 Katella Ave'},
+    { 'street_addr': '1680 W Lomita Blvd'},
+    { 'street_addr': '8152 Sunset Blvd'},
+    { 'street_addr': '5223 W Century Blvd'},
+    { 'street_addr': '4947 Huntington Dr'},
+    { 'street_addr': '14742 Oxnard St'},
+    { 'street_addr': '5933 York Blvd'},
+    { 'street_addr': '2319 N San Fernando Rd'},
+    { 'street_addr': '4655 Hollywood Blvd'},
+    { 'street_addr': '6250 Hollywood Blvd'},
+    { 'street_addr': '400 World Way'},
+    { 'street_addr': '11603 Slater St'},
+    { 'street_addr': '8581 W Pico Blvd'},
+    { 'street_addr': '189 The Grove Dr'},
+    { 'street_addr': '901 South La Brea Ave #2'},
+    { 'street_addr': '4301 W Pico Blvd'},
+    { 'street_addr': '2575 W Pico Blvd'},
+    { 'street_addr': '852 S Broadway'},
+    { 'street_addr': '5601 Melrose Ave'},
+    { 'street_addr': '1528 North Vermont Avenue C'},
+    { 'street_addr': '523 N Fairfax Ave'},
     
-    { 'street_addr': 'Paseo de la Reforma s/n', 'zip_code': '06500', 'country': 'Mexico', },
-    { 'street_addr': 'Paseo de la Reforma 476', 'zip_code': '06600', 'country': 'Mexico', },
-    { 'street_addr': 'Insurgentes Sur 235', 'zip_code': '06700', 'country': 'Mexico', },
-    { 'street_addr': 'Calle Durango 205 Local 1', 'zip_code': '06700', 'country': 'Mexico', },
-    { 'street_addr': 'Calle Hamburgo 87', 'zip_code': '06600', 'country': 'Mexico', },
+    { 'street_addr': 'Paseo de la Reforma s/n'},
+    { 'street_addr': 'Paseo de la Reforma 476'},
+    { 'street_addr': 'Insurgentes Sur 235'},
+    { 'street_addr': 'Calle Durango 205 Local 1'},
+    { 'street_addr': 'Calle Hamburgo 87'},
 
-    { 'street_addr': '463 Saint-Catherine', 'zip_code': 'H3B 1B1', 'country': 'Canada', },
-    { 'street_addr': '2050 Rue de Bleury', 'zip_code': 'H3A 2J5', 'country': 'Canada', },
-    { 'street_addr': '150 Saint-Catherine St', 'zip_code': 'H2X 3Y2', 'country': 'Canada', },
-    { 'street_addr': '245 Sherbrooke St', 'zip_code': 'H2X 1X8', 'country': 'Canada', },
-    { 'street_addr': '262 Saint-Catherine St', 'zip_code': 'H2X 2A1', 'country': 'Canada', },
+    { 'street_addr': '463 Saint-Catherine'},
+    { 'street_addr': '2050 Rue de Bleury'},
+    { 'street_addr': '150 Saint-Catherine St'},
+    { 'street_addr': '245 Sherbrooke St'},
+    { 'street_addr': '262 Saint-Catherine St'},
     
 ]
 
-USERS = [
-    {'email': 'jon@email.com', 'name': 'Jon L', 'password': '123'},
-    {'email': 'peter@email.com', 'name': 'Peter S', 'password': '123'},
-    {'email': 'rick@email.com', 'name': 'Rick L', 'password': '123'},
-    {'email': 'fiaz@email.com', 'name': 'Fiaz S', 'password': '123'},
-    {'email': 'etienne@email.com', 'name': 'Etienne D', 'password': '123'}
-]
+def make_user():
+    first_name = random.choice(FIRST_NAMES)
+    last_name = random.choice(LAST_NAMES)
+    return {'email': '{}@{}.com'.format(first_name, last_name).lower(), 'name': '{} {}'.format(first_name, last_name), 'password': '123'}
+
+def create_amenities():
+    for am in AMENITIES:
+        m.Amenity.objects.create(name=am['name'], font_class=am['icon'])
 
 def create_users():
-    for user in USERS:
+    for i in range(1, 100):
         try:
-            m.User.objects.create(email=user['email'], username=user['name'])
+            user = make_user()
+            m.User.objects.create(email=user['email'], username=user['name'], password=user['password'])
         except:
             pass
 
-def create_listing(addr_idx):
-    addr_entry = ADDRESSES[addr_idx]
-    params_dict = {
-        'name': random.choice(NAMES),
-        'desc': 'description',
-        'street_addr': addr_entry['street_addr'],
-        'zip_code': addr_entry['zip_code'],
-        'country': addr_entry['country'],
-        'gps_coordinates': str(addr_idx),
-        'stay_type': random.choice(range(len(const.STAY_TYPE))),
-        'prop_type': random.choice(range(len(const.PROP_TYPE))),
-        'uniq_type': random.choice(range(len(const.UNIQ_TYPE))),
-        'beds': random.choice(range(1, 51)),
-        'bedrooms': random.choice(range(1, 26)),
-        'bathrooms': random.choice(range(1, 11)),
-        'price_per_night': random.choice(range(100, 200)),
-        'amenities_mask': random.choice(range(1 << len(const.AMENITIES))),
-        'facilities_mask': random.choice(range(1 << len(const.FACILITIES))),
-        'rules_mask': random.choice(range(1 << len(const.RULES))),
-        'host_user_id': random.choice([1, 2, 3, 4, 5]),
-    }
-    listing, error = db.create_listing(params_dict)
-    if listing:
-        from_dt = '2018-{}-{}'.format(random.choice(range(1, 7)), random.choice(range(1, 28)))
-        to_dt = '2018-{}-{}'.format(random.choice(range(7, 13)), random.choice(range(1, 28)))
-        db.add_listing_dates(listing.id, from_dt, to_dt)
+def get_component(component):
+    def get_filter(city_data):
+        for item in city_data:
+            if component in item['types']:
+                return item['long_name']
+    return get_filter
+
 
 def create_listings():
-    for i in range(len(ADDRESSES)):
-        create_listing(i)
+    for addr in ADDRESSES:
+        address = addr['street_addr']
+        google_address = gmaps.geocode(address)[0]
+        location = google_address['geometry']['location']
+        city = get_component('locality')(google_address['address_components'])
+        country = get_component('country')(google_address['address_components'])
+        addr_lat = float(location['lat'])
+        addr_lon = float(location['lng'])
 
+        user_id = random.choice(range(1, 51))
+        listing_type = random.choice(PROP_TYPE)
+        privacy_type = random.choice(STAY_TYPE)
+        bedroom = random.choice(range(1, 50))
+        bed = random.choice(range(1, 30))
+        bath = random.choice(range(1, 25))
+        max_guests = random.choice(range(1, 20))
+        
+        price = random.choice(range(50, 1000))
+        active = True
+
+        name = '{} {}'.format(random.choice(LAST_NAMES), random.choice(NAMES))
+        description = ''
+
+        listing = m.Listing.objects.create(host_id=user_id, listing_type=listing_type, privacy_type=privacy_type, bedroom=bedroom, bath=bath, bed=bed , max_guests=max_guests, city=city, country=country, address=address, price=price, active=True, name=name, desc=description, addr_lat=addr_lat, addr_lon=addr_lon) 
+
+        
+        amenities = []
+        for i in range(3, len(AMENITIES)):
+            name = random.choice(AMENITIES)['name']
+            if name not in amenities:
+                amenities.append(name)
+
+        for name in amenities:
+            listing.amenities.add(m.Amenity.objects.get(name=name))
+        listing.save()
+
+
+        
+
+        
+
+
+def create_data():
+    create_amenities()
+    create_users()
+    create_listings()
+>>>>>>> eaf4655c55d7165dfc3847c2e905ca1d9f965560
 

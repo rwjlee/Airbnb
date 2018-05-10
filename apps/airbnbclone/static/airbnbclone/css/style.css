@@ -296,13 +296,8 @@
 #map {
     width: 450px;
     height: 250px;
-    border: 1px solid grey;
 }
 
-#map-search {
-    width: 450px;
-    height: 250px;
-}
 input.search_input:focus {
     outline-width: 0;
 }
@@ -642,4 +637,37 @@ button.listing_a:focus {
 
 .copy-me {
     display: none;
+}
+.slideshow {
+    margin: 0 auto;
+    width: 65%;
+}
+.photo_container {
+    width: 90%;
+    margin: 0 auto;
+    height: 475px;
+    margin-top: 30px;
+}
+.scroll_buttons {
+    
+    
+}
+.photo_button {
+    width: 100%;
+}
+/* Results page */
+.house_listings {
+    width: 66%;
+}
+.results_page {
+    font-size: 0px;
+}
+.map_box {
+    width: 33%;
+    margin-left: 0%;
+
+}
+#map-search {
+    width: 90%;
+    height: 250px;
 }

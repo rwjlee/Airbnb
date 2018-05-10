@@ -48,6 +48,13 @@ class Listing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def primary_photo(self):
+        for photo in self.photos.all():
+            if photo.is_primary:
+                return photo.url
+        return None                
+
 
 class Favorite(models.Model):
     guest = models.ForeignKey(User, related_name = 'likes', on_delete=models.CASCADE)

@@ -1,7 +1,7 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="listing-banner">
-  <img src="..{{primary.url}}" alt="photo here" style="width: 100%; height: 368px; z-index: 1;">
+  <img src="../{{primary.url}}" alt="photo here" style="width: 100%; height: 368px; z-index: 1;">
 
   <div class="row justify-content-between" style="z-index: 2;">
     <div class="col-8" style="position: relative; top: -375px; left: 10px;">
@@ -12,9 +12,8 @@
     </div>
     <div class="col-4 ">
       <div class="row p-3 float-right" style="position: relative; top: -355px; left: -20px;">
-        <a href="" class="btn save ml-5">
-          <i class="fa fa-heart-o mr-2"></i>
-          Save
+        <a href="" class="btn save ml-5" id="save-btn">
+          
         </a>
       </div>
 
@@ -127,10 +126,8 @@
 
     <div class="listing-avail col-4 border">
       <div class="container">
-        <div class="row">
-          <div class="h3">${{room.price}}</div>
-          <div class="small align-bottom">per night</div>
-        </div>
+        <div class="book-box">
+          <div class="h3">${{room.price}} <span class="small">per night</span></div>
 
         <form method="POST" action="{% url 'airbnbclone:authenticate_booking' %}" id="booking-form">
           {% csrf_token %}
@@ -140,9 +137,9 @@
           <div class="form-group">
             <input type="date" name="html_checkout" id="checkout" placeholder="Check Out" class="form-control">
           </div>
-          <div class="form-group">
-            <input type="number" name="html_guests" id="numguests" placeholder="Guests" class="form-control">
-          </div>
+          <select class="form-control" name="html_guests" id="numguests">
+                <option selected value="1">1 guest</option>
+          </select>
           <button id="book-btn" class="btn btn-danger col-12">Book</button>
         </form>
       </div>
@@ -164,10 +161,8 @@
 
   function initMap() {
     
-    let input = document.getElementById('search_id');
-    let autocomplete = new google.maps.places.Autocomplete(input);   
-
-
+  let input = document.getElementById('search_id');
+  let autocomplete = new google.maps.places.Autocomplete(input);   
 
   let addrLat = {{ room.addr_lat }};
   let addrLon = {{ room.addr_lon }};
@@ -214,9 +209,64 @@
 
     todayDate = dYear + "-" + dMonth + "-" + dDate;
 
-    $("#checkin").attr("min", todayDate);
-    $("#checkout").attr("min", todayDate);
-    $("#numguests").attr("max", 5);
+    tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    console.log(tomorrow);
+
+    let setCheckin = $("#checkin");
+    let setCheckout = $("#checkout");
+
+    setCheckin.attr("min", todayDate);
+    setCheckout.attr("min", todayDate);
+
+
+
+   
+    let guestsDiv = $("#numguests");
+    for (let i=2; i < {{room.max_guests}}+1; i++) {
+      guestsDiv.append('<option value=' + i + '>' + i + ' guests</option>');
+    }
+
+
+    let favStr = '<i class="fa fa-heart mr-2" style="color:red"></i>Saved'
+    let unfavStr = '<i class="fa fa-heart-o mr-2" style="color:red"></i>Save'
+
+    let favDiv = $("#save-btn")
+
+    if ("{{fav_status}}" == "1") {
+      favDiv.append(favStr);
+    } else {
+      favDiv.append(unfavStr)
+    }
+
+    $("#save-btn").click(function (event) {
+      console.log(event);
+      event.preventDefault();
+      $.ajax({
+        beforeSend: setCsrfToken,
+        type: "POST",
+        url: "/save_favorite",
+        data: {
+          "html_user_id": "{{request.session.user_id}}",
+          "html_listing": "{{room.id}}",
+        },
+        success: function (response) {
+          console.log(response);
+          favDiv.empty();
+          if (response.fav == 1) {
+            favDiv.append(favStr);
+          } else {
+            favDiv.append(unfavStr);
+          }
+          
+        },
+        error: function (response) {
+          console.log(response);
+        }
+
+      })
+
+    })
 
     $("#book-btn").click(function (event) {
       console.log(event);
@@ -239,7 +289,6 @@
           window.location = response.url;
         },
         error: function (response) {
-          console.log("Stupid error not working")
           console.log(response)
           displayErrors($('.messages'), response.responseJSON.errors)
         }

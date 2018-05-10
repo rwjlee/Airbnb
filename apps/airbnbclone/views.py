@@ -81,7 +81,6 @@ def register(request):
                 request.session['username'] = user.username
                 request.session['user_id'] = user.id
                 request.session['email'] = user.email
-                request.session['birthday'] = user.birthday
             except:
                 raise
                 messages.error(request,'Account already in use')
@@ -101,6 +100,19 @@ def login(request):
                 request.session['username'] = user.username
                 request.session['user_id'] = user.id
                 request.session['email'] = user.email
+                request.session['has_listings'] = len(user.has_listings.all())
+
+                # try:
+                #     print(user.has_listings)
+                #     has_listings = len(user.has_listings)
+                # except:
+                #     raise
+                #     has_listings = 0
+
+                # print(has_listings)
+
+                # request.session['has_listings'] = has_listings
+
                 return redirect('airbnbclone:index')
             else:
                 messages.error(request, 'Invalid login')
@@ -332,7 +344,6 @@ def submit_review(request, booking_id):
 
     listing = m.Listing.objects.get(id = booking.home_listing_id)
 
-
     listing.number_reviews += 1
     listing.save()
 
@@ -348,7 +359,8 @@ def submit_review(request, booking_id):
         'review': review,
         'listing': listing,
     } 
-    return render(request, 'airbnbclone/my_bookings.html', context)
+    # return render(request, 'airbnbclone/my_bookings.html', context)
+    return redirect('airbnbclone:my_bookings')
 
 
 #### AVAILABILITIES
@@ -417,7 +429,6 @@ def check_dates(start_date, end_date, listing_id):
 #### LISTINGS
 
 def listing(request, listing_id):
-    
     try:
         room = m.Listing.objects.get(id = listing_id)
         if not room.active:
@@ -426,6 +437,16 @@ def listing(request, listing_id):
         primary_photo = m.Photo.objects.get(listing_id = room.id, is_primary = True)
         photos = m.Photo.objects.filter(listing_id = room.id)
 
+        if 'user_id' in request.session:
+            user_id = request.session['user_id']
+            fav_list = m.Favorite.objects.filter(Q(home_listing_id = room.id) & Q(guest_id = user_id))
+            fav = len(fav_list)
+            print("============fav")
+        else:
+            fav = 0
+
+        print("========{}fav".format(fav))
+        
     except:
         raise
         room = None
@@ -437,10 +458,46 @@ def listing(request, listing_id):
         'reviews': reviews,
         'primary' : primary_photo,
         'photos' : photos,
+        'fav_status': fav,
     }
     print("listing got okay")
     print(room.address)
     return render(request, 'airbnbclone/listing.html', context)
+
+def my_listings(request):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    
+    user_id = request.session['user_id']
+    my_listings = m.Listing.objects.filter(host_id = user_id)
+
+    context = {
+        'user_id': user_id,
+        'my_listings': my_listings,
+    }
+    return render(request, 'airbnbclone/my_listings.html', context)
+
+def my_favorites(request):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:index')
+    
+    user_id = request.session['user_id']
+    my_favorites = m.Listing.objects.filter(saved_by__guest_id = user_id)
+
+    fav_photos = []
+
+    for my_favorite in my_favorites:
+        photo = m.Photo.objects.get(listing_id = my_favorite.id, is_primary = 1)
+        fav_photos.append(photo)
+
+    print(fav_photos)
+
+    context = {
+        'user_id': user_id,
+        'my_favorites': my_favorites,
+        'fav_photos': fav_photos,
+    }
+    return render(request, 'airbnbclone/my_favorites.html', context)
 
 def get_price_range(input):
     # if input == 1:
@@ -578,8 +635,8 @@ def become_a_host(request):
         return redirect('airbnbclone:register')
     return render(request, 'airbnbclone/create_listing.html')
 
-def get_url(address, city, country):
-    url = "https://maps.googleapis.com/maps/api/geocode/json?address={},+{},+{}&key={}".format(address, city, country, MAP_API_KEY)
+def get_url(address):
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}".format(address, MAP_API_KEY)
     return url
 
 def get_json(url):
@@ -596,21 +653,10 @@ def edit_listing(request, listing_id):
 
     return redirect('airbnbclone:index')
 
-def get_amenities(amen):
-    a = None
-
-    try:
-        a = m.Amenity.objects.get(name = amen)
-    except:
-        print("amenity does not exist")
-        a = m.Amenity.objects.create(name = amen)
-    
-    return a
-
 def create_listing(request):
 
     if 'user_id' not in request.session:
-        return redirect('airbnbclone:index')
+        return redirect('airbnbclone:login')
 
     if request.method == 'POST':
         try:
@@ -624,6 +670,7 @@ def create_listing(request):
 
             country = request.POST['html_country'].upper()
             city = request.POST['html_city'].upper()
+
             address = request.POST['html_address'].upper()
 
             price = request.POST['html_price']
@@ -631,14 +678,22 @@ def create_listing(request):
             name = request.POST['html_name']
             desc = request.POST['html_desc']
 
-            amen = get_amenities("dryer")
-
             try:
-                geo_address = get_json(get_url(address, city, country))['results'][0]
+                geo_address = get_json(get_url(address))['results'][0]
+
+                for addr in geo_address['address_components']:
+                    if 'locality' in addr['types']:
+                        city = addr['long_name']
+                    elif 'country' in addr['types']:
+                        country = addr['long_name']
+
+                print("========={}".format(city))
+                print("=========={}".format(country))
+                
                 addr_lat = geo_address['geometry']['location']['lat']
                 addr_lon = geo_address['geometry']['location']['lng']
             except:
-                pass
+                return JsonResponse({"errors": "Location incorrect"})
 
             
             listing_obj = m.Listing.objects.create(
@@ -660,23 +715,30 @@ def create_listing(request):
             )
 
             listing_obj.active = True
-            listing_obj.amenities.add(amen)
+
+            amen_list = m.Amenity.objects.all()
+
+            for amen in amen_list:
+                if request.POST[amen.name]!='':
+                    listing_obj.amenities.add(amen)
+            
+            try:
+                update_avail(from_date, to_date, listing_obj.id, 1)
+            except:
+                return JsonResponse({"errors": "Incorrect Dates"})
+            
+
             listing_obj.save()
 
             if 'html_photo' in request.FILES:
                 html_photo = request.FILES.getlist('html_photo')
-                print(html_photo)
                 fs = FileSystemStorage()
                 for file in html_photo:
                     filename = fs.save(file.name, file)
                     photo = m.Photo.objects.create(listing_id = listing_obj.id, url = fs.url(filename), is_primary = False)
-                    print(photo.url)
-                    print(html_photo[0].name) 
-                    print(photo.is_primary)
                     if "/media/{}".format(html_photo[0].name) == photo.url:
                         photo.is_primary = True
                         photo.save()
-
 
         except:
             raise
@@ -688,11 +750,29 @@ def create_listing(request):
     return render(request, 'airbnbclone/create_listing.html')
 
 def save_favorite(request):
-    pass
 
+    if "user_id" not in request.session:
+        return JsonResponse({'errors': "Login First", "url": redirect('airbnbclone:login').url}, status=400)
     
+    if request.method == "POST":
+        listing_id = request.POST["html_listing"]
+        user_id = request.session['user_id']
 
+        try:
+            fav = m.Favorite.objects.get(Q(home_listing_id=listing_id) & Q(guest_id = user_id))
+            fav.delete()
+            fav_status = 0
+        except:
+            fav = m.Favorite.objects.create(home_listing_id=listing_id, guest_id=user_id)
+            fav_status = 1
 
+        context = {
+            "fav": fav_status,
+        }
+        return JsonResponse(context)
+    
+    return JsonResponse({'errors': "Not Allowed", "url": redirect('airbnbclone:index').url}, status=400)
+    
 
 def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
     # approximate radius of earth in km
@@ -714,20 +794,28 @@ def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
     return distance
 
 def filter_by(request):
+    
+    all_listings = m.Listing.objects.filter(active=1)
 
+    if len(all_listings)==0:
+        return JsonResponse({'errors': "No Result"}, status=400)
+    
     fromDate = request.POST['html_fromDate']
     toDate = request.POST['html_toDate']
     guests = request.POST['html_guests']
     homeType = request.POST['html_homeType']
     price = request.POST['html_price']
 
-    all_listings = m.Listing.objects.filter(active=1)
-
     if guests!="Guests":
         all_listings = all_listings.filter(max_guests__gte=guests)
+        if len(all_listings)==0:
+            return JsonResponse({'errors': "No Result"}, status=400)
         
     if homeType!="Home Type":
         all_listings = all_listings.filter(privacy_type=homeType)
+        if len(all_listings)==0:
+            return JsonResponse({'errors': "No Result"}, status=400)
+        
     
     if price!="Price":
         price_list = get_price_range(int(price))
@@ -735,7 +823,9 @@ def filter_by(request):
             all_listings = all_listings.filter(price__gte=price_list[0]).filter(price__lte=higher)
         elif len(price_list) == 2:
             all_listings = all_listings.filter(price__gte=price_list[0]).filter(price__lte=price_list[1])
-        
+
+        if len(all_listings)==0:
+            return JsonResponse({'errors': "No Result"}, status=400)
 
     if fromDate and toDate:
         final_list = []
@@ -749,12 +839,9 @@ def filter_by(request):
             if 0 not in open_list:
                 final_list.append(listing)
 
-        
         all_listings = final_list
 
-    print("all listing =========")
-    print(all_listings)
-    
+
     if len(all_listings)==0:
         return JsonResponse({'errors': "No Result"}, status=400)
     
@@ -764,7 +851,7 @@ def filter_by(request):
         center_lat = 40.7178871	
         center_lon = -73.9856753
     else:
-        geo_address = get_json(get_url(address, '', ''))['results'][0]
+        geo_address = get_json(get_url(address))['results'][0]
         center_lat = geo_address['geometry']['location']['lat']
         center_lon = geo_address['geometry']['location']['lng']
 
@@ -787,11 +874,15 @@ def filter_by(request):
 
 def search_by_map(request):
     address = request.POST['html_loc']
-    geo_address = get_json(get_url(address, '', ''))['results'][0]
+    geo_address = get_json(get_url(address))['results'][0]
     center_lat = geo_address['geometry']['location']['lat']
     center_lon = geo_address['geometry']['location']['lng']
 
-    all_listings = m.Listing.objects.all()
+    all_listings = m.Listing.objects.filter(active=1).all()
+
+    if len(all_listings)==0:
+        return JsonResponse({'errors': "No Result"}, status=400)
+    
     results_tuple = [(distance_to_center(listing.addr_lat, listing.addr_lon, center_lat, center_lon), listing) for listing in all_listings]
 
     results_tuple.sort(key=itemgetter(0))
@@ -809,14 +900,17 @@ def search_by_map(request):
     return JsonResponse(context)
 
 def results_edit(request):
-
-
+    print(request.GET)
     context = {
         'listings': m.Listing.objects.all(),
         'api_key': MAP_API_KEY,
     }
 
     return render(request, 'airbnbclone/results_edit.html', context)
+
+def awesomeforms(request):
+
+    return render(request, airbnbclone/awesomeforms.html)
 
 
 def view_maps(request):
@@ -830,7 +924,6 @@ def photos(request, listing_id):
     photos = m.Photo.objects.filter(listing_id = listing_id)
     context = {
         'photos' : photos,
-
     }
     return render(request, 'airbnbclone/photos.html', context)
 
