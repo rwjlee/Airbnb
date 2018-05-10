@@ -294,9 +294,13 @@
 }
 
 #map {
-    width: 450px;
+    width: 100%;
     height: 250px;
     border: 1px solid grey;
+}
+.map_box {
+    width: 30%
+
 }
 
 #map-search {
@@ -659,4 +663,8 @@ button.listing_a:focus {
 }
 .photo_button {
     width: 100%;
+}
+/* Results page */
+.house_listings {
+    width: 66%;
 }
