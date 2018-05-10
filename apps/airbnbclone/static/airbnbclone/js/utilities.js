@@ -54,3 +54,4 @@ function displayErrors(divTarget, errors) {
         flash.appendTo(divTarget)
     }
 }
+

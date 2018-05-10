@@ -151,8 +151,6 @@
 
       </div>
 
-
-
     </div>
 
   </div>
@@ -165,6 +163,11 @@
 <script>
 
   function initMap() {
+    
+    let input = document.getElementById('search_id');
+    let autocomplete = new google.maps.places.Autocomplete(input);   
+
+
 
   let addrLat = {{ room.addr_lat }};
   let addrLon = {{ room.addr_lon }};
@@ -246,5 +249,5 @@
   });
 </script>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=initMap">
 </script> {% endblock %}

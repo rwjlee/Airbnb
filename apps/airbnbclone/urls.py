@@ -40,4 +40,5 @@ urlpatterns = [
     path('photos/<int:listing_id>', views.photos, name='photos'),
 
     path('results_edit', views.results_edit, name='results_edit'),
+    path('filter_by', views.filter_by, name='filter_by'),
 ]

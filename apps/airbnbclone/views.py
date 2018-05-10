@@ -11,6 +11,8 @@ import json, requests
 import pandas as pd
 import math as math
 from django.core.files.storage import FileSystemStorage
+from operator import itemgetter
+
 
 from django.core import serializers
 
@@ -403,7 +405,6 @@ def check_dates(start_date, end_date, listing_id):
         return None
         
     today = datetime.date.today().strftime("%Y-%m-%d")
-    print("-------{}--------".format(today))
     if start_date < today:
         return None
 
@@ -441,42 +442,62 @@ def listing(request, listing_id):
     print(room.address)
     return render(request, 'airbnbclone/listing.html', context)
 
-def get_price_range(request, input):
+def get_price_range(input):
+    # if input == 1:
+    #     request.session['price'] = [0.0, 50.0]
+    # elif input == 2:
+    #     request.session['price'] = [50.0, 100.0]
+    # elif input == 3:
+    #     request.session['price'] = [100.0, 150.0]
+    # elif input == 4:
+    #     request.session['price'] = [150.0, 200.0]
+    # elif input == 5:
+    #     request.session['price'] = [200.0, 250.0]
+    # elif input == 6:
+    #     request.session['price'] = [250.0, 300.0]
+    # elif input == 7:
+    #     request.session['price'] = [300.0, 400.0]
+    # elif input == 8:
+    #     request.session['price'] = [400.0, 500.0]
+    # elif input == 9:
+    #     request.session['price'] = 500.0
+    # else:
+    #     request.session['price'] = [0.0, 1000.0]
+
     if input == 1:
-        request.session['price'] = [0.0, 50.0]
-    elif input == 2:
-        request.session['price'] = [50.0, 100.0]
-    elif input == 3:
-        request.session['price'] = [100.0, 150.0]
-    elif input == 4:
-        request.session['price'] = [150.0, 200.0]
-    elif input == 5:
-        request.session['price'] = [200.0, 250.0]
-    elif input == 6:
-        request.session['price'] = [250.0, 300.0]
-    elif input == 7:
-        request.session['price'] = [300.0, 400.0]
-    elif input == 8:
-        request.session['price'] = [400.0, 500.0]
-    elif input == 9:
-        request.session['price'] = 500.0
+        return [0.0, 50.0]
+    if input == 2:
+        return [50.0, 100.0]
+    if input == 3:
+        return [100.0, 150.0]
+    if input == 4:
+        return [150.0, 200.0]
+    if input == 5:
+        return [200.0, 250.0]
+    if input == 6:
+        return [250.0, 300.0]
+    if input == 7:
+        return [300.0, 400.0]
+    if input == 8:
+        return [400.0, 500.0]
+    if input == 9:
+        return [500.0]
     else:
-        request.session['price'] = [0.0, 1000.0]
+        return [0.0]
 
 def filters(request):
-    request.session['from_date'] = request.POST["fromDate"]
-    request.session['to_date'] = request.POST["toDate"]
+    
+#     request.session['from_date'] = request.POST["fromDate"]
+#     request.session['to_date'] = request.POST["toDate"]
 
-    if request.POST['guests'] != "Guests":
-        request.session['guests'] = int(request.POST["guests"])
-    if request.POST['homeType'] != "Home Type":
-        request.session['home_type'] = request.POST["homeType"]
-    if request.POST['price'] != 'Price':
-        get_price_range(request, int(request.POST["price"]))
+#     if request.POST['guests'] != "Guests":
+#         request.session['guests'] = int(request.POST["guests"])
+#     if request.POST['homeType'] != "Home Type":
+#         request.session['home_type'] = request.POST["homeType"]
+#     if request.POST['price'] != 'Price':
+#         get_price_range(request, int(request.POST["price"]))
     
     return JsonResponse({})
-
-
         
 def results(request):
     results = []
@@ -669,25 +690,100 @@ def create_listing(request):
 def save_favorite(request):
     pass
 
+    
 
-# def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
-#     # approximate radius of earth in km
-#     R = 6373.0
 
-#     lat1 = radians(addr_lat)
-#     lon1 = radians(addr_lon)
-#     lat2 = radians(center_lat)
-#     lon2 = radians(center_lon)
 
-#     dlon = lon2 - lon1
-#     dlat = lat2 - lat1
+def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
+    # approximate radius of earth in km
+    R = 6373.0
 
-#     a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-#     c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    lat1 = math.radians(addr_lat)
+    lon1 = math.radians(addr_lon)
+    lat2 = math.radians(center_lat)
+    lon2 = math.radians(center_lon)
 
-#     distance = R * c
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
 
-#     return distance
+    a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    distance = R * c
+
+    return distance
+
+def filter_by(request):
+
+    fromDate = request.POST['html_fromDate']
+    toDate = request.POST['html_toDate']
+    guests = request.POST['html_guests']
+    homeType = request.POST['html_homeType']
+    price = request.POST['html_price']
+
+    all_listings = m.Listing.objects.filter(active=1)
+
+    if guests!="Guests":
+        all_listings = all_listings.filter(max_guests__gte=guests)
+        
+    if homeType!="Home Type":
+        all_listings = all_listings.filter(privacy_type=homeType)
+    
+    if price!="Price":
+        price_list = get_price_range(int(price))
+        if len(price_list) == 1:
+            all_listings = all_listings.filter(price__gte=price_list[0]).filter(price__lte=higher)
+        elif len(price_list) == 2:
+            all_listings = all_listings.filter(price__gte=price_list[0]).filter(price__lte=price_list[1])
+        
+
+    if fromDate and toDate:
+        final_list = []
+        for listing in all_listings:
+            date_avail = check_dates(fromDate, toDate, listing.id)
+            
+            date_list, open_list = zip(*date_avail)
+
+            print(date_avail)
+
+            if 0 not in open_list:
+                final_list.append(listing)
+
+        
+        all_listings = final_list
+
+    print("all listing =========")
+    print(all_listings)
+    
+    if len(all_listings)==0:
+        return JsonResponse({'errors': "No Result"}, status=400)
+    
+    address = request.POST['html_loc']
+    
+    if address=="":
+        center_lat = 40.7178871	
+        center_lon = -73.9856753
+    else:
+        geo_address = get_json(get_url(address, '', ''))['results'][0]
+        center_lat = geo_address['geometry']['location']['lat']
+        center_lon = geo_address['geometry']['location']['lng']
+
+    results_tuple = [(distance_to_center(listing.addr_lat, listing.addr_lon, center_lat, center_lon), listing) for listing in all_listings]
+
+    results_tuple.sort(key=itemgetter(0))
+
+    distance, final_results = zip(*results_tuple)
+
+    center_lat = final_results[0].addr_lat
+    center_lon = final_results[0].addr_lon
+
+    context = {
+        'center_lat': center_lat,
+        'center_lon': center_lon,
+        'results' : json.loads(serializers.serialize("json", final_results))
+    }
+    return JsonResponse(context)
+
 
 def search_by_map(request):
     address = request.POST['html_loc']
@@ -695,14 +791,26 @@ def search_by_map(request):
     center_lat = geo_address['geometry']['location']['lat']
     center_lon = geo_address['geometry']['location']['lng']
 
+    all_listings = m.Listing.objects.all()
+    results_tuple = [(distance_to_center(listing.addr_lat, listing.addr_lon, center_lat, center_lon), listing) for listing in all_listings]
+
+    results_tuple.sort(key=itemgetter(0))
+
+    distance, final_results = zip(*results_tuple)
+
+    center_lat = final_results[0].addr_lat
+    center_lon = final_results[0].addr_lon
+
     context = {
         'center_lat': center_lat,
         'center_lon': center_lon,
-        'results' : json.loads(serializers.serialize("json", m.Listing.objects.all()))
+        'results' : json.loads(serializers.serialize("json", final_results))
     }
     return JsonResponse(context)
 
 def results_edit(request):
+
+
     context = {
         'listings': m.Listing.objects.all(),
         'api_key': MAP_API_KEY,

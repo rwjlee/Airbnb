@@ -21,7 +21,7 @@
 
       <div class="navbar-nav navbar_right">
           {% if request.session.user_id %}
-          <a class="navbar_link" href="{% url 'airbnbclone:my_bookings' %}">Become a Host</a>
+          <a class="navbar_link" href="{% url 'airbnbclone:create_listing' %}">Become a host</a>
           <a class="navbar_link" href="{% url 'airbnbclone:my_bookings' %}">Saved</a>
           <a class="navbar_link" href="{% url 'airbnbclone:my_bookings' %}">Trips</a>
           <a class="navbar_link" href="{% url 'airbnbclone:all_messages' %}">Messages</a>
@@ -36,8 +36,8 @@
             </div>
           
           {% else %}
+          <a class="navbar_link" href="{% url 'airbnbclone:register' %}">Sign Up</a>
           <a class="navbar_link" href="{% url 'airbnbclone:login' %}">Login</a>
-          <a class="navbar_link" href="{% url 'airbnbclone:register' %}">Register</a>
           {% endif %}
       </div>
 
@@ -46,9 +46,20 @@
 
 {% block scripts %}
 <script>
+    window.onscroll = function() {myFunction()};
+    var navbar = document.getElementById("navbar");
+    var sticky = navbar.offsetTop;
+    function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+};
 
     
 </script>
+
 {% endblock %}
 
 
