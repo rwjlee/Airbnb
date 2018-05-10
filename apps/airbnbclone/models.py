@@ -36,6 +36,9 @@ class Listing(models.Model):
     price = models.FloatField(null=True)
     active = models.BooleanField(default=False)
     
+    number_reviews = models.IntegerField(default=0)
+    average_rating = models.FloatField(default=0)
+
     name = models.TextField(max_length=200)
     desc = models.TextField(blank=True)
 
@@ -82,6 +85,14 @@ class Availability(models.Model):
     class Meta:
         unique_together = ('listing', 'one_day')
 
+class Review(models.Model):
+    booking = models.ForeignKey(Booking, related_name = 'booking_reviewed', on_delete=models.CASCADE)
+    description = models.CharField(max_length=500, default=None)
+    star_rating = models.IntegerField()
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Conversation(models.Model):
     listing = models.ForeignKey(Listing, related_name= 'convo_about', on_delete=models.CASCADE)
 
@@ -96,5 +107,12 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation, related_name= 'message_in_convo', on_delete=models.CASCADE)
     from_user = models.ForeignKey(User, related_name = 'messages', on_delete=models.CASCADE)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Photo(models.Model):
+    url = models.TextField(max_length=128)
+    listing = models.ForeignKey(Listing, related_name= 'photos', on_delete=models.CASCADE)
+    is_primary = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,204 +1,253 @@
-{% extends 'airbnbclone/base.html' %}
-
-{% block body %}
+{% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="listing-banner">
+  <img src="..{{primary.url}}" alt="photo here" style="width: 100%; height: 368px; z-index: 1;">
 
-  <div class="row justify-content-between">
-  <div class="col-8">
-    <div class="p-3 photo-button">
-      <a href="" class="btn btn-light">View Photos</a>
+  <div class="row justify-content-between" style="z-index: 2;">
+    <div class="col-8" style="position: relative; top: -375px; left: 10px;">
+      <div class="p-3 photo-button">
+        <a href="{% url 'airbnbclone:photos' listing_id=room.id %}" class="btn view_photos">View Photos</a>
+      </div>
+
+    </div>
+    <div class="col-4 ">
+      <div class="row p-3 float-right" style="position: relative; top: -355px; left: -20px;">
+        <a href="" class="btn save ml-5">
+          <i class="fa fa-heart-o mr-2"></i>
+          Save
+        </a>
+      </div>
+
     </div>
 
-  </div>
-  <div class="col-4">
-    <div class="row p-3 float-right">
-      <a href="" class="btn btn-light mr-3">
-        <i class="fa fa-share"></i>
-        Share
-      </a>
-      <a href="" class="btn btn-light mr-3">
-        <i class="fa fa-heart-o"></i>
-        Save
-      </a>
-    </div>
- 
-  </div>
-  
   </div>
 </div>
 
 <div class="container context-box">
   <div class="row">
-  <div class="listing-content col-8">
+    <div class="listing-content col-8">
 
-    <div class="summary">
-      <h3>{{room.listing_type}}</h3>
-      <h2>{{room.name}}</h2>
-      <p>{{room.city}}, {{room.country}}</p>
-      <p>{{room.max_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
-      <p>{{room.desc}}</p>
-      <a href="">Contact host</a>
+      <div class="summary">
+        <h3>{{room.listing_type}}</h3>
+        <h2>{{room.name}}</h2>
+        <p>{{room.city}}, {{room.country}}</p>
+        <p>{{room.max_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
+        <p>{{room.desc}}</p>
+        <a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact host</a>
+      </div>
+
+      <hr>
+
+      <div class="amenities">
+        <p>Amenities</p>
+        {% for amen in room.amenities.all %}
+        <div>{{amen.name}}</div>
+        {% endfor %}
+      </div>
+
+      <hr>
+
+      <div class="cancellations">
+        <p>Cancellation
+          <p>
+            <a href="">Get Details</a>
+      </div>
+
+      <hr>
+
+      <!-- Insert reviews here -->
+
+      <div class="hosted-by">
+        <span>Hosted by {{room.host.username}}</span>
+        <p>Languages: </p>
+        <a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact Host</a>
+      </div>
+
+      <hr>
+
+      <div class="neighborhood" id="map">
+
+      </div>
+      <span>Exact location information is provided after a booking is confirmed.</span>
+
+      <hr>
+
+      <div class="view-reviews">
+        <div class="largeprint">{{room.number_reviews}} Reviews</div>
+        <div class="largeprint">Average rating: {{ room.average_rating }}
+          <span class="bluecolor">
+          {% if room.average_rating < 0.5 %}
+          <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 1 %}
+          <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 1.5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 2 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 2.5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 3 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 3.5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 4 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 4.5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
+          {% elif room.average_rating < 5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i>
+          {% elif room.average_rating == 5 %}
+          <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+          {% endif %}</span>
+        </div>
+        <div></div>
+        <hr>
+        {% for review in reviews %}
+          <div>{{review.booking.guest.username}}</div>
+          <div class="bluecolor">
+              {% if review.star_rating == 1 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+              {% elif review.star_rating == 2 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+              {% elif review.star_rating == 3 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+              {% elif review.star_rating == 4 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
+              {% elif review.star_rating == 5 %}
+              <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+              {% endif %}
+          </div>
+          <div>{{review.description}}</div>
+          <div class="fineprint">{{review.created_at.date}}</div>
+          <hr>
+        {% endfor %}
+      </div>
+      <hr>
     </div>
 
-    <hr>
+    <div class="listing-avail col-4 border">
+      <div class="container">
+        <div class="row">
+          <div class="h3">${{room.price}}</div>
+          <div class="small align-bottom">per night</div>
+        </div>
 
-    <div class="amenities">
-      <p>Amenities</p>
-      {% for amen in room.amenities.all %}
-      <div>{{amen.name}}</div>
-      {% endfor %}
-    </div>
+        <form method="POST" action="{% url 'airbnbclone:authenticate_booking' %}" id="booking-form">
+          {% csrf_token %}
+          <div class="form-group">
+            <input type="date" name="html_checkin" id="checkin" placeholder="Check In" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="date" name="html_checkout" id="checkout" placeholder="Check Out" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="number" name="html_guests" id="numguests" placeholder="Guests" class="form-control">
+          </div>
+          <button id="book-btn" class="btn btn-danger col-12">Book</button>
+        </form>
+      </div>
 
-    <hr>
+      <div class="my-3 messages">
 
-    <div class="cancellations">
-      <p>Cancellation<p>
-      <a href="">Get Details</a>
-    </div>
-
-    <hr>
-
-    <!-- Insert reviews here -->
-
-    <div class="hosted-by">
-      <span>Hosted by {{room.host.username}}</span>
-      <p>Languages: </p>
-      <a href="">Contact Host</a>
-    </div>
-
-    <hr>
-
-    <div class="neighborhood" id="map">
+      </div>
 
     </div>
-    <span>Exact location information is provided after a booking is confirmed.</span>
+
   </div>
-
-  <div class="listing-avail col-4 border">
-    <div class="container">
-    <div class="row">
-      <div class="h3">${{room.price}}</div>
-      <div class="small align-bottom">per night</div>
-    </div>
-
-    <form method="POST" action="{% url 'airbnbclone:authenticate_booking' %}" id="booking-form">
-        {% csrf_token %}
-      <div class="form-group">
-          <input type="date" name="html_checkin" id="checkin" placeholder="Check In" class="form-control">
-      </div>
-      <div class="form-group">
-          <input type="date" name="html_checkout" id="checkout" placeholder="Check Out" class="form-control">
-      </div>
-      <div class="form-group">
-          <input type="number" name="html_guests" id="numguests" placeholder="Guests" class="form-control">
-      </div>
-      <button id="book-btn" class="btn btn-danger col-12">Book</button>
-    </form>
-    </div>
-
-    <div class="my-3 messages">
-        
-    </div>
-
-
-
-  </div>
-  
 </div>
-</div>
-  
-  
-  
-  {% endblock %}
 
-{% block scripts %}
+
+
+{% endblock %} {% block scripts %}
 
 <script>
 
   function initMap() {
-
-    let addrLat = {{room.addr_lat}};
-    let addrLon = {{room.addr_lon}};
-    let map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 14,
-      center: {lat: addrLat, lng: addrLon},
-      mapTypeId: 'terrain',
-      radius: 300,
-      strokeColor: '#FF0000',
-      strokeOpacity: 0.5,
-      strokeWeight: 1,
-      fillColor: '#FF0000',
-      fillOpacity: 0.35,
-    });
     
-    let cityCircle = new google.maps.Circle({
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.5,
-        strokeWeight: 1,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
-        map: map,
-        center: map.center,
-        radius: 300,
-    });
+    let input = document.getElementById('search_id');
+    let autocomplete = new google.maps.places.Autocomplete(input);   
+
+
+
+  let addrLat = {{ room.addr_lat }};
+  let addrLon = {{ room.addr_lon }};
+
+  let map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 14,
+    center: { lat: addrLat, lng: addrLon },
+    mapTypeId: 'terrain',
+    radius: 300,
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.5,
+    strokeWeight: 1,
+    fillColor: '#FF0000',
+    fillOpacity: 0.35,
+  });
+
+  let cityCircle = new google.maps.Circle({
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.5,
+    strokeWeight: 1,
+    fillColor: '#FF0000',
+    fillOpacity: 0.35,
+    map: map,
+    center: map.center,
+    radius: 300,
+  });
   }
 
-    $(document).ready(function () {
+  $(document).ready(function () {
 
-        let d = new Date();
-        let dYear = d.getFullYear();
-        let dMonth = d.getMonth()+1;
+    let d = new Date();
+    let dYear = d.getFullYear();
+    let dMonth = d.getMonth() + 1;
 
-        if (dMonth < 10) {
-            dMonth = "0" + dMonth;
+    if (dMonth < 10) {
+      dMonth = "0" + dMonth;
+    }
+
+    let dDate = d.getDate();
+
+    if (dDate < 10) {
+      dDate = "0" + dDate;
+    }
+
+    todayDate = dYear + "-" + dMonth + "-" + dDate;
+
+    $("#checkin").attr("min", todayDate);
+    $("#checkout").attr("min", todayDate);
+    $("#numguests").attr("max", 5);
+
+    $("#book-btn").click(function (event) {
+      console.log(event);
+      event.preventDefault();
+      $(".messages").children().remove();
+      $.ajax({
+        beforeSend: setCsrfToken,
+        type: "POST",
+        url: $("#booking-form").attr("action"),
+        data: {
+          "html_checkin": $("input[name=html_checkin]").val(),
+          "html_checkout": $("input[name=html_checkout]").val(),
+          "html_guests": $("input[name=html_guests]").val(),
+          "html_user_id": "{{request.session.user_id}}",
+          "html_listing_id": "{{room.id}}",
+          "html_charge": "{{room.price}}",
+        },
+        success: function (response) {
+          console.log(response);
+          window.location = response.url;
+        },
+        error: function (response) {
+          console.log("Stupid error not working")
+          console.log(response)
+          displayErrors($('.messages'), response.responseJSON.errors)
         }
+      });
 
-        let dDate = d.getDate();
-
-        if (dDate < 10) {
-            dDate = "0" + dDate;
-        }
-        
-        todayDate = dYear + "-" + dMonth + "-" + dDate;
-
-        $("#checkin").attr("min", todayDate);
-        $("#checkout").attr("min", todayDate);
-        $("#numguests").attr("max", 5);
-        
-        $("#book-btn").click(function(event) {
-          console.log(event);
-            event.preventDefault();
-            $(".messages").children().remove();
-            $.ajax({
-                beforeSend: setCsrfToken,
-                type: "POST",
-                url: $("#booking-form").attr("action"),
-                data: {
-                    "html_checkin": $("input[name=html_checkin]").val(),
-                    "html_checkout": $("input[name=html_checkout]").val(),
-                    "html_guests": $("input[name=html_guests]").val(),
-                    "html_user_id": "{{request.session.user_id}}",
-                    "html_listing_id": "{{room.id}}",
-                    "html_charge": "{{room.price}}",
-                },
-                success: function (response) {
-                    console.log(response);
-                    window.location = response.url;
-                },
-                error: function(response) {
-                  console.log("Stupid error not working")
-                  console.log(response)
-                  displayErrors($('.messages'), response.responseJSON.errors)
-                }
-            });
-
-        });
     });
+  });
 </script>
 
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap">
-</script>
-
-{% endblock %}
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=initMap">
+</script> {% endblock %}

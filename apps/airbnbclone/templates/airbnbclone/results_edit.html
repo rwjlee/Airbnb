@@ -1,0 +1,248 @@
+{% extends 'airbnbclone/base.html' %}
+
+{% block body %}
+{% include 'airbnbclone/filter_navbar.html' %}
+
+<div class="container">
+    <div class="row">
+        <div class="homes col-8">
+            <div class="row" id="home-box">
+                
+                {% for listing in listings %}
+                <div class="home col-4">
+                    <a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">{{ listing.name }}</a>
+                    <p>{{listing.listing_type}}, {{listing.bed}} beds</p>
+                    <p>from {{listing.price}} per night - Free cancellation</p>
+                    <p>{{listing.average_rating}}/5 stars<span class="bluecolor fineprint">
+                            {% if listing.average_rating < 0.5 %}
+                            <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 1 %}
+                            <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 1.5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 2 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 2.5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 3 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 3.5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 4 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 4.5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
+                            {% elif listing.average_rating < 5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i>
+                            {% elif listing.average_rating == 5 %}
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+                            {% endif %}</span></p>
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="home border m-2 col-4 copy-me">
+            <div class="l-photo"><a href=""></a></div>
+            <div class="l-type"></div>
+            <div class="l-name"></div>
+            <div class="l-price"></div>
+            <div class="l-review"></div>
+        </div>
+    
+        <div class="col-3">
+            <div id="map-search">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+
+let map;
+var infoWindow;
+var service;
+var mapCenter = {lat: 43.653226, lng: -79.3831843};
+
+function initMap() {
+
+    var input = document.getElementById('search_id');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    
+    map = new google.maps.Map(document.getElementById('map-search'), {
+    center: mapCenter,
+    zoom: 14,
+    styles: [{
+      stylers: [{ visibility: 'simplified' }]
+    }, {
+      elementType: 'labels',
+      stylers: [{ visibility: 'off' }]
+    }]
+  });
+
+  infoWindow = new google.maps.InfoWindow();
+  console.log("ready for service")
+  
+  service = new google.maps.places.PlacesService(map);
+
+}
+
+function performSearch(locations) {
+  var request = {
+    bounds: map.getBounds(),
+    keyword: 'best view'
+  };
+
+  console.log("in perform Search");
+
+  for (let i=0, result; result = locations[i]; i++) {
+      addMarker(result);
+  }
+}
+
+function addMarker(place) {
+    let addr_lat = place['fields']['addr_lat']
+    let addr_lon = place['fields']['addr_lon']
+    var myLatLng = {lat: addr_lat, lng: addr_lon};
+  
+  console.log(myLatLng)
+  var marker = new google.maps.Marker({
+    map: map,
+    position: myLatLng,
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+
+    let redirectlink = "/listing/" + place['pk']
+    
+  var contentString = 
+      '<div><a href=' + redirectlink + ' target="_blank">'+ place['fields']['address'] +'</a></div>';
+
+    let request = {placeId: place['pk']}
+
+    service.getDetails(request, function(result) {
+      infoWindow.setContent(contentString);
+      infoWindow.open(map, marker);
+    });
+  });
+}
+
+function noResult() {
+    console.log("No Such Location");
+    $("#home-box").empty();
+    $("#home-box").text("No available homes found at your location");
+}
+
+let filterResult = function(response) {
+    console.log("filter stuff in function");
+}
+
+
+$(document).ready(function() {
+    console.log("ready");
+
+    let populateResult = function(response) {
+        console.log("populate===========");
+        mapCenter = {lat: response['center_lat'], lng: response['center_lon']};
+        initMap();
+        map.addListener('idle', performSearch(response['results']));
+
+        $('#home-box').empty();
+
+        for (let i=0, result; result = response['results'][i]; i++) {
+            let listing_type = result['fields']['listing_type'];
+            console.log("=========================");
+            console.log(listing_type);
+            let listing_name = result['fields']['name'];
+            let listing_price = result['fields']['price'];
+            let listing_id = result['pk'];
+            let listing_review = result['fields']['average_rating'];
+            
+            let roomDiv = $(".copy-me").clone();
+            roomDiv.removeClass("copy-me");
+
+            roomDiv.find("a").attr("href", "/listing/"+listing_id);
+            roomDiv.find("a").attr("target", "_blank");
+            roomDiv.find("a").text(result['fields']['city']);
+            roomDiv.find(".l-type").text(listing_type);
+            roomDiv.find(".l-name").text(listing_name);
+            roomDiv.find(".l-price").text(listing_price);
+
+            let reviewDiv = roomDiv.find(".l-review");
+            reviewDiv.text(listing_review);
+            // for (let i = 0; i < Math.round(listing_review); i++) {
+            //     reviewDiv.addClass()
+            // }
+
+            
+            
+            $("#home-box").append(roomDiv);
+        }
+    }
+
+    $("#filter_id").click(function(event) {
+        event.preventDefault();
+        console.log("Filter Stuff");
+        
+        $.ajax({
+            beforeSend: setCsrfToken,
+            type: "POST",
+            url: "/filter_by",
+            data: {
+                "html_loc": $("input[name=html_loc").val(),
+                'html_fromDate' : $("input[name=from_date]").val(),
+                'html_toDate' : $("input[name=to_date]").val(),
+                'html_guests' : $("select[name=guests]").val(),
+                'html_homeType' : $("select[name=hometype]").val(),
+                'html_price' : $("select[name=price]").val(),
+            },
+            success: function (response) {
+                console.log("success");
+                populateResult(response);
+            },
+            error: function(response) {
+                console.log("failed");
+                noResult();
+            }
+        });
+    });
+
+    $("#search_id").keypress(function(event) {
+        if (event.keyCode == 13) {
+        
+            event.preventDefault();
+            console.log($(this).val())
+
+            $.ajax({
+                beforeSend: setCsrfToken,
+                type: "POST",
+                url: "/search_by_map",
+                data: {
+                    "html_loc": $("input[name=html_loc").val(),
+                },
+                success: function (response) {
+                    console.log(response);
+                    populateResult(response);
+                },
+
+                error: function(response) {
+                    noResult();
+                }
+            });
+        }
+    });
+});
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap&libraries=places" async defer>
+</script>
+
+{% endblock %}
