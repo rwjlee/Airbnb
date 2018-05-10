@@ -36,7 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'apps.airbnbclone',
+    'apps.chat',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +85,17 @@ DATABASES = {
     }
 }
 
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [(redis_host, 6379)]
+        }
+    }
+}
+
+ASGI_APPLICATION = 'Airbnb.routing.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
