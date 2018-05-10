@@ -344,7 +344,6 @@ def submit_review(request, booking_id):
 
     listing = m.Listing.objects.get(id = booking.home_listing_id)
 
-
     listing.number_reviews += 1
     listing.save()
 
@@ -360,7 +359,8 @@ def submit_review(request, booking_id):
         'review': review,
         'listing': listing,
     } 
-    return render(request, 'airbnbclone/my_bookings.html', context)
+    # return render(request, 'airbnbclone/my_bookings.html', context)
+    return redirect('airbnbclone:my_bookings')
 
 
 #### AVAILABILITIES

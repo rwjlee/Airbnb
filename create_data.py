@@ -1,3 +1,4 @@
+
 from shutil import copyfile
 import googlemaps
 from datetime import datetime
@@ -186,4 +187,5 @@ def create_data():
     create_amenities()
     create_users()
     create_listings()
+>>>>>>> eaf4655c55d7165dfc3847c2e905ca1d9f965560
 
