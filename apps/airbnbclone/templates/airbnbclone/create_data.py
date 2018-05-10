@@ -156,6 +156,7 @@ def create_listings():
 
         for name in amenities:
             listing.amenities.add(m.Amenity.objects.get(name=name))
+            
         listing.save()
         
 
