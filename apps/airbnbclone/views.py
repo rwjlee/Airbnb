@@ -635,8 +635,8 @@ def become_a_host(request):
         return redirect('airbnbclone:register')
     return render(request, 'airbnbclone/create_listing.html')
 
-def get_url(address, city, country):
-    url = "https://maps.googleapis.com/maps/api/geocode/json?address={},+{},+{}&key={}".format(address, city, country, MAP_API_KEY)
+def get_url(address):
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}".format(address, MAP_API_KEY)
     return url
 
 def get_json(url):
@@ -653,21 +653,10 @@ def edit_listing(request, listing_id):
 
     return redirect('airbnbclone:index')
 
-def get_amenities(amen):
-    a = None
-
-    try:
-        a = m.Amenity.objects.get(name = amen)
-    except:
-        print("amenity does not exist")
-        a = m.Amenity.objects.create(name = amen)
-    
-    return a
-
 def create_listing(request):
 
     if 'user_id' not in request.session:
-        return redirect('airbnbclone:index')
+        return redirect('airbnbclone:login')
 
     if request.method == 'POST':
         try:
@@ -681,6 +670,7 @@ def create_listing(request):
 
             country = request.POST['html_country'].upper()
             city = request.POST['html_city'].upper()
+
             address = request.POST['html_address'].upper()
 
             price = request.POST['html_price']
@@ -688,14 +678,22 @@ def create_listing(request):
             name = request.POST['html_name']
             desc = request.POST['html_desc']
 
-            amen = get_amenities("dryer")
-
             try:
-                geo_address = get_json(get_url(address, city, country))['results'][0]
+                geo_address = get_json(get_url(address))['results'][0]
+
+                for addr in geo_address['address_components']:
+                    if 'locality' in addr['types']:
+                        city = addr['long_name']
+                    elif 'country' in addr['types']:
+                        country = addr['long_name']
+
+                print("========={}".format(city))
+                print("=========={}".format(country))
+                
                 addr_lat = geo_address['geometry']['location']['lat']
                 addr_lon = geo_address['geometry']['location']['lng']
             except:
-                pass
+                return JsonResponse({"errors": "Location incorrect"})
 
             
             listing_obj = m.Listing.objects.create(
@@ -717,7 +715,19 @@ def create_listing(request):
             )
 
             listing_obj.active = True
-            listing_obj.amenities.add(amen)
+
+            amen_list = m.Amenity.objects.all()
+
+            for amen in amen_list:
+                if request.POST[amen.name]!='':
+                    listing_obj.amenities.add(amen)
+            
+            try:
+                update_avail(from_date, to_date, listing_obj.id, 1)
+            except:
+                return JsonResponse({"errors": "Incorrect Dates"})
+            
+
             listing_obj.save()
 
             if 'html_photo' in request.FILES:
@@ -729,8 +739,6 @@ def create_listing(request):
                     if "/media/{}".format(html_photo[0].name) == photo.url:
                         photo.is_primary = True
                         photo.save()
-
-
 
         except:
             raise
@@ -843,7 +851,7 @@ def filter_by(request):
         center_lat = 40.7178871	
         center_lon = -73.9856753
     else:
-        geo_address = get_json(get_url(address, '', ''))['results'][0]
+        geo_address = get_json(get_url(address))['results'][0]
         center_lat = geo_address['geometry']['location']['lat']
         center_lon = geo_address['geometry']['location']['lng']
 
@@ -866,11 +874,15 @@ def filter_by(request):
 
 def search_by_map(request):
     address = request.POST['html_loc']
-    geo_address = get_json(get_url(address, '', ''))['results'][0]
+    geo_address = get_json(get_url(address))['results'][0]
     center_lat = geo_address['geometry']['location']['lat']
     center_lon = geo_address['geometry']['location']['lng']
 
-    all_listings = m.Listing.objects.all()
+    all_listings = m.Listing.objects.filter(active=1).all()
+
+    if len(all_listings)==0:
+        return JsonResponse({'errors': "No Result"}, status=400)
+    
     results_tuple = [(distance_to_center(listing.addr_lat, listing.addr_lon, center_lat, center_lon), listing) for listing in all_listings]
 
     results_tuple.sort(key=itemgetter(0))
@@ -895,6 +907,10 @@ def results_edit(request):
     }
 
     return render(request, 'airbnbclone/results_edit.html', context)
+
+def awesomeforms(request):
+
+    return render(request, airbnbclone/awesomeforms.html)
 
 
 def view_maps(request):

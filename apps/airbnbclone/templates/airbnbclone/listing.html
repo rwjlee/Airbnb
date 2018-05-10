@@ -126,10 +126,8 @@
 
     <div class="listing-avail col-4 border">
       <div class="container">
-        <div class="row">
-          <div class="h3">${{room.price}}</div>
-          <div class="small align-bottom">per night</div>
-        </div>
+        <div class="book-box">
+          <div class="h3">${{room.price}} <span class="small">per night</span></div>
 
         <form method="POST" action="{% url 'airbnbclone:authenticate_booking' %}" id="booking-form">
           {% csrf_token %}
@@ -139,9 +137,9 @@
           <div class="form-group">
             <input type="date" name="html_checkout" id="checkout" placeholder="Check Out" class="form-control">
           </div>
-          <div class="form-group">
-            <input type="number" name="html_guests" id="numguests" placeholder="Guests" class="form-control">
-          </div>
+          <select class="form-control" name="html_guests" id="numguests">
+                <option selected value="1">1 guest</option>
+          </select>
           <button id="book-btn" class="btn btn-danger col-12">Book</button>
         </form>
       </div>
@@ -211,9 +209,23 @@
 
     todayDate = dYear + "-" + dMonth + "-" + dDate;
 
-    $("#checkin").attr("min", todayDate);
-    $("#checkout").attr("min", todayDate);
-    $("#numguests").attr("max", 5);
+    tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    console.log(tomorrow);
+
+    let setCheckin = $("#checkin");
+    let setCheckout = $("#checkout");
+
+    setCheckin.attr("min", todayDate);
+    setCheckout.attr("min", todayDate);
+
+
+
+   
+    let guestsDiv = $("#numguests");
+    for (let i=2; i < {{room.max_guests}}+1; i++) {
+      guestsDiv.append('<option value=' + i + '>' + i + ' guests</option>');
+    }
 
 
     let favStr = '<i class="fa fa-heart mr-2" style="color:red"></i>Saved'
@@ -277,7 +289,6 @@
           window.location = response.url;
         },
         error: function (response) {
-          console.log("Stupid error not working")
           console.log(response)
           displayErrors($('.messages'), response.responseJSON.errors)
         }
