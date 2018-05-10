@@ -1,0 +1,14 @@
+{% extends 'airbnbclone/base.html' %} {% block body %}
+
+<div class="container mt-4">
+    {% if request.session.user_id %}
+    <h1>Start a room...</h1>
+    <form action="{% url 'chat:create_room' %}" method="POST">
+        <div class="form-inline">
+            <input type="text" class="form-control col-10" placeholder="Room name" name="room_name"> {% csrf_token %}
+            <button type="submit" class="btn btn-success ml-2">Join</button>
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

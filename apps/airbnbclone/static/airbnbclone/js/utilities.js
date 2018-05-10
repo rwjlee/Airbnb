@@ -47,11 +47,38 @@ function setCsrfToken(xhr, settings) {
     }
 }
 
-function displayErrors(divTarget, errors) {
-    for (let i in errors) {
-        let flash = $("<div></div>").addClass("alert alert-danger message")
-        flash.text(errors[i])
-        flash.appendTo(divTarget)
+function formToJson(formId) {
+    let fields = $(formId).serializeArray();
+    let json = {};
+
+    for (let i in fields) {
+        let inputField = fields[i];
+        json[inputField['name']] = inputField['value'];
+    }
+
+    return json;
+}
+
+
+function displayErrors(target, errors) {
+    for (let i = 0; i < errors.length; i++) {
+        let flash = $("<div></div>").addClass("alert").addClass("alert-danger").addClass("message");
+        flash.text(errors[i]);
+        flash.appendTo(target);
     }
 }
+
+
+function createElement(tag, text, classes=[]) {
+    let element = $("<"+tag+"><"+tag+"/>");
+    for (let i = 0 ; i < classes.length ; i++) {
+        element.addClass(classes[i]);
+    }
+    element.text(text);
+    return element;
+}
+
+
+
+
 

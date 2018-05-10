@@ -1,0 +1,80 @@
+{% extends 'airbnbclone/base.html' %} {% block body %}
+
+<div class="container">
+    <div class="row p-4">
+        <div class="col-12 messages">
+            <div class="row">
+                <div class="content-pane">
+                    <div id="messages-list"></div>
+                </div>
+                <div class="col-12 p-0 mt-4">
+                    <form action="" id="sendMessage">
+                        <input type="text" placeholder="Message" class="form-control" name="message">
+                        <input type="hidden" name="action" value="send.message">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block scripts %}
+<script>
+
+
+    function formToJson(formId) {
+        let fields = $(formId).serializeArray();
+        let json = {};
+
+        for (let i in fields) {
+            let inputField = fields[i];
+            json[inputField['name']] = inputField['value'];
+        }
+
+        return json;
+    }
+
+    $(document).ready(function () {
+        let connection = new WebSocket('ws://localhost:8000/ws/chat/{{room_name}}');
+
+
+        const SEND_MESSAGE_HANDLER = function (event) {
+            if (event.originalEvent.key == "Enter") {
+                event.preventDefault();
+                let message = formToJson("#sendMessage");
+                connection.send(JSON.stringify(message));
+                $("input[name=message]").val("");
+            }
+        };
+
+        connection.onmessage = function (response) {
+            let data = JSON.parse(response.data);
+            if (data.success) {
+                if (data.username) {
+                    let username = createElement("span", data.username+" :", ["username"]);
+                    let message = createElement("span", data.message);
+                    let messageDiv = createElement("div", null, ["message"]);
+                    messageDiv.append(username);
+                    messageDiv.append(message);
+                    $("#messages-list").append(messageDiv);
+                    
+                } else if (data.notification) {
+                    let messageDiv = createElement("div", null, ["notification"]);
+                    messageDiv.append(data.notification)
+                    $("#messages-list").append(messageDiv);
+                }
+
+                $(".content-pane").animate({ scrollTop: $('.content-pane').prop("scrollHeight")}, 2000);
+                
+            } else {
+                console.log(data.error);
+            }
+        };
+
+        $("#sendMessage").keypress(SEND_MESSAGE_HANDLER);
+
+
+
+    });
+</script> {% endblock %}
