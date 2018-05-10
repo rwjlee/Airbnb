@@ -714,14 +714,10 @@ def create_listing(request):
 
             if 'html_photo' in request.FILES:
                 html_photo = request.FILES.getlist('html_photo')
-                print(html_photo)
                 fs = FileSystemStorage()
                 for file in html_photo:
                     filename = fs.save(file.name, file)
                     photo = m.Photo.objects.create(listing_id = listing_obj.id, url = fs.url(filename), is_primary = False)
-                    print(photo.url)
-                    print(html_photo[0].name) 
-                    print(photo.is_primary)
                     if "/media/{}".format(html_photo[0].name) == photo.url:
                         photo.is_primary = True
                         photo.save()
