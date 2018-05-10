@@ -1,3 +1,4 @@
+from shutil import copyfile
 import googlemaps
 from datetime import datetime
 
@@ -5,12 +6,29 @@ import django
 
 import apps.airbnbclone.models as m
 import random
+from django.core.files.storage import FileSystemStorage
+
+import os
 
 from pprint import pprint
 
 django.setup()
 
 gmaps = googlemaps.Client(key='AIzaSyDSLQt7KusqUJAwSxviZ2iBJ371b5mI3EQ')
+
+
+MEDIA_DIR = 'media/'
+IMAGE_ROOT = '/Users/CryptoWork/Downloads/images/'
+file_names = []
+def create_images():
+    print('suck it')
+    for image in (os.listdir(IMAGE_ROOT)):
+        file_names.append(image)
+    for name in file_names:
+        copyfile(IMAGE_ROOT+name, MEDIA_DIR+name)
+    for i in m.Listing.objects.all():
+        print(i)
+        m.Photo.objects.create(listing_id = i.id, url = MEDIA_DIR + file_names[i.id], is_primary = True)
 
 
 FIRST_NAMES = ['Ned', 'John', 'Arya', 'Sansa', 'Cersei', 'Rob', 'Jorah', 'Daenerys', 'Joffrey', 'Robert', 'Samwell', 'Catelyn', 'Oberyn', 'Gregor', 'Rhaegar', 'Sandor']
@@ -147,6 +165,7 @@ def create_listings():
 
         listing = m.Listing.objects.create(host_id=user_id, listing_type=listing_type, privacy_type=privacy_type, bedroom=bedroom, bath=bath, bed=bed , max_guests=max_guests, city=city, country=country, address=address, price=price, active=True, name=name, desc=description, addr_lat=addr_lat, addr_lon=addr_lon) 
 
+        
         amenities = []
         for i in range(3, len(AMENITIES)):
             name = random.choice(AMENITIES)['name']
@@ -156,6 +175,10 @@ def create_listings():
         for name in amenities:
             listing.amenities.add(m.Amenity.objects.get(name=name))
         listing.save()
+
+
+        
+
         
 
 
@@ -163,3 +186,4 @@ def create_data():
     create_amenities()
     create_users()
     create_listings()
+

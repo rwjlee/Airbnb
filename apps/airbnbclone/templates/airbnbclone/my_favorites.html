@@ -1,27 +1,28 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">My Favorites</h3>
+    <h3 class="text-center">Your Saved Listings</h3>
     <hr>
     <div class="largeprint">Find Your Next Adventure</div>
-    <div>Explore your world for 
+    <div>Explore your world for
         <a href="{% url 'airbnbclone:index' %}">your next adventure</a> today!</div>
     <hr>
     <div class="largeprint">Your Favorites</div>
-    {% for favorite in my_favorites %}
+    {% for fav_listing in my_favorites %}
     <div class="listing-box">
+        <img src="{{ fav_listing.primary_photo }}" class="img-fluid" alt="primary photo"> 
         <div class="row justify-content-between">
             <div class="largeprint col-8">
-                <a href="{% url 'airbnbclone:listing' listing_id=favorite.id %}">{{ favorite.name }}</a>
+                <a href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">{{ fav_listing.name }}</a>
             </div>
             <div class="col-2 mr-3">
                 <a class="btn btn-warning" href="">Unlike</a>
             </div>
         </div>
-        <div class="fineprint">{{ favorite.desc }}</div>
+        <div class="fineprint">{{ fav_listing.desc }}</div>
+
     </div>
-    {% endfor %}
-    <hr>
+    <hr> {% endfor %}
 </div>
 
 {% endblock %}

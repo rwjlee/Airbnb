@@ -482,13 +482,20 @@ def my_favorites(request):
         return redirect('airbnbclone:index')
     
     user_id = request.session['user_id']
-    print(user_id)
-    my_favorites = m.Listing.objects.filter(saved_by = user_id)
-    print(len(my_favorites))
+    my_favorites = m.Listing.objects.filter(saved_by__guest_id = user_id)
+
+    fav_photos = []
+
+    for my_favorite in my_favorites:
+        photo = m.Photo.objects.get(listing_id = my_favorite.id, is_primary = 1)
+        fav_photos.append(photo)
+
+    print(fav_photos)
 
     context = {
         'user_id': user_id,
         'my_favorites': my_favorites,
+        'fav_photos': fav_photos,
     }
     return render(request, 'airbnbclone/my_favorites.html', context)
 
@@ -725,14 +732,10 @@ def create_listing(request):
 
             if 'html_photo' in request.FILES:
                 html_photo = request.FILES.getlist('html_photo')
-                print(html_photo)
                 fs = FileSystemStorage()
                 for file in html_photo:
                     filename = fs.save(file.name, file)
                     photo = m.Photo.objects.create(listing_id = listing_obj.id, url = fs.url(filename), is_primary = False)
-                    print(photo.url)
-                    print(html_photo[0].name) 
-                    print(photo.is_primary)
                     if "/media/{}".format(html_photo[0].name) == photo.url:
                         photo.is_primary = True
                         photo.save()
