@@ -482,6 +482,7 @@ def my_favorites(request):
         return redirect('airbnbclone:index')
     
     user_id = request.session['user_id']
+    print(user_id)
     my_favorites = m.Listing.objects.filter(saved_by = user_id)
     print(len(my_favorites))
 

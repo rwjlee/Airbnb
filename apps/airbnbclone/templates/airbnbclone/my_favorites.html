@@ -12,7 +12,7 @@
     <div class="listing-box">
         <div class="row justify-content-between">
             <div class="largeprint col-8">
-                <a href="{% url 'airbnbclone:listing' listing_id=favorite.home_listing.id %}">{{ favorite.name }}</a>
+                <a href="{% url 'airbnbclone:listing' listing_id=favorite.id %}">{{ favorite.name }}</a>
             </div>
             <div class="col-2 mr-3">
                 <a class="btn btn-warning" href="">Unlike</a>
