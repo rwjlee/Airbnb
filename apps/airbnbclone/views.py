@@ -474,8 +474,6 @@ def listing(request, listing_id):
         print("========{}fav".format(fav))
         
     except:
-        raise
-        room = None
         return redirect('airbnbclone:index')
 
     context = {
