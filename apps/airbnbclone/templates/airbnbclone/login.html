@@ -1,7 +1,7 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">Login</h3>
+    <h3 class="text-center font-weight-light">Login</h3>
     <form method="POST" action="{% url 'airbnbclone:login' %}" id="login-form">
             {% csrf_token %}
         <div class="form-group">
