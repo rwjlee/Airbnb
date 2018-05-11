@@ -891,7 +891,7 @@ def add_photo(request):
                     "primary": photo,
                 }
 
-                return redirect(request, 'airbnbclone/edit_listing.html', context)
+                return render(request, 'airbnbclone/edit_listing.html', context)
         except:
             pass
 
