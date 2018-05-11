@@ -1,0 +1,339 @@
+{% extends 'airbnbclone/base.html' %}
+
+{% block body %}
+
+<div class="container" id="step-one">
+    
+<div class="row justify-content-center my-3 p-2">
+    <div class="lead headline">Please Enter The Listing Address to Begin</div>
+</div>
+        
+<div class="row justify-content-center my-3">
+    <div class="col-5 ">
+        <form class="form-inline mx-3" action="">
+                <div class="searchbar_div d-flex">
+                    <div class="search_icon dib">
+                        <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 24px; width: 24px; display: block; fill: rgb(118, 118, 118);">
+                            <path d="m10.4 18.2c-4.2-.6-7.2-4.5-6.6-8.8.6-4.2 4.5-7.2 8.8-6.6 4.2.6 7.2 4.5 6.6 8.8-.6 4.2-4.6 7.2-8.8 6.6m12.6 3.8-5-5c1.4-1.4 2.3-3.1 2.6-5.2.7-5.1-2.8-9.7-7.8-10.5-5-.7-9.7 2.8-10.5 7.9-.7 5.1 2.8 9.7 7.8 10.5 2.5.4 4.9-.3 6.7-1.7v.1l5 5c .3.3.8.3 1.1 0s .4-.8.1-1.1"
+                                fill-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <input class="search_input dib" id="complete_id" class="controls" type="text" name="html_address" value="" placeholder="Your Address">
+                    <button class="btn search_button my-2 my-sm-0" type="submit">Search</button>
+                </div>
+            </form>
+    </div>
+
+    <div class="col-5 copy-me">
+        <div id="address-map">
+
+
+        </div>
+        
+    </div>
+</div>
+
+<div class="row justify-content-center my-3">
+    <div class="col-5 text-center" id="broadcast-id">
+
+    </div>
+</div>
+
+<div class="row justify-content-center my-3">
+    <button class="btn btn-primary copy-me" id="confirm-btn">Confirm</button>
+</div>
+
+</div>
+
+
+<div id="step-three" class="copy-me">
+<div class="listing-banner edit-banner">
+    <div class="row justify-content-between">
+        <div class="col-8">
+          <div class="p-3">
+            <div class="btn">Add Photo to Complete the Process and Activate Your Listing</div>
+                <div class="form-group">
+                    <input type="file" name="html_photo" multiple required class="form-control mb-3 picturetitle" id="exampleFormControlFile1">
+                </div>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="step-two" class="copy-me">
+
+<div class="container" id="form-step-two">
+    <div class="row justify-content-center text-center p-3">
+        <div class="h2">
+            Please Fill Out the Form to Make A Listing
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-8 left">
+            <div class="border p-3">
+                <div class="form-group">
+                    <select class="form-control" name="html_listing_type" id="listing-type-form" placeholder="Listing Type">
+                      <option select>Apartment</option>
+                      <option>Bed and Breakfast</option>
+                      <option>Boutique Hotel</option>
+                      <option>Bungalow</option>
+                      <option>Cabin</option>
+                      <option>Chalet</option>
+                      <option>Cottage</option>
+                      <option>Guest Suite</option>
+                      <option>Guesthouse</option>
+                      <option>Hostel</option>
+                      <option>Hotel</option>
+                      <option>House</option>
+                      <option>Loft</option>
+                      <option>Resort</option>
+                      <option>Townhouse</option>
+                      <option>Villa</option>
+                    </select>
+                </div>
+
+                <h1 contenteditable="true" name="html_name">Listing Name</h1>
+
+                <div>
+                    <span name="city"></span>, <span name="country"></span>
+                    <input type="hidden" name="html_lat" value="">
+                    <input type="hidden" name="html_lon" value="">
+                </div>
+                
+                <div class="form-group my-3">
+                    <select class="form-control" name="html_privacy_type" id="privacy-type-form">
+                      <option select>Entire Place</option>
+                      <option>Private Room</option>
+                      <option>Shared Room</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="debug p-3 mx-3">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="row">
+                            <i class="fa fa-user"></i>
+                            <input class="form-control-sm form-inline" type="number" min="1" name="html_max_guests" placeholder="1">Guests
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <i class="fa fa-bed"></i>
+                            <input class="form-control-sm form-inline" type="number" min="1" name="html_bed" placeholder="1">Beds
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <i class="fa fa-bath"></i>
+                            <input class="form-control-sm form-inline" type="number" min="0" name="html_bath" placeholder="0">Bath
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <i class="fa fa-sign-in"></i>
+                            <input class="form-control-sm form-inline" type="number" min="0" name="html_bedroom" placeholder="0">Room
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group p-3">
+              <label for="comment">Tell Us More About Your place</label>
+              <textarea class="form-control" name="html_desc" rows="5" id="comment"></textarea>
+            </div>
+
+            <div class="amen-div p-3">
+                <div class="h3">
+                    Add Amenities
+                </div>
+
+                <div class="row border m-2">
+                    {% for amen in amen_list %}
+                    <div class="form-check col-4 m-1">
+                        <input class="form-check-input" type="checkbox" value="">
+                        <label class="form-check-label">
+                            <i class="fa {{amen.font_class}}" id="{{amen.font_class}}">{{amen.name}}</i>
+                            
+                        </label>
+                    </div>
+
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="border p-3">
+                <div>
+                    <span>
+                        <input type="number" class="form-control" name="html_price" placeholder="Set Your Price">
+                    </span>
+                    <span class="pernight">
+                        per night
+                    </span>
+                </div>
+                <hr class="my-3">
+                <div>
+                    <div class="my-2">
+                        Make Your Place Available
+                    </div>
+                    <div>
+                        <div>Start Date</div> 
+                        <input type="date" class="form-control" name="html_start" required>
+                    </div>
+                    <div>
+                        <div>End Date</div>
+                        <input type="date" class="form-control" name="html_end" required>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <button class="btn btn-danger" id="create-btn">Create Listing</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}
+        
+        
+        
+{% block scripts %}
+<script>
+
+    $(document).ready(function() {
+        console.log("ready")
+
+        let message = $("#broadcast-id")
+
+        function confirm_first(response) {
+            message.empty();
+            if (response.length == 0) {
+                message.text("This is an incorrect address. Please try again");   
+            } else {
+                console.log(response); 
+                let mes_adr = "<div>Address: " + response['long_address'] + "</div>";
+                let mes = "<div>Please press button to proceed</div>";
+                $("#confirm-btn").removeClass("copy-me");
+                message.append(mes_adr + mes);
+                $("#confirm-btn").click(function(event) {
+                    event.preventDefault();
+                    console.log(event);
+                    message.empty();
+                    $("#step-one").addClass("copy-me");
+                    $("#step-two").removeClass("copy-me");
+                    $("span[name=city]").text(response['city']);
+                    $("span[name=country]").text(response['country']);
+                    $("input[name=html_lat").val(response['addr_lat']);
+                    $("input[name=html_lon").val(response['addr_lon']);
+                    $("input[name=html_address").val(response['long_address']);
+                });
+            }
+        };
+
+
+        $("#photo-file").click(function(event) {
+            event.preventDefault();
+            console.log(event);
+
+            $.ajax({
+                type: "FILES",
+                url: "url",
+                data: {},
+                success: function (response) {
+
+                }
+            });
+        })
+
+        function confirm_second(response) {
+            console.log(response);
+        };
+
+        $("#create-btn").click(function(event) {
+            event.preventDefault();
+            console.log(event);
+            
+            $.ajax({
+                beforeSend: setCsrfToken,
+                type: "POST",
+                url: "/create_listing",
+                data: {
+                    'html_listing_type': $("select[name=html_listing_type]").val(),
+                    'html_privacy_type': $("select[name=html_privacy_type]").val(),
+                    'html_bedroom': $("input[name=html_bedroom]").val(),
+                    'html_bath': $("input[name=html_bath]").val(),
+                    'html_bed': $("input[name=html_bed]").val(),
+                    'html_max_guests': $("input[name=html_max_guests]").val(),
+                    'html_price': $("input[name=html_price]").val(),
+                    'html_name': $("h1[name=html_name]").text(),
+                    'html_desc': $("textarea[name=html_desc]").val(),
+                    'html_city': $("span[name=city]").text(),
+                    'html_country': $("span[name=country]").text(),
+                    'html_lat': $("input[name=html_lat]").val(),
+                    'html_lon': $("input[name=html_lon]").val(),
+                    'html_address': $("input[name=html_address]").val(),
+                    'html_start_date': $("input[name=html_start]").val(),
+                    'html_end_date': $("input[name=html_end]").val(),
+                },
+                success: function (response) {
+                    confirm_second(response);
+                },
+                error: function (response) {
+                    console.log(response['responseJSON'])
+                }
+            });
+        });
+
+        $("#complete_id").keypress(function(event) {
+
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                let address = $(this).val();
+                message.empty()
+                $.ajax({
+                    beforeSend: setCsrfToken,
+                    type: "POST",
+                    url: "/find_address",
+                    data: {
+                        "address": address,
+                    },
+                    success: function (response) {
+                        
+                        confirm_first(response);   
+                    },
+                    error: function (response) {
+                        console.log(response);
+                        message.empty();
+                        message.text("The address is incorrect. Please Search Again");
+                    }
+                });
+            }
+        });
+    });
+
+    function initMap() {
+        let input = document.getElementById('complete_id');
+        let autocomplete = new google.maps.places.Autocomplete(input);
+    }
+
+    
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap&libraries=places" async defer>
+</script>
+{% endblock %}
+
+
+
