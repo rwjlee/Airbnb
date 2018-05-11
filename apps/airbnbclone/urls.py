@@ -10,6 +10,7 @@ urlpatterns = [
     path('become_a_host', views.become_a_host, name='become_a_host'),
     path('my_listings', views.my_listings, name='my_listings'),
     path('my_favorites', views.my_favorites, name='my_favorites'),
+    path('un_favorite/<int:listing_id>', views.un_favorite, name='un_favorite'),
 
     path('login', views.login, name='login'),
     path('register', views.register, name='register'),
@@ -46,4 +47,9 @@ urlpatterns = [
     path('save_favorite', views.save_favorite, name='save_favorite'),
 
     path('awesomeforms', views.awesomeforms, name='awesomeforms'),
+
+    path('find_address', views.find_address, name='find_address'),
+
+    path('create_steps', views.create_steps, name='create_steps'),
+    path('edit_listing/<int:listing_id>', views.edit_listing, name='edit_listing'),
 ]

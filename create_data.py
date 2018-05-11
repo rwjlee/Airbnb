@@ -93,7 +93,7 @@ def create_bookings():
 
 
 MEDIA_DIR = '/media/'
-IMAGE_ROOT = '/Users/pesomerville/CodeRemote/images/'
+IMAGE_ROOT = '/Users/R/coderemote/project/images/'
 file_names = []
 def create_images():
     for image in (os.listdir(IMAGE_ROOT)):

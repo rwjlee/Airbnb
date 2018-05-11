@@ -147,10 +147,13 @@
 }
 .listing-box {
     margin: 10px;
-    border: 2px solid black;
+    border: 1px solid lightgray;
     padding: 10px;
 }
 
+.listing-box a {
+    color: black;
+}
 
 .map-container {
     height: 500px;
@@ -780,4 +783,26 @@ button.result_a:focus {
 
 .location-fix {
     margin-top: -66px;
+}
+.edit-banner {
+    background-color: #e3e3e3;
+}
+
+.right {
+    
+}
+
+.pernight {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.form-control{
+    -webkit-border-radius: 2;
+       -moz-border-radius: 2;
+            border-radius: 2;
+  }
+
+.form-control-sm {
+    width: 30%;
 }

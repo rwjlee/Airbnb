@@ -24,7 +24,9 @@
     <hr> 
     {% endfor %}
     <div class="largeprint">Details for this listing:</div>
-    <div><a href="{% url 'airbnbclone:listing' listing_id=conversation.listing.id %}" >{{ conversation.listing.name }}</a></div>
+    <div><a class="" href="{% url 'airbnbclone:listing' listing_id=conversation.listing.id %}" >{{ conversation.listing.name }}</a></div>
+    <div class="bluecolor">{{ conversation.listing.listing_type }} with {{ conversation.listing.bed}} {% if conversation.listing.bed == 1 %}bed{% else %}beds{% endif %}</div></a>
+    <div class="fineprint font-weight-bold">From ${{ conversation.listing.price }} per night | {{ conversation.listing.privacy_type }}</div>
     <div class="fineprint">{{ conversation.listing.desc }}</div>
 
 

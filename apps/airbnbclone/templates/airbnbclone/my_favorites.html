@@ -3,26 +3,52 @@
 <div class="card my-4 col-6 offset-3 p-5">
     <h3 class="text-center">Your Saved Listings</h3>
     <hr>
-    <div class="largeprint">Find Your Next Adventure</div>
+    <div class="font-weight-bold bluecolor">Find Your Next Adventure</div>
     <div>Explore your world for
         <a href="{% url 'airbnbclone:index' %}">your next adventure</a> today!</div>
     <hr>
     <div class="largeprint">Your Favorites</div>
     {% for fav_listing in my_favorites %}
-    <div class="listing-box">
+    <div class="listing-box"><a href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">
         <img src="{{ fav_listing.primary_photo }}" class="img-fluid" alt="primary photo"> 
+        <div class="bluecolor font-weight-bold">{{ fav_listing.listing_type }} with {{ fav_listing.bed}} {% if fav_listing.bed == 1 %}bed{% else %}beds{% endif %}</div></a>
         <div class="row justify-content-between">
             <div class="largeprint col-8">
-                <a href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">{{ fav_listing.city }}</a>
+                <h4><a style="text-dark" href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">{{ fav_listing.city }}</a></h4>
             </div>
             <div class="col-2 mr-3">
-                <a class="btn btn-warning" href="">Unlike</a>
+                <a class="btn btn-outline-info btn-sm mt-2" href="{% url 'airbnbclone:un_favorite' listing_id=fav_listing.id %}">Unlike</a>
             </div>
         </div>
-        <div class="">{{ fav_listing.name }}</div>
-        <div class="fineprint">{{ fav_listing.desc }}</div>
+        <div class=""><a href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">{{ fav_listing.name }}</div>
+        <div class="fineprint font-weight-bold">From ${{ fav_listing.price }} per night | {{ fav_listing.privacy_type }}</div>
+        <div class=""><span class="bluecolor">
+                        {% if fav_listing.average_rating < 0.5 %}
+                        <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                        {% elif fav_listing.average_rating < 1 %}
+                        <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                        {% elif fav_listing.average_rating < 1.5 %}
+                        <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                        {% elif fav_listing.average_rating < 2 %}
+                        <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                        {% elif fav_listing.average_rating < 2.5 %}
+                        <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                        {% elif fav_listing.average_rating < 3 %}
+                        <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                        {% elif fav_listing.average_rating < 3.5 %}
+                        <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
+                        {% elif fav_listing.average_rating < 4 %}
+                        <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i>
+                        {% elif fav_listing.average_rating < 4.5 %}
+                        <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
+                        {% elif fav_listing.average_rating < 5 %}
+                        <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i>
+                        {% elif fav_listing.average_rating == 5 %}
+                        <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+                        {% endif %}</span>{{ fav_listing.number_reviews }} Reviews
+        </div>
 
-    </div>
+    </a></div>
     <hr> {% endfor %}
 </div>
 
