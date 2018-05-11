@@ -45,6 +45,9 @@
                 {% elif booking.home_listing.average_rating == 5 %}
                 <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
                 {% endif %}</span>{{ booking.home_listing.number_reviews }} Reviews</div>
+                <hr>
+                <div class="mb-2 font-weight-bold bluecolor"><a href="{% url 'airbnbclone:start_convo' listing_id=booking.home_listing.id %}">Send Message to the Host</a>
+                </div>
     </div>
     {% endfor %}
     <hr>

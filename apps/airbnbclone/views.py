@@ -18,9 +18,26 @@ gmaps = googlemaps.Client(key = MAP_API_KEY)
 
 # Create your views here.
 def index(request):
+    listings_rated = []
+    listings_all = []
+    listings = m.Listing.objects.all()
+    i = 8 
+    while i < 16:
+        listings_rated.append(listings[i])
+        i += 1
+    z = 16
+    while z < 25:
+        listings_all.append(listings[z])
+        if z == 19:
+            z += 2
+        else:
+            z += 1
     context = {
         "api_key": MAP_API_KEY,
+        "listings_rated" : listings_rated,
+        "listings_all" : listings_all,
     }
+    
     return render(request, 'airbnbclone/index.html', context)
 
 def start_session(request, user):
@@ -149,7 +166,7 @@ def all_messages(request):
 
     user_id = request.session['user_id']
 
-    conversations = m.Conversation.objects.filter(Q(host_id = user_id) | Q(guest_id = user_id)).order_by('-created_at')
+    conversations = m.Conversation.objects.filter(Q(host_id = user_id) | Q(guest_id = user_id)).order_by('-updated_at')
 
     context = {
         'conversations': conversations,
@@ -182,6 +199,9 @@ def send_message(request, conversation_id):
                     contents = request.POST['html_contents'],
                     from_user_id = request.session['user_id'],
                 )
+                conversation.updated_at = message.created_at
+                conversation.save()
+
             except:
                 pass
 
@@ -1123,6 +1143,13 @@ def search_by_map(request):
 
     if len(all_listings)==0:
         return JsonResponse({'errors': "No Result"}, status=400)
+
+    # results_tuple = []
+
+    # for listing in all_listings:
+    #     dist = distance_to_center(listing.addr_lat, listing.addr_lon, center_lat, center_lon)
+    #     if dist < 100:
+    #         results_tuple.append((dist, listing))
 
     results_tuple = [(distance_to_center(listing.addr_lat, listing.addr_lon, center_lat, center_lon), listing) for listing in all_listings]
 

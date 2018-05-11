@@ -11,10 +11,10 @@
     {% for fav_listing in my_favorites %}
     <div class="listing-box"><a href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">
         <img src="{{ fav_listing.primary_photo }}" class="img-fluid" alt="primary photo"> 
+        <div class="bluecolor font-weight-bold">{{ fav_listing.listing_type }} with {{ fav_listing.bed}} {% if fav_listing.bed == 1 %}bed{% else %}beds{% endif %}</div></a>
         <div class="row justify-content-between">
             <div class="largeprint col-8">
-                <div class="fineprint bluecolor font-weight-bold">{{ fav_listing.listing_type }} with {{ fav_listing.bed}} {% if fav_listing.bed == 1 %}bed{% else %}beds{% endif %}</div></a>
-                <a style="text-dark" href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">{{ fav_listing.city }}</a>
+                <h4><a style="text-dark" href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">{{ fav_listing.city }}</a></h4>
             </div>
             <div class="col-2 mr-3">
                 <a class="btn btn-outline-info btn-sm mt-2" href="{% url 'airbnbclone:un_favorite' listing_id=fav_listing.id %}">Unlike</a>
