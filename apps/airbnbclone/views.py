@@ -341,6 +341,7 @@ def create_booking(request):
     except:
         messages.error(request, "Booking cannot be completed")
         raise
+        return None
     
     return booking
 
@@ -703,7 +704,6 @@ def create_steps(request):
     return render(request, 'airbnbclone/create_steps.html', context)
 
 def find_address(request):
-
     if request.method == "POST":
 
         try:
@@ -828,13 +828,23 @@ def create_listing(request):
 
 
 def add_amenity(request):
+
+    if request.method == "POST":
+        print(request.POST)
+        
+        listing_id = request.POST['html_listing_id']
+
+        listing = m.Listing.objects.get(id = listing_id)
+
+        amen_list = listing.amenities
+
+    return False
+
     
     # amen_list = m.Amenity.objects.all()
     # for amen in amen_list:
     #     if amen.font_class in request.POST:
     #         listing_obj.amenities.add(amen)
-
-    pass
             
 def add_dates(request):
     if request.method == "POST":
@@ -889,7 +899,7 @@ def add_photo(request):
                     "primary": photo,
                 }
 
-                return render(request, 'airbnbclone/edit_listing.html', context)
+                return redirect(request, 'airbnbclone/edit_listing.html', context)
         except:
             pass
 

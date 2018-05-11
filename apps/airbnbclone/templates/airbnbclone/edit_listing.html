@@ -179,11 +179,15 @@ $(document).ready(function() {
             },
             success: function (response) {
                 console.log(response);
-                
+                let msg = $("#date-msg");
+                msg.empty();
+                msg.append("<div class='text-primary'>Price and Date Updated<div>");
             },
             error: function (response) {
                 console.log(response);
-                console.log("bad");
+                let msg = $("#date-msg");
+                msg.empty();
+                msg.append("<div class='text-danger'>Your Change cannot be updated. Please try again.</div>")
             },
         });
 
