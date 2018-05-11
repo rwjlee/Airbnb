@@ -74,7 +74,8 @@ def create_reviews():
     for review in REVIEWS:
         booking_id = random.choice(range(1, 36))
         rating = random.choice(range(3, 6))
-        m.Review.objects.create(booking_id = booking_id, description = review, star_rating = rating)
+        review_objs = m.Review.objects.create(booking_id = booking_id, description = review, star_rating = rating)
+
 
 
 def create_bookings():
@@ -93,7 +94,7 @@ def create_bookings():
 
 
 MEDIA_DIR = '/media/'
-IMAGE_ROOT = '/Users/R/coderemote/project/images/'
+IMAGE_ROOT = '/Users/CryptoWork/Downloads/images/'
 file_names = []
 def create_images():
     for image in (os.listdir(IMAGE_ROOT)):

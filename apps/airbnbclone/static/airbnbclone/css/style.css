@@ -659,6 +659,9 @@ button.listing_a:focus {
 .results_page {
     font-size: 0px;
 }
+.results_listings_container {
+    width: 66%
+}
 .results_homes {
     font-weight: 700 ;
     margin-bottom: 0px ;
@@ -668,12 +671,9 @@ button.listing_a:focus {
     letter-spacing: normal ;
     padding-top: 2px ;
     color: rgb(72, 72, 72) ;
-    margin-left: 7px;
+    margin-left: 20px;
     margin-top: 40px;
 
-}
-.results_listings_container {
-    width: 66%
 }
 .results_listings {
     width: 100%;
@@ -686,6 +686,7 @@ button.listing_a:focus {
     width: 50%;
     border: none;
     padding: 0%;
+    margin-bottom: 15px;
 }
 button.result_a:focus {
     outline-width: 0;
@@ -724,6 +725,7 @@ button.result_a:focus {
     color: rgb(72, 72, 72) ;
     font-weight: 700 ;
     margin: 0px ;
+    margin-bottom: 3px;
 }
 .results_name {
     word-wrap: break-word ;
@@ -751,8 +753,12 @@ button.result_a:focus {
 
 }
 .map_box {
-    width: 33%;
+    width: 34%;
     margin-left: 0%;
+    vertical-align: top;
+    padding-top: 26px;
+    padding-left: 15px;
+    position: fixed;
 
 }
 .review_star {
@@ -777,8 +783,8 @@ button.result_a:focus {
     margin: 0px ;
 }
 #map-search {
-    width: 90%;
-    height: 450px;
+    width: 94%;
+    height: 70vh;
 }
 
 .location-fix {

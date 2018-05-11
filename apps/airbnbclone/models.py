@@ -54,6 +54,11 @@ class Listing(models.Model):
             if photo.is_primary:
                 return photo.url
         return None   
+    
+    @property
+    def get_rating(self):
+        return '{0:.1f}'.format(self.average_rating)
+
          
 
 

@@ -74,7 +74,7 @@
 
       <div class="view-reviews">
         <div class="largeprint">{{room.number_reviews}} Reviews</div>
-        <div class="largeprint">Average rating: {{ room.average_rating }}
+        <div class="largeprint">Average rating: {{ room.get_rating }}
           <span class="bluecolor">
           {% if room.average_rating < 0.5 %}
           <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
