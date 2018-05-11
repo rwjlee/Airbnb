@@ -71,10 +71,19 @@ REVIEWS = [
 ]
 
 def create_reviews():
-    for review in REVIEWS:
-        booking_id = random.choice(range(1, 36))
+    for booking in m.Booking.objects.all():
+        description = random.choice(REVIEWS)
         rating = random.choice(range(3, 6))
-        review_objs = m.Review.objects.create(booking_id = booking_id, description = review, star_rating = rating)
+        review = m.Review.objects.create(booking_id = booking.id, description = description, star_rating = rating)
+        listing = review.booking.home_listing
+        if listing.average_rating:
+            listing.average_rating = (listing.number_reviews * listing.average_rating) / (listing.number_reviews + 1)
+            listing.number_reviews += 1
+        else:
+            listing.average_rating = rating
+            
+        listing.save()
+
 
 
 
