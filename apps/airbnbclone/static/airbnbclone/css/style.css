@@ -147,10 +147,13 @@
 }
 .listing-box {
     margin: 10px;
-    border: 2px solid black;
+    border: 1px solid lightgray;
     padding: 10px;
 }
 
+.listing-box a {
+    color: black;
+}
 
 .map-container {
     height: 500px;

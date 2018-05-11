@@ -1,53 +1,98 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">Manage Your Listings</h3>
+    <h3 class="text-center">Manage the Listings You Host</h3>
     <hr>
-    <div class="largeprint">Sharing is Caring</div>
-    <div>Add a 
+    <div class="font-weight-bold bluecolor">Sharing is Caring</div>
+    <div>Add a
         <a href="{% url 'airbnbclone:create_listing' %}">new listing</a> and welcome travelers from around the world to your community.</div>
     <hr>
     <div class="largeprint">Your Listings</div>
     {% for listing in my_listings %}
-    <div class="listing-box">
+    <div class="listing-box"><a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">
+        <img src="{{ listing.primary_photo }}" class="img-fluid" alt="primary photo">
         <div class="row justify-content-between">
             <div class="largeprint col-8">
-                <a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">{{ listing.name }}</a>
+                <div class="fineprint bluecolor font-weight-bold">{{ listing.listing_type }} with {{ listing.bed}} {% if listing.bed == 1 %}bed{% else %}beds{% endif %}</div>
+                <a class="text-dark" href="{% url 'airbnbclone:listing' listing_id=listing.id %}">{{ listing.city }}</a>    
             </div>
             <div class="col-2 mr-5">
-                <a class="btn btn-warning" href="">Edit Listing</a>
+                <a class="btn btn-outline-info btn-sm mt-2" href="">Edit Listing</a>
             </div>
         </div>
-        <div class="fineprint">{{ listing.desc }}</div>
+        <div class=""><a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">{{ listing.name }}</div>
+        <div class="fineprint font-weight-bold">From ${{ listing.price }} per night | {{ listing.privacy_type }}</div>
         <div>
-            {{listing.number_reviews}} Reviews, Average Rating: {{listing.average_rating}}/5 stars<span class="bluecolor">
-                {% if listing.average_rating < 0.5 %}
-                <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
-                {% elif listing.average_rating < 1 %}
-                <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
-                {% elif listing.average_rating < 1.5 %}
-                <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
-                {% elif listing.average_rating < 2 %}
-                <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
-                {% elif listing.average_rating < 2.5 %}
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
-                {% elif listing.average_rating < 3 %}
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
-                {% elif listing.average_rating < 3.5 %}
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i>
-                {% elif listing.average_rating < 4 %}
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i>
-                {% elif listing.average_rating < 4.5 %}
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
-                {% elif listing.average_rating < 5 %}
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i>
+            <span class="bluecolor">
+                {% if listing.average_rating < 0.5 %} <i class="fa fa-star-o">
+                    </i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                {% elif listing.average_rating < 1 %} <i class="fa fa-star-half-o">
+                    </i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                {% elif listing.average_rating < 1.5 %} <i class="fa fa-star">
+                    </i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                {% elif listing.average_rating < 2 %} <i class="fa fa-star">
+                    </i>
+                    <i class="fa fa-star-half-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                {% elif listing.average_rating < 2.5 %} <i class="fa fa-star">
+                    </i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                {% elif listing.average_rating < 3 %} <i class="fa fa-star">
+                    </i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                {% elif listing.average_rating < 3.5 %} <i class="fa fa-star">
+                    </i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                {% elif listing.average_rating < 4 %} <i class="fa fa-star">
+                    </i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-o"></i>
+                    <i class="fa fa-star-o"></i>
+                {% elif listing.average_rating < 4.5 %} <i class="fa fa-star">
+                    </i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-o"></i>
+                {% elif listing.average_rating < 5 %} <i class="fa fa-star">
+                    </i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-o"></i>
                 {% elif listing.average_rating == 5 %}
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                {% endif %}</span></div>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    {% endif %}</span> {{listing.number_reviews}} Reviews</div>
+        </a>
     </div>
     {% endfor %}
-    <hr>
-
 </div>
-
 {% endblock %}

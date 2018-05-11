@@ -236,7 +236,7 @@ def my_bookings(request):
     user_id = request.session['user_id']
     today = datetime.date.today()
     current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
-    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
+    past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all().order_by('-to_date')
 
     context = {
         'user_id': user_id,
@@ -978,6 +978,19 @@ def save_favorite(request):
         return JsonResponse(context)
     
     return JsonResponse({'errors': "Not Allowed", "url": redirect('airbnbclone:index').url}, status=400)
+    
+def un_favorite(request, listing_id):
+    if 'user_id' not in request.session:
+        return redirect('airbnbclone:login')
+    
+    user_id = request.session['user_id']
+    try:
+        fav = m.Favorite.objects.get(Q(home_listing_id = listing_id) & Q(guest_id = user_id))
+        fav.delete()
+    except:
+        pass
+
+    return redirect('airbnbclone:my_favorites')
     
 
 def distance_to_center(addr_lat, addr_lon, center_lat, center_lon):
