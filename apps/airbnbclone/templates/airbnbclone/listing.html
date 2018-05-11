@@ -271,6 +271,8 @@
       console.log(event);
       event.preventDefault();
       $(".messages").children().remove();
+      console.log('----------')
+      console.log($("select[name=html_guests]").val())
       $.ajax({
         beforeSend: setCsrfToken,
         type: "POST",
@@ -278,13 +280,13 @@
         data: {
           "html_checkin": $("input[name=html_checkin]").val(),
           "html_checkout": $("input[name=html_checkout]").val(),
-          "html_guests": $("input[name=html_guests]").val(),
+          "html_guests": $("select[name=html_guests]").val(),
           "html_user_id": "{{request.session.user_id}}",
           "html_listing_id": "{{room.id}}",
           "html_charge": "{{room.price}}",
         },
         success: function (response) {
-          console.log(response);
+          window.location = response.url;
           
         },
         error: function (response) {

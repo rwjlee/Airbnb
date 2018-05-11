@@ -271,7 +271,7 @@ def authenticate_booking(request):
         print("==========={}=======".format(booking))
 
         if booking:
-            return JsonResponse({"url": redirect('airbnbclone:index').url})
+            return JsonResponse({"url": redirect('airbnbclone:my_bookings').url})
 
         errors = []
         for message in messages.get_messages(request):
