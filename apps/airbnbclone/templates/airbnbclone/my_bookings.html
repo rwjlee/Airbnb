@@ -1,10 +1,10 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">My Trips</h3>
+    <h3 class="text-center font-weight-light">My Trips</h3>
     <hr>
     <div class="bluecolor font-weight-bold">Choose Your Next Adventure</div>
-    <div>Search for a
+    <div class="font-weight-light">Search for a
         <a href="{% url 'airbnbclone:index' %}">great place to stay</a> on your next trip!</div>
     <hr>
     <div class="largeprint">Current and Upcoming Trips</div>
@@ -66,7 +66,18 @@
         </div>
     </div>
     {% endfor %}
-
+    <hr>
+    <div class="text-center font-italic bluecolor mt-4">
+            <div class="font-weight-bold mt-4">OH! THE PLACES YOU'LL GO!</div>
+            <div class="mt-4">You'll be on your way up!</div>
+            <div>You'll be seeing great sights!</div>
+            <div>You'll join the high fliers</div> 
+            <div>who soar to high heights.</div> 
+            <div class="mt-4">You won't lag behind, because you'll have the speed.</div>
+            <div>You'll pass the whole gang and you'll soon take the lead.</div>
+            <div>Wherever you fly, you'll be best of the best.</div>
+            <div>Wherever you go, you will top all the rest.</div>
+    </div>
 </div>
 
 {% endblock %}
