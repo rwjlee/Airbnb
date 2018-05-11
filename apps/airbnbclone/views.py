@@ -166,7 +166,7 @@ def all_messages(request):
 
     user_id = request.session['user_id']
 
-    conversations = m.Conversation.objects.filter(Q(host_id = user_id) | Q(guest_id = user_id)).order_by('-created_at')
+    conversations = m.Conversation.objects.filter(Q(host_id = user_id) | Q(guest_id = user_id)).order_by('-updated_at')
 
     context = {
         'conversations': conversations,
@@ -199,6 +199,9 @@ def send_message(request, conversation_id):
                     contents = request.POST['html_contents'],
                     from_user_id = request.session['user_id'],
                 )
+                conversation.updated_at = message.created_at
+                conversation.save()
+
             except:
                 pass
 
@@ -252,7 +255,7 @@ def cancel_booking(request, booking_id):
 def my_bookings(request):
     user_id = request.session['user_id']
     today = datetime.date.today()
-    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
+    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all().order_by('to_date')
     past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all().order_by('-to_date')
 
     context = {
@@ -268,7 +271,7 @@ def authenticate_booking(request):
         print("==========={}=======".format(booking))
 
         if booking:
-            return JsonResponse({"url": redirect('airbnbclone:index').url})
+            return JsonResponse({"url": redirect('airbnbclone:my_bookings').url})
 
         errors = []
         for message in messages.get_messages(request):
@@ -674,10 +677,16 @@ def edit_listing(request, listing_id):
         listing = m.Listing.objects.get(id = listing_id)
     except:
         return redirect('airbnbclone:index')
-
+    
+    try:
+        primary_photo = m.Photo.objects.get(listing_id = listing.id, is_primary=1)
+    except:
+        primary_photo = None
+        
     if listing and listing.host_id == request.session['user_id']:
         context = {
             "room": listing,
+            "primary": primary_photo
         }
         return render(request, 'airbnbclone/edit_listing.html', context)
 
@@ -828,36 +837,63 @@ def add_amenity(request):
     pass
             
 def add_dates(request):
-    try:
-        listing_id=request.POST['listing_id']
-        from_date = request.POST['html_start_date']
-        to_date = request.POST['html_end_date']
-        update_avail(from_date, to_date, listing_id, 1)
-    except:
-        return False
+    if request.method == "POST":
+        print(request.POST)
+        try:
+            listing_id=request.POST['html_listing_id']
+            from_date = request.POST['html_start_date']
+            to_date = request.POST['html_end_date']
+            price = request.POST['html_price']
+            listing = m.Listing.objects.get(id = listing_id)
+            listing.price = price
+            listing.save()
 
-    return True
+            update_avail(from_date, to_date, listing_id, 1)
+        except:
+            raise
+            return JsonResponse({"errors": "Incorrect Date Entered"}, status=401)
+        
+        context = {
+            "message": "Date and Price Updated",
+            "price": price
+        }
+        return JsonResponse(context)
+
+    return JsonResponse({"Errors": "Bad Path"}, status=400)
 
 def add_photo(request):
 
-    listing_id = request.POST['listing_id']
+    if request.method == "POST":
 
-    try:
-        if 'html_photo' in request.FILES:
-            html_photo = request.FILES.getlist('html_photo')
-            fs = FileSystemStorage()
-            photo = None
-            for file in html_photo:
-                filename = fs.save(file.name, file)
-                photo = m.Photo.objects.create(listing_id = listing_id, url = fs.url(filename), is_primary = False)
+        listing_id = request.POST['html_listing_id']
+        print("in add_photo")
 
-            photo.is_primary = True
-            photo.save()
-            return True
-    except:
-        pass
+        try:
+            if 'html_photo' in request.FILES:
+                html_photo = request.FILES.getlist('html_photo')
+                print("get_photo")
+                fs = FileSystemStorage()
+                photo = None
+                for file in html_photo:
+                    filename = fs.save(file.name, file)
+                    photo = m.Photo.objects.create(listing_id = listing_id, url = fs.url(filename), is_primary = False)
 
-    return True
+                for old_photo in m.Photo.objects.filter(listing_id = listing_id):
+                    old_photo.is_primary= 0
+                    old_photo.save()
+                
+                photo.is_primary = True
+                photo.save()
+                context = {
+                    "room": m.Listing.objects.get(id = listing_id),
+                    "primary": photo,
+                }
+
+                return render(request, 'airbnbclone/edit_listing.html', context)
+        except:
+            pass
+
+    return redirect('airbnbclone:index')
 
 def add_listing(request):
 

@@ -811,3 +811,7 @@ button.result_a:focus {
 .form-control-sm {
     width: 30%;
 }
+
+.card > img {
+    width: 150px;
+}

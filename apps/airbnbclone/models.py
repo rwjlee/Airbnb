@@ -54,6 +54,11 @@ class Listing(models.Model):
             if photo.is_primary:
                 return photo.url
         return None   
+    
+    @property
+    def get_rating(self):
+        return '{0:.1f}'.format(self.average_rating)
+
          
 
 
@@ -108,7 +113,7 @@ class Conversation(models.Model):
     guest = models.ForeignKey(User, related_name='guest_conversations', on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True) 
 
 class Message(models.Model):
     contents = models.TextField(max_length=500)

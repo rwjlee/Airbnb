@@ -1,7 +1,7 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
-<div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">Register</h3>
+<div class="card my-4 col-6 offset-3 px-5 py-1">
+    <h3 class="text-center font-weight-light py-3">Ready to See the World? Sign Up Today!</h3>
     <form method="POST" action="{% url 'airbnbclone:register' %}" id="register-form">
         {% csrf_token %}
         <div class="form-group">
@@ -16,7 +16,7 @@
         </div>
         <div class="form-group">
             <label for="inputBirthday">Your Birthday</label>
-            <label for="inputBirthday" class="fineprint">To sign up, you must be 18 or older. Other people won’t see your birthday.</label>
+            <label for="inputBirthday" class="fineprint bluecolor">To sign up, you must be 18 or older. Other people won’t see your birthday.</label>
             <input type="date" class="form-control" id="inputBirthday" placeholder="Your Birthday" name="html_birthday">
         </div>
         <div class="form-group">
