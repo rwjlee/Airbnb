@@ -1,7 +1,7 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
 <div class="card my-4 col-6 offset-3 p-5">
-    <h3 class="text-center">Conversation with
+    <h3 class="text-center font-weight-light">Conversation with
             {% if request.session.user_id != conversation.guest.id %}
             {{ conversation.guest.username }}
             {% else %}
