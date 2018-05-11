@@ -52,4 +52,5 @@ urlpatterns = [
 
     path('create_steps', views.create_steps, name='create_steps'),
     path('edit_listing/<int:listing_id>', views.edit_listing, name='edit_listing'),
+    path('add_photo', views.add_photo, name='add_photo'),
 ]

@@ -657,10 +657,16 @@ def edit_listing(request, listing_id):
         listing = m.Listing.objects.get(id = listing_id)
     except:
         return redirect('airbnbclone:index')
-
+    
+    try:
+        primary_photo = m.Photo.objects.get(listing_id = listing.id)
+    except:
+        primary_photo = None
+        
     if listing and listing.host_id == request.session['user_id']:
         context = {
             "room": listing,
+            "primary": primary_photo
         }
         return render(request, 'airbnbclone/edit_listing.html', context)
 
@@ -823,24 +829,33 @@ def add_dates(request):
 
 def add_photo(request):
 
-    listing_id = request.POST['listing_id']
+    if request.method == "POST":
 
-    try:
-        if 'html_photo' in request.FILES:
-            html_photo = request.FILES.getlist('html_photo')
-            fs = FileSystemStorage()
-            photo = None
-            for file in html_photo:
-                filename = fs.save(file.name, file)
-                photo = m.Photo.objects.create(listing_id = listing_id, url = fs.url(filename), is_primary = False)
+        listing_id = request.POST['html_listing_id']
+        print("in add_photo")
 
-            photo.is_primary = True
-            photo.save()
-            return True
-    except:
-        pass
+        try:
+            if 'html_photo' in request.FILES:
+                html_photo = request.FILES.getlist('html_photo')
+                print("get_photo")
+                fs = FileSystemStorage()
+                photo = None
+                for file in html_photo:
+                    filename = fs.save(file.name, file)
+                    photo = m.Photo.objects.create(listing_id = listing_id, url = fs.url(filename), is_primary = False)
 
-    return True
+                photo.is_primary = True
+                photo.save()
+                context = {
+                    "room": m.Listing.objects.get(id = listing_id),
+                    "primary": photo,
+                }
+
+                return render(request, 'airbnbclone/edit_listing.html', context)
+        except:
+            pass
+
+    return redirect('airbnbclone:index')
 
 def add_listing(request):
 
