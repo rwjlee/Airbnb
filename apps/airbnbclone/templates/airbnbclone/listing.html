@@ -130,6 +130,7 @@
         <div class="book-box">
           <div class="h3">${{room.price}} <span class="small">per night</span></div>
 
+
         <form method="POST" action="{% url 'airbnbclone:authenticate_booking' %}" id="booking-form">
           {% csrf_token %}
           <div class="form-group">
@@ -141,13 +142,15 @@
           <select class="form-control" name="html_guests" id="numguests">
                 <option selected value="1">1 guest</option>
           </select>
+
+          <div class="my-3 messages">
+
+          </div>
           <button id="book-btn" class="btn btn-danger col-12 mt-3">Book</button>
         </form>
       </div>
 
-      <div class="my-3 messages">
-
-      </div>
+      
 
     </div>
 
