@@ -275,7 +275,8 @@ function doSearch() {
             review_span.empty()
             review_span.text(num_reviews)
 
-            $("#listing-box").attr("href", "listing/"+(listing_id + 1))
+            listingDiv.attr("href", "listing/"+listing_id)
+            listingDiv.attr("id", "listing-box" + listing_id)
 
 
             
