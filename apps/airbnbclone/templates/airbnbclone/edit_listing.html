@@ -121,7 +121,7 @@
             <div class="border p-3">
                 <div>
                     <span>
-                        <input type="number" class="form-control" name="html_price" placeholder="Set Your Price">
+                        <input type="number" class="form-control" name="html_price" value="{{room.price}}"placeholder="Update Your Price">
                     </span>
                     <span class="pernight">
                         per night
@@ -142,8 +142,11 @@
                     </div>
                 </div>
 
+                <div id="date-msg" class="col-8">
+                </div>
+
                 <div class="mt-5">
-                    <button class="btn btn-danger" id="create-btn">Create Listing</button>
+                    <button class="btn btn-danger" id="price-btn">Update Available Date and Price</button>
                 </div>
 
             </div>
@@ -153,5 +156,40 @@
 </div>
 
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+
+    $("#price-btn").click(function(event) {
+        event.preventDefault();
+        console.log(event);
+
+        $.ajax({
+            beforeSend: setCsrfToken,
+            type: "POST",
+            url: "/add_dates",
+            data: {
+                "html_price": $("input[name=html_price]").val(),
+                "html_start_date": $("input[name=html_start]").val(),
+                "html_end_date": $("input[name=html_end]").val(),
+                "html_listing_id": $("input[name=html_listing_id]").val(),
+            },
+            success: function (response) {
+                console.log(response);
+                
+            },
+            error: function (response) {
+                console.log(response);
+                console.log("bad");
+            },
+        });
+
+    }); 
+});
+</script>
+
 
 {% endblock %}

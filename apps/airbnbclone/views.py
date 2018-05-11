@@ -837,15 +837,29 @@ def add_amenity(request):
     pass
             
 def add_dates(request):
-    try:
-        listing_id=request.POST['listing_id']
-        from_date = request.POST['html_start_date']
-        to_date = request.POST['html_end_date']
-        update_avail(from_date, to_date, listing_id, 1)
-    except:
-        return False
+    if request.method == "POST":
+        print(request.POST)
+        try:
+            listing_id=request.POST['html_listing_id']
+            from_date = request.POST['html_start_date']
+            to_date = request.POST['html_end_date']
+            price = request.POST['html_price']
+            listing = m.Listing.objects.get(id = listing_id)
+            listing.price = price
+            listing.save()
 
-    return True
+            update_avail(from_date, to_date, listing_id, 1)
+        except:
+            raise
+            return JsonResponse({"errors": "Incorrect Date Entered"}, status=401)
+        
+        context = {
+            "message": "Date and Price Updated",
+            "price": price
+        }
+        return JsonResponse(context)
+
+    return JsonResponse({"Errors": "Bad Path"}, status=400)
 
 def add_photo(request):
 
