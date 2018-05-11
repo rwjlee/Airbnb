@@ -2,23 +2,28 @@
 
 <div class="card my-4 col-6 offset-3 p-5">
     <h3 class="text-center">My Messages</h3>
-    <hr>
+    <hr> {% for conversation in conversations %}
+
+    <div class="row justify-content-between">
+        <div class="col-3">
+            <img src="{{ conversation.listing.primary_photo }}" class="img-fluid" alt="primary photo">
+        </div>
+        <div class="col-9">
+            <div class="largeprint">
+                <a href="{% url 'airbnbclone:convo' conversation_id=conversation.id %}">Conversation with {% if request.session.user_id != conversation.guest.id %} {{ conversation.guest.username
+                    }} {% else %} {{ conversation.host.username }} {% endif %}
+                </a>
+            </div>
+            <div class="text-secondary font-weight-light mt-2">Last Message at {{ conversation.updated_at }}</div>
+            <div class="text-secondary font-weight-light">{{ conversation.listing.city }}, {{ conversation.listing.country }}</div>
+        </div>
+
+    </div>
+
+    <hr> {% endfor %}
 
 
-    {% for conversation in conversations %}
-    <div class="largeprint"><a href="{% url 'airbnbclone:convo' conversation_id=conversation.id %}">Conversation with
-        {% if request.session.user_id != conversation.guest.id %}
-         {{ conversation.guest.username }}
-         {% else %}
-         {{ conversation.host.username }}
-        {% endif %}
-        </a></div>
 
-    <hr>
-    {% endfor %}
-
-
-  
 
 </div>
 

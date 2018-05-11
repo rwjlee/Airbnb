@@ -149,7 +149,7 @@ def all_messages(request):
 
     user_id = request.session['user_id']
 
-    conversations = m.Conversation.objects.filter(Q(host_id = user_id) | Q(guest_id = user_id)).order_by('-created_at')
+    conversations = m.Conversation.objects.filter(Q(host_id = user_id) | Q(guest_id = user_id)).order_by('-updated_at')
 
     context = {
         'conversations': conversations,
@@ -182,6 +182,9 @@ def send_message(request, conversation_id):
                     contents = request.POST['html_contents'],
                     from_user_id = request.session['user_id'],
                 )
+                conversation.updated_at = message.created_at
+                conversation.save()
+
             except:
                 pass
 
