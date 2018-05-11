@@ -39,7 +39,7 @@
       <hr>
 
       <div class="amenities">
-        <p>Amenities</p>
+        <div class="font-weight-bold">Amenities</div>
         <ul>
         {% for amen in room.amenities.all %}
         <li>{{amen.name}}</li>
@@ -49,25 +49,16 @@
 
       <hr>
 
-      <div class="cancellations">
-        <p>Cancellation
-          <p>
-            <a href="">Get Details</a>
-      </div>
-      <hr>
-
-      <!-- Insert reviews here -->
-
       <div class="hosted-by">
-        <span>Hosted by {{room.host.username}}</span>
-        <p>Languages: </p>
-        <a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact {{room.host.username}}</a>
+        <div class="font-weight-bold">Hosted by {{room.host.username}}</div>
+        <div><span class="font-weight-bold">About your host:</span> {{room.host.description}}</div>
+        <div class="font-weight-bold"><a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact {{room.host.username}}</a></div>
       </div>
       <hr>
 
       <div class="neighborhood" id="map">
       </div>
-      <div class="mt-2">Exact location information is provided after a booking is confirmed.</div>
+      <div class="mt-2 font-italic">Exact location information is provided after a booking is confirmed.</div>
       <hr>
 
       <div class="view-reviews">
