@@ -70,16 +70,23 @@ REVIEWS = [
 
 ]
 
+def reset_ratings():
+    for listing in m.Listing.objects.all():
+        listing.number_reviews = 0
+        listing.average_rating = 0
+        listing.save()
+
 def create_reviews():
     for booking in m.Booking.objects.all():
         description = random.choice(REVIEWS)
         rating = random.choice(range(3, 6))
         review = m.Review.objects.create(booking_id = booking.id, description = description, star_rating = rating)
         listing = review.booking.home_listing
-        if listing.average_rating:
-            listing.average_rating = (listing.number_reviews * listing.average_rating) / (listing.number_reviews + 1)
+        if listing.average_rating > 0:
+            listing.average_rating = float((listing.number_reviews * listing.average_rating + rating) / (listing.number_reviews + 1))
             listing.number_reviews += 1
         else:
+            listing.number_reviews += 1
             listing.average_rating = rating
             
         listing.save()
@@ -88,17 +95,21 @@ def create_reviews():
 
 
 def create_bookings():
-    for i in m.Listing.objects.all():
-        user_id = random.choice(range(1, 51))
-        listing_id = random.choice(range(1, 36))
-        charge_amt = random.choice(range(10, 1000))
-        guests = random.choice(range(0, 100))
-        to_date = "2018-0{}-{}".format(random.choice(range(3, 10)), random.choice(range(14, 30)))
-        from_date = "2018-03-13"
-        
+    for i in range(0, 100):
+        for i in m.Listing.objects.all():
+            try:
+                user_id = random.choice(range(1, 51))
+                listing_id = random.choice(range(1, 36))
+                charge_amt = random.choice(range(10, 1000))
+                guests = random.choice(range(0, 100))
+                to_date = "2018-0{}-{}".format(random.choice(range(3, 10)), random.choice(range(14, 30)))
+                from_date = "2018-03-13"
+                
 
 
-        m.Booking.objects.create(guest_id = user_id, home_listing_id = listing_id, charge_amount = charge_amt, num_guests = guests, from_date = from_date, to_date = to_date)
+                m.Booking.objects.create(guest_id = user_id, home_listing_id = listing_id, charge_amount = charge_amt, num_guests = guests, from_date = from_date, to_date = to_date)
+            except:
+                pass
 
 
 

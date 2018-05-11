@@ -14,8 +14,8 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Amenity(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    font_class = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
+    font_class = models.CharField(max_length=50)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
