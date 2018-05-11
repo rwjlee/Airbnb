@@ -46,4 +46,9 @@ urlpatterns = [
     path('save_favorite', views.save_favorite, name='save_favorite'),
 
     path('awesomeforms', views.awesomeforms, name='awesomeforms'),
+
+    path('find_address', views.find_address, name='find_address'),
+
+    path('create_steps', views.create_steps, name='create_steps'),
+    path('edit_listing/<int:listing_id>', views.edit_listing, name='edit_listing'),
 ]

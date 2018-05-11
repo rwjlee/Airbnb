@@ -3,15 +3,55 @@
 {% block body %}
 
 
+
+<div class="container">
+    
+    {% include 'airbnbclone/search_bar.html' with hide_search=False %}
+
+    <div class="text-left">
+        <h1>21 W Chestnut</h1>
+        <h2>Chicago, IL 60610</h2>
+    </div>
+</div>
+
 {% include 'airbnbclone/listingform.html' %}
 
 
 {% endblock %}
 
 {% block scripts %}
+
+
 <script>
 
+    $(document).ready(function() {
+        $("#search_id").keypress(function(event) {
 
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                let address = $(this).val();
+                $.ajax({
+                    beforeSend: setCsrfToken,
+                    type: "POST",
+                    url: "/find_address",
+                    data: {
+                        "address": address,
+                    },
+                    success: function (response) {
+                        console.log(response);
+                    }
+                });
+            }
+        });
+    });
+
+    function initMap() {
+        let input = document.getElementById('search_id');
+        let autocomplete = new google.maps.places.Autocomplete(input);
+    }
+
+    
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap&libraries=places" async defer>
 </script>
-
 {% endblock %}

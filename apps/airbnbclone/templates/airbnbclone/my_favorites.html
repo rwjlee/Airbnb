@@ -13,12 +13,13 @@
         <img src="{{ fav_listing.primary_photo }}" class="img-fluid" alt="primary photo"> 
         <div class="row justify-content-between">
             <div class="largeprint col-8">
-                <a href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">{{ fav_listing.name }}</a>
+                <a href="{% url 'airbnbclone:listing' listing_id=fav_listing.id %}">{{ fav_listing.city }}</a>
             </div>
             <div class="col-2 mr-3">
                 <a class="btn btn-warning" href="">Unlike</a>
             </div>
         </div>
+        <div class="">{{ fav_listing.name }}</div>
         <div class="fineprint">{{ fav_listing.desc }}</div>
 
     </div>

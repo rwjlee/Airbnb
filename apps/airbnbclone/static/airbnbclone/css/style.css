@@ -491,12 +491,7 @@ button.listing_a:focus {
     margin-bottom: 3px;
 
 }
-.listing_review {
 
-}
-.review_stars {
-
-}
 .star {
     display: inline-block ;
     color: rgb(0, 132, 137) ;
@@ -656,18 +651,147 @@ button.listing_a:focus {
     width: 100%;
 }
 /* Results page */
-.house_listings {
-    width: 66%;
-}
 .results_page {
     font-size: 0px;
 }
+.results_homes {
+    font-weight: 700 ;
+    margin-bottom: 0px ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 25px ;
+    line-height: 30px ;
+    letter-spacing: normal ;
+    padding-top: 2px ;
+    color: rgb(72, 72, 72) ;
+    margin-left: 7px;
+    margin-top: 40px;
+
+}
+.results_listings {
+    width: 66%;
+}
+.results_row {
+    width: 100%;
+
+}
+.result_a {
+    width: 50%;
+    border: none;
+    padding: 0%;
+}
+button.result_a:focus {
+    outline-width: 0;
+}
+.results_box {
+    align-content: flex-start;
+    display: flex;
+    width: 95%;
+}
+.results_image_box {
+    position: relative ;
+    width: 100% ;
+    z-index: 0 ;
+    border-bottom-left-radius: 3px ;
+    border-bottom-right-radius: 3px ;
+    border-top-left-radius: 3px ;
+    border-top-right-radius: 3px ;
+    overflow: hidden ;
+    object-fit: contain;
+}
+.results_image {
+    height: 289px;
+    width: 100%;
+}
+.results_text {
+    margin-top: 8px;
+}
+.results_type {
+    word-wrap: break-word ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 15px ;
+    line-height: 16px ;
+    letter-spacing: normal ;
+    padding-top: 0px ;
+    padding-bottom: 0px ;
+    color: rgb(72, 72, 72) ;
+    font-weight: 700 ;
+    margin: 0px ;
+}
+.results_name {
+    word-wrap: break-word ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 18px ;
+    line-height: 22px ;
+    padding-top: 0px ;
+    padding-bottom: 0px ;
+    color: rgb(72, 72, 72) ;
+    font-weight: 700 ;
+    margin: 0px ;
+}
+.results_price {
+    word-wrap: break-word ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 16px ;
+    line-height: 18px ;
+    letter-spacing: normal ;
+    padding-top: 0px ;
+    padding-bottom: 0px ;
+    color: rgb(72, 72, 72) ;
+    font-weight: 300 ;
+    margin-top: 3px;
+    margin-bottom: 3px;
+
+}
 .map_box {
-    width: 33%;
+    width: 30%;
     margin-left: 0%;
 
 }
+.review_star {
+    display: inline-block ;
+    color: rgb(0, 132, 137) ;
+    font-size: 10px ;
+    height: 10px ;
+    margin-right: 1px ;
+    width: 9px ;
+}
+.results_review {
+    font-weight: normal ;
+    word-wrap: break-word ;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif ;
+    font-size: 13px ;
+    line-height: 16px ;
+    letter-spacing: normal ;
+    padding-top: 0px ;
+    padding-bottom: 0px ;
+    color: rgb(72, 72, 72) ;
+    display: inline ;
+    margin: 0px ;
+}
 #map-search {
     width: 90%;
-    height: 250px;
+    height: 450px;
+}
+
+.edit-banner {
+    background-color: #e3e3e3;
+}
+
+.right {
+    
+}
+
+.pernight {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.form-control{
+    -webkit-border-radius: 2;
+       -moz-border-radius: 2;
+            border-radius: 2;
+  }
+
+.form-control-sm {
+    width: 30%;
 }
