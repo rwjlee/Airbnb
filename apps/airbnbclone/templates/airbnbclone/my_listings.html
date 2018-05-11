@@ -17,7 +17,7 @@
                 <a class="text-dark" href="{% url 'airbnbclone:listing' listing_id=listing.id %}">{{ listing.city }}</a>    
             </div>
             <div class="col-2 mr-5">
-                <a class="btn btn-outline-info btn-sm mt-2" href="">Edit Listing</a>
+                <a class="btn btn-outline-info btn-sm mt-2" href="{% url 'airbnbclone:edit_listing' listing_id=listing.id %}">Edit Listing</a>
             </div>
         </div>
         <div class=""><a href="{% url 'airbnbclone:listing' listing_id=listing.id %}">{{ listing.name }}</div>
