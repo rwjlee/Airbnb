@@ -255,7 +255,7 @@ def cancel_booking(request, booking_id):
 def my_bookings(request):
     user_id = request.session['user_id']
     today = datetime.date.today()
-    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all()
+    current_bookings = m.Booking.objects.filter(Q(to_date__gte = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all().order_by('to_date')
     past_bookings = m.Booking.objects.filter(Q(to_date__lt = today) & Q(guest_id = user_id) & Q(is_cancelled = 0)).all().order_by('-to_date')
 
     context = {
