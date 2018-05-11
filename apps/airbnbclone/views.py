@@ -807,6 +807,7 @@ def create_listing(request):
                 host_id = host,
                 addr_lat = addr_lat,
                 addr_lon = addr_lon,
+                active = 1,
             )
 
             return JsonResponse({"listing_id": listing_obj.id})
