@@ -679,7 +679,7 @@ def edit_listing(request, listing_id):
         return redirect('airbnbclone:index')
     
     try:
-        primary_photo = m.Photo.objects.get(listing_id = listing.id)
+        primary_photo = m.Photo.objects.get(listing_id = listing.id, is_primary=1)
     except:
         primary_photo = None
         
@@ -864,6 +864,10 @@ def add_photo(request):
                     filename = fs.save(file.name, file)
                     photo = m.Photo.objects.create(listing_id = listing_id, url = fs.url(filename), is_primary = False)
 
+                for old_photo in m.Photo.objects.filter(listing_id = listing_id):
+                    old_photo.is_primary= 0
+                    old_photo.save()
+                
                 photo.is_primary = True
                 photo.save()
                 context = {
