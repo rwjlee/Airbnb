@@ -57,6 +57,7 @@
         </div>
         <div class="bluecolor font-weight-bold">{{ booking.from_date }} to {{ booking.to_date }} | {{booking.num_guests}} {% if booking.num_guests == 1 %}guest{% else %}guests{% endif %}</div>
         <div>{{ booking.home_listing.name }}</div>
+        <div class="fineprint font-weight-bold">Amount charged: ${{ booking.charge_amount }}</div>
         <div class="">
             <a class="btn btn-success btn-sm mt-2" href="{% url 'airbnbclone:write_review' booking_id=booking.id %}">Write a Review of Your Trip</a>
         </div>
