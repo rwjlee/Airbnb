@@ -112,7 +112,7 @@
                 </div>
             </div>
 
-            <div class="debug p-3 mx-3">
+            <div class="p-3 mx-3">
                 <div class="row">
                     <div class="col-3">
                         <div class="row">
@@ -147,7 +147,7 @@
               <textarea class="form-control" name="html_desc" rows="5" id="comment"></textarea>
             </div>
 
-            <div class="amen-div p-3">
+            <div class="amen-div copy-me p-3">
                 <div class="h3">
                     Add Amenities
                 </div>
@@ -169,7 +169,7 @@
         </div>
 
         <div class="col-4">
-            <div class="border p-3">
+            <div class="border p-3 copy-me">
                 <div>
                     <span>
                         <input type="number" class="form-control" name="html_price" placeholder="Set Your Price">
@@ -194,10 +194,21 @@
                 </div>
 
                 <div class="mt-5">
-                    <button class="btn btn-danger" id="create-btn">Create Listing</button>
+                    <button class="btn btn-danger" id="not-create-btn">Create Listing</button>
                 </div>
 
             </div>
+
+            <div class="border p-3">
+                <div id="msg-bad">
+                    
+                </div>
+                <div class="mt-5">
+                    <button class="btn btn-danger" id="create-btn">Create Listing</button>
+                </div>
+    
+            </div>
+
         </div>
     </div>
 
@@ -258,7 +269,7 @@
         })
 
         function confirm_second(response) {
-            console.log(response);
+            
         };
 
         $("#create-btn").click(function(event) {
@@ -276,7 +287,7 @@
                     'html_bath': $("input[name=html_bath]").val(),
                     'html_bed': $("input[name=html_bed]").val(),
                     'html_max_guests': $("input[name=html_max_guests]").val(),
-                    'html_price': $("input[name=html_price]").val(),
+                    // 'html_price': $("input[name=html_price]").val(),
                     'html_name': $("h1[name=html_name]").text(),
                     'html_desc': $("textarea[name=html_desc]").val(),
                     'html_city': $("span[name=city]").text(),
@@ -284,14 +295,19 @@
                     'html_lat': $("input[name=html_lat]").val(),
                     'html_lon': $("input[name=html_lon]").val(),
                     'html_address': $("input[name=html_address]").val(),
-                    'html_start_date': $("input[name=html_start]").val(),
-                    'html_end_date': $("input[name=html_end]").val(),
+                    // 'html_start_date': $("input[name=html_start]").val(),
+                    // 'html_end_date': $("input[name=html_end]").val(),
                 },
                 success: function (response) {
-                    confirm_second(response);
+                    console.log(response);
+                    window.location = "/edit_listing/" + response.listing_id;
                 },
                 error: function (response) {
                     console.log(response['responseJSON'])
+                    let msg = $("#msg-bad")
+                    msg.empty()
+                    msg.text("Listing cannot be added");
+                    
                 }
             });
         });

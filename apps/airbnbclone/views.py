@@ -755,8 +755,7 @@ def create_listing(request):
         print(request.POST)
         errors = {}
         check_list = ['html_listing_type', 'html_privacy_type', 'html_bedroom', 'html_bath',
-            'html_bed', 'html_max_guests', 'html_address', 'html_price', 'html_name', 'html_desc',
-            'html_start_date', 'html_end_date']
+            'html_bed', 'html_max_guests', 'html_address', 'html_name', 'html_desc']
 
         for check in check_list:
             if check in request.POST:
@@ -785,8 +784,6 @@ def create_listing(request):
             max_guests= request.POST['html_max_guests']
 
             address = request.POST['html_address']
-
-            price = request.POST['html_price']
             
             name = request.POST['html_name']
             desc = request.POST['html_desc']
@@ -809,7 +806,6 @@ def create_listing(request):
                 address = address,
                 name = name,
                 desc = desc,
-                price = price,
                 host_id = host,
                 addr_lat = addr_lat,
                 addr_lon = addr_lon,
@@ -819,6 +815,10 @@ def create_listing(request):
 
         except:
             raise
+            context = {
+                "errors": "Listing cannot be created. Try Again."
+            }
+            return JsonResponse(context, status=401)
             
     context = {
         "errors": "Listing cannot be created. Try Again."
@@ -839,12 +839,6 @@ def add_amenity(request):
         amen_list = listing.amenities
 
     return False
-
-    
-    # amen_list = m.Amenity.objects.all()
-    # for amen in amen_list:
-    #     if amen.font_class in request.POST:
-    #         listing_obj.amenities.add(amen)
             
 def add_dates(request):
     if request.method == "POST":
