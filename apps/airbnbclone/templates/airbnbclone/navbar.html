@@ -18,7 +18,7 @@
                   Become a host
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{% url 'airbnbclone:create_listing' %}">Host a home</a>
+                <a class="dropdown-item" href="{% url 'airbnbclone:create_steps' %}">Host a home</a>
                 {% if request.session.has_listings > 0 %}
                 <a class="dropdown-item" href="{% url 'airbnbclone:my_listings' %}">Manage Listings</a>
                 {% endif %}
