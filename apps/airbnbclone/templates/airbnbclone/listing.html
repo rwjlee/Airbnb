@@ -33,16 +33,18 @@
         <p>{{room.city}}, {{room.country}}</p>
         <p>{{room.max_guests}} guests, {{room.bedroom}} bedrooms, {{room.bed}} beds, {{room.bath}} baths</p>
         <p>{{room.desc}}</p>
-        <a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact host</a>
+        <p>Got a question about this listing? <a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact the host</a></p>
       </div>
 
       <hr>
 
       <div class="amenities">
         <p>Amenities</p>
+        <ul>
         {% for amen in room.amenities.all %}
-        <div>{{amen.name}}</div>
+        <li>{{amen.name}}</li>
         {% endfor %}
+      </ul>
       </div>
 
       <hr>
@@ -52,7 +54,6 @@
           <p>
             <a href="">Get Details</a>
       </div>
-
       <hr>
 
       <!-- Insert reviews here -->
@@ -60,16 +61,13 @@
       <div class="hosted-by">
         <span>Hosted by {{room.host.username}}</span>
         <p>Languages: </p>
-        <a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact Host</a>
+        <a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact {{room.host.username}}</a>
       </div>
-
       <hr>
 
       <div class="neighborhood" id="map">
-
       </div>
-      <span>Exact location information is provided after a booking is confirmed.</span>
-
+      <div class="mt-2">Exact location information is provided after a booking is confirmed.</div>
       <hr>
 
       <div class="view-reviews">
