@@ -368,7 +368,6 @@ input.search_input:focus {
 .city_image {
     width: 96px;
     height: 72px;
-    background-image: url(https://a0.muscache.com/im/pictures/e3b8d12c-07dc-4f3d-9cdc-c79e0a442dd4.jpg?aki_policy=large);
 }
 .city_name {
     word-wrap: break-word ;
@@ -379,8 +378,7 @@ input.search_input:focus {
     color: rgb(72, 72, 72) ;
     font-weight: 700 ;
     margin-left: 15px;
-    position: relative;
-    bottom: 30px;
+
 }
 .top_rated_listings {
     width: 90%;
@@ -430,6 +428,7 @@ button.listing_a:focus {
     align-content: flex-start;
     display: flex;
     width: 95%;
+    margin-bottom: 20px;
 
 }
 .listing_image_box {
@@ -446,12 +445,12 @@ button.listing_a:focus {
 .listing_image {
     width: 100%;
     height: 205px;
-    background-image: url(https://a0.muscache.com/im/pictures/e3b8d12c-07dc-4f3d-9cdc-c79e0a442dd4.jpg?aki_policy=large);
     
 
 }
 .listing_TEXT {
     margin-top: 8px;
+    font-size: 0%;
 
 
 }
@@ -494,13 +493,15 @@ button.listing_a:focus {
     margin-bottom: 3px;
 
 }
-
+.review_stars {
+    font-size: 0%;
+}
 .star {
     display: inline-block ;
     color: rgb(0, 132, 137) ;
     font-size: 9px ;
     height: 10px ;
-    margin-right: 1px ;
+    margin-right: 1px;
     width: 9px ;
 }
 .review_text {
@@ -516,6 +517,7 @@ button.listing_a:focus {
     color: rgb(72, 72, 72) ;
     display: inline ;
     margin: 0px ;
+    margin-left: 5px;
 }
 .praises {
     margin-top: 30px;
@@ -670,8 +672,11 @@ button.listing_a:focus {
     margin-top: 40px;
 
 }
+.results_listings_container {
+    width: 66%
+}
 .results_listings {
-    width: 66%;
+    width: 100%;
 }
 .results_row {
     width: 100%;
@@ -746,7 +751,7 @@ button.result_a:focus {
 
 }
 .map_box {
-    width: 30%;
+    width: 33%;
     margin-left: 0%;
 
 }
@@ -776,6 +781,9 @@ button.result_a:focus {
     height: 450px;
 }
 
+.location-fix {
+    margin-top: -66px;
+}
 .edit-banner {
     background-color: #e3e3e3;
 }

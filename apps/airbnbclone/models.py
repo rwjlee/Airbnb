@@ -53,7 +53,8 @@ class Listing(models.Model):
         for photo in self.photos.all():
             if photo.is_primary:
                 return photo.url
-        return None                
+        return None   
+         
 
 
 class Favorite(models.Model):
