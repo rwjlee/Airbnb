@@ -1,0 +1,130 @@
+{% extends 'airbnbclone/base.html' %}
+
+{% block body %}
+
+<div id="step-three" class="">
+<div class="listing-banner edit-banner">
+    <div class="row justify-content-between">
+        <div class="col-8">
+          <div class="p-3">
+            <div class="btn">Add Photos</div>
+                <div class="form-group">
+                    <input type="file" name="html_photo" multiple required class="form-control mb-3 picturetitle" id="exampleFormControlFile1">
+                </div>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="step-two" class="">
+
+<div class="container">
+    <div class="row">
+        <div class="col-8 left">
+            <div class="border p-3">
+                <div class="form-group">{{room.listing_type}}
+                </div>
+
+                <h1 contenteditable="false" name="html_name">{{room.name}}</h1>
+
+                <div>
+                    <span name="city">{{room.city}}</span>, <span name="country">{{room.country}}</span>
+                    <input type="hidden" name="html_lat" value="">
+                    <input type="hidden" name="html_lon" value="">
+                </div>
+                
+                <div class="form-group my-3">{{room.privacy_type}}
+                </div>
+            </div>
+
+            <div class="p-3 mx-3">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="row">
+                            <i class="fa fa-user mr-2"></i><span>{{room.max_guests}} Guests</span>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <i class="fa fa-bed"></i><span>{{room.bed}} Beds</span>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <i class="fa fa-bath"></i><span>{{room.bath}} Bath</span>
+                         </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <i class="fa fa-sign-in"></i><span>{{room.bedroom}} Bedroom</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group p-3">
+              <label for="comment">Tell Us More About Your place</label>
+              <textarea class="form-control" name="html_desc" rows="5" id="comment"></textarea>
+            </div>
+
+            <div class="amen-div p-3">
+                <div class="h3">
+                    Add Amenities
+                </div>
+
+                <div class="row border m-2">
+                    {% for amen in amen_list %}
+                    <div class="form-check col-4 m-1">
+                        <input class="form-check-input" type="checkbox" value="">
+                        <label class="form-check-label">
+                            <i class="fa {{amen.font_class}}" id="{{amen.font_class}}">{{amen.name}}</i>
+                            
+                        </label>
+                    </div>
+
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="border p-3">
+                <div>
+                    <span>
+                        <input type="number" class="form-control" name="html_price" placeholder="Set Your Price">
+                    </span>
+                    <span class="pernight">
+                        per night
+                    </span>
+                </div>
+                <hr class="my-3">
+                <div>
+                    <div class="my-2">
+                        Make Your Place Available
+                    </div>
+                    <div>
+                        <div>Start Date</div> 
+                        <input type="date" class="form-control" name="html_start" required>
+                    </div>
+                    <div>
+                        <div>End Date</div>
+                        <input type="date" class="form-control" name="html_end" required>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <button class="btn btn-danger" id="create-btn">Create Listing</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}
