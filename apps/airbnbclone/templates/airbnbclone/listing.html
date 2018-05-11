@@ -1,5 +1,6 @@
 {% extends 'airbnbclone/base.html' %} {% block body %}
 
+<div id="listing-page">
 <div class="listing-banner">
   <img src="{{primary.url}}" alt="photo here" style="width: 100%; height: 368px; z-index: 1;">
 
@@ -24,9 +25,9 @@
 
 <div class="container context-box">
   <div class="row">
-    <div class="listing-content col-8">
+    <div class="col-8 left">
 
-      <div class="summary">
+      <div class="border p-3 summary">
         <h3>{{room.listing_type}}</h3>
         <h2>{{room.name}}</h2>
         <p>{{room.city}}, {{room.country}}</p>
@@ -153,6 +154,8 @@
   </div>
 </div>
 
+</div>
+
 
 
 {% endblock %} {% block scripts %}
@@ -219,14 +222,10 @@
     setCheckin.attr("min", todayDate);
     setCheckout.attr("min", todayDate);
 
-
-
-   
     let guestsDiv = $("#numguests");
     for (let i=2; i < {{room.max_guests}}+1; i++) {
       guestsDiv.append('<option value=' + i + '>' + i + ' guests</option>');
     }
-
 
     let favStr = '<i class="fa fa-heart mr-2" style="color:red"></i>Saved'
     let unfavStr = '<i class="fa fa-heart-o mr-2" style="color:red"></i>Save'
@@ -286,7 +285,7 @@
         },
         success: function (response) {
           console.log(response);
-          window.location = response.url;
+          
         },
         error: function (response) {
           console.log(response)

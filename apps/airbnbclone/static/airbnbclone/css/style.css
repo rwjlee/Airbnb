@@ -775,3 +775,26 @@ button.result_a:focus {
     width: 90%;
     height: 450px;
 }
+
+.edit-banner {
+    background-color: #e3e3e3;
+}
+
+.right {
+    
+}
+
+.pernight {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.form-control{
+    -webkit-border-radius: 2;
+       -moz-border-radius: 2;
+            border-radius: 2;
+  }
+
+.form-control-sm {
+    width: 30%;
+}
