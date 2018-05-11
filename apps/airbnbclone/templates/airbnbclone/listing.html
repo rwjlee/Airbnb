@@ -39,7 +39,7 @@
       <hr>
 
       <div class="amenities">
-        <div class="font-weight-bold">Amenities</div>
+        <div class="font-weight-bold mb-2">Amenities</div>
         <ul>
         {% for amen in room.amenities.all %}
         <li>{{amen.name}}</li>
@@ -51,7 +51,7 @@
 
       <div class="hosted-by">
         <div class="font-weight-bold">Hosted by {{room.host.username}}</div>
-        <div><span class="font-weight-bold">About your host:</span> {{room.host.description}}</div>
+        <div class="mt-2"><span class="font-weight-bold">About your host:</span> {{room.host.description}}</div>
         <div class="font-weight-bold"><a href="{% url 'airbnbclone:start_convo' listing_id=room.id %}">Contact {{room.host.username}}</a></div>
       </div>
       <hr>
