@@ -8,7 +8,7 @@ server {
     }
 
     location /media/ {
-        root /home/ubuntu/Airbnb/
+        root /home/ubuntu/Airbnb/;
     }
 
     location / {
