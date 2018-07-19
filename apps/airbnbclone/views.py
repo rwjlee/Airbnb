@@ -21,17 +21,22 @@ def index(request):
     listings_rated = []
     listings_all = []
     listings = m.Listing.objects.all()
-    i = 8 
-    while i < 16:
-        listings_rated.append(listings[i])
-        i += 1
-    z = 16
-    while z < 25:
-        listings_all.append(listings[z])
-        if z == 19:
-            z += 2
-        else:
-            z += 1
+
+    try:
+        i = 8 
+        while i < 16:
+            listings_rated.append(listings[i])
+            i += 1
+        z = 16
+        while z < 25:
+            listings_all.append(listings[z])
+            if z == 19:
+                z += 2
+            else:
+                z += 1
+    except:
+        pass
+        
     context = {
         "api_key": MAP_API_KEY,
         "listings_rated" : listings_rated,
