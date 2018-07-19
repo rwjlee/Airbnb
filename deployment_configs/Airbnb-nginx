@@ -11,4 +11,9 @@ server {
         include proxy_params;
         proxy_pass http://unix:/home/ubuntu/Airbnb/Airbnb.sock;
     }
+
+    location /media/ {
+        autoindex on;
+        alias /home/ubuntu/Airbnb/
+    }
 }
