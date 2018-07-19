@@ -114,7 +114,7 @@ def create_bookings():
 
 
 MEDIA_DIR = '/media/'
-IMAGE_ROOT = '/Users/CryptoWork/Downloads/images/'
+IMAGE_ROOT = '/home/ubuntu/media/'
 file_names = []
 def create_images():
     for image in (os.listdir(IMAGE_ROOT)):
